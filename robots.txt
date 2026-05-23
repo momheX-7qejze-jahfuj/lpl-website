@@ -1,0 +1,7 @@
+# The Leadership Pressure Lab™ — coachjoeleadership.com
+# © 2026 Joseph "Coach Joe" Clementi | All Rights Reserved
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Sitemap: https://coachjoeleadership.com/sitemap.xml
