@@ -4,7 +4,7 @@
 ---
 
 ## Overview
-This is the official website for The Leadership Pressure Lab™ (`coachjoeleadership.com`), a static HTML website hosted on GitHub Pages.
+This is the official website for The Leadership Pressure Lab™ (`leadershippressurelab.com`), a static HTML website hosted on GitHub Pages.
 
 **The P.R.E.S.S.U.R.E. System™, The Pressure Test™, Responsible Ownership™, The Torque Drive OS™, The Pressure Lab Cohort™, and all associated content are the exclusive intellectual property of Joseph Clementi. Unauthorized reproduction is prohibited.**
 
