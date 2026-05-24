@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Leadership Pressure Lab™ — Cohort Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D1F3C;--blue:#1A4B8C;--sky:#2E7FD4;--orange:#E8621A;--amber:#F09340;--white:#FFFFFF;--off:#F6F8FB;--border:#DDE3ED;--text:#111827;--muted:#536279;--ease:cubic-bezier(0.16,1,0.3,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--text);line-height:1.7;overflow-x:hidden}
+body.locked{overflow:hidden}
+
+/* ── GATE OVERLAY ── */
+#gate1{position:fixed;inset:0;background:var(--navy);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;transition:transform .7s var(--ease),opacity .5s ease}
+#gate1::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+#gate1::after{content:'';position:absolute;bottom:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(232,98,26,.15) 0%,transparent 70%);pointer-events:none}
+#gate1.exit{transform:translateY(-100%);opacity:0;pointer-events:none}
+.gate-inner{position:relative;z-index:1;text-align:center;max-width:440px;width:100%}
+.gate-mark{width:68px;height:68px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:21px;color:#fff;letter-spacing:2px;margin:0 auto 28px;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.gate-eyebrow{font-size:10px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;font-weight:600;margin-bottom:14px}
+.gate-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,6vw,46px);letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:12px}
+.gate-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:36px;font-weight:300;line-height:1.6}
+.gate-row{display:flex;gap:10px;margin-bottom:10px}
+.gate-input{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:14px 16px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:#fff;outline:none;text-align:center;text-transform:uppercase;transition:border-color .3s,background .3s}
+.gate-input::placeholder{color:rgba(255,255,255,.2);font-size:15px;letter-spacing:2px;font-family:'DM Sans',sans-serif}
+.gate-input:focus{border-color:var(--amber);background:rgba(255,255,255,.1)}
+.gate-input.err{border-color:#f56565;animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.gate-btn{background:var(--orange);border:none;border-radius:8px;padding:14px 22px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:#fff;cursor:pointer;transition:background .2s,transform .15s;white-space:nowrap}
+.gate-btn:hover{background:#cc561a}
+.gate-btn:active{transform:scale(.97)}
+.gate-err{font-size:12px;color:#fc8181;min-height:18px;margin-bottom:2px}
+.gate-hint{font-size:11px;color:rgba(255,255,255,.18);margin-top:18px;letter-spacing:.3px}
+
+/* ── SCROLL ANIMATIONS ── */
+.anim{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s var(--ease)}
+.anim.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* ── NAV ── */
+.nav{background:var(--navy);height:56px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid var(--orange);position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-hex{width:30px;height:30px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:10px;color:#fff;flex-shrink:0}
+.nav-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:#fff}
+.nav-name small{display:block;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--amber);font-weight:600;text-transform:uppercase}
+.nav-apply{background:var(--orange);color:#fff;border:none;border-radius:6px;padding:8px 18px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;text-decoration:none;transition:background .2s}
+.nav-apply:hover{background:#cc561a}
+
+/* ── HERO ── */
+.hero{background:var(--navy);min-height:92vh;display:flex;align-items:center;padding:80px 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 0% 50%,rgba(26,75,140,.55) 0%,transparent 60%),radial-gradient(ellipse 55% 65% at 100% 100%,rgba(232,98,26,.18) 0%,transparent 55%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:80px 80px;pointer-events:none}
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.hero-chip{display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:3px;color:var(--amber);font-weight:600;text-transform:uppercase;margin-bottom:28px}
+.hero-chip::before{content:'';display:block;width:28px;height:2px;background:var(--orange)}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(54px,10vw,100px);line-height:.92;letter-spacing:2px;color:#fff;margin-bottom:32px}
+.hero-h1 em{font-style:normal;color:var(--orange)}
+.hero-p{font-size:19px;color:rgba(255,255,255,.68);max-width:560px;line-height:1.72;font-weight:300;margin-bottom:44px}
+.hero-p strong{color:rgba(255,255,255,.95);font-weight:500}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:#fff;text-decoration:none;padding:18px 32px;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;cursor:pointer;transition:background .2s,transform .15s}
+.hero-cta:hover{background:#cc561a;transform:translateY(-1px)}
+.hero-scroll{margin-top:60px;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.2);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+.hero-scroll::after{content:'';display:block;width:1px;height:36px;background:rgba(255,255,255,.12);margin-left:4px}
+
+/* ── SECTION BASE ── */
+.sec{padding:96px 40px}
+.sec-w{max-width:900px;margin:0 auto}
+.sec-light{background:var(--white)}
+.sec-off{background:var(--off)}
+.sec-navy{background:var(--navy)}
+.sec-dark{background:#060e1c}
+.eyebrow{font-size:10px;letter-spacing:4px;color:var(--orange);font-weight:700;text-transform:uppercase;margin-bottom:12px}
+.eyebrow-amber{color:var(--amber)}
+.sh{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,54px);letter-spacing:2px;line-height:1.05;margin-bottom:20px;color:var(--navy)}
+.sh.lt{color:#fff}
+.sp{font-size:17px;color:var(--muted);max-width:640px;line-height:1.75;margin-bottom:18px}
+.sp strong{color:var(--text)}
+.sp.lt{color:rgba(255,255,255,.62)}
+.sp.lt strong{color:rgba(255,255,255,.95)}
+
+/* ── RECOGNITION CARDS ── */
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px;margin-top:48px}
+.rec-card{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:26px;border-left:3px solid var(--orange);position:relative}
+.rec-card::before{content:'"';position:absolute;top:10px;right:16px;font-size:52px;color:var(--border);font-family:Georgia,serif;line-height:1}
+.rec-card p{font-size:15px;color:var(--text);line-height:1.65;font-weight:500}
+
+/* ── STAT ROW ── */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-top:48px}
+.stat-cell{background:var(--navy);padding:30px 24px}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:46px;color:var(--orange);letter-spacing:1px;line-height:1}
+.stat-l{font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;line-height:1.5}
+.stat-source{font-size:10px;color:rgba(255,255,255,.25);font-style:italic;margin-top:4px}
+
+/* ── COACH JOE ── */
+.coach-layout{display:grid;grid-template-columns:1fr 1.7fr;gap:56px;align-items:start;margin-top:48px}
+.coach-photo{aspect-ratio:3/4;background:linear-gradient(180deg,var(--blue) 0%,var(--navy) 100%);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:28px;text-align:center}
+.coach-hex{width:80px;height:80px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;letter-spacing:2px;margin-bottom:20px}
+.coach-nameplate strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#fff}
+.coach-nameplate span{font-size:11px;color:var(--amber);letter-spacing:1px}
+.coach-creds{list-style:none;margin-top:24px}
+.coach-creds li{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted);padding:12px 0;border-bottom:1px solid var(--border);line-height:1.6}
+.coach-creds li:last-child{border-bottom:none}
+.cred-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0;margin-top:7px}
+.coach-quote{margin-top:24px;padding:22px 26px;background:var(--navy);border-radius:10px;border-left:3px solid var(--orange)}
+.coach-quote p{font-size:16px;color:rgba(255,255,255,.82);font-style:italic;line-height:1.65}
+
+/* ── PRESSURE GRID ── */
+.pres-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:48px}
+.pres-cell{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:22px 14px;text-align:center;transition:background .2s,border-color .2s}
+.pres-cell:hover{background:rgba(232,98,26,.09);border-color:rgba(232,98,26,.28)}
+.pres-letter{font-family:'Bebas Neue',sans-serif;font-size:50px;color:var(--orange);line-height:1}
+.pres-word{font-size:11px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+.pres-desc{font-size:11px;color:rgba(255,255,255,.38);margin-top:8px;line-height:1.5}
+.pres-note{text-align:center;font-size:13px;color:rgba(255,255,255,.3);margin-top:20px;font-style:italic}
+
+/* ── COHORT STRUCTURE ── */
+.cohort-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:40px 0}
+.cs{background:var(--white);padding:28px 20px;text-align:center}
+.cs-n{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--navy);letter-spacing:1px;line-height:1}
+.cs-n span{font-size:22px;color:var(--orange)}
+.cs-l{font-size:12px;color:var(--muted);margin-top:6px}
+.cohort-steps{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.cs-step{display:flex;gap:18px;align-items:flex-start;background:var(--off);border:1px solid var(--border);border-radius:10px;padding:20px 24px}
+.cs-step-n{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);line-height:1;width:28px;flex-shrink:0}
+.cs-step h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.cs-step p{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── WHO IT'S FOR ── */
+.for-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
+.for-card{border-radius:10px;padding:28px}
+.for-yes{background:rgba(46,127,212,.08);border:1px solid rgba(46,127,212,.22)}
+.for-no{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.for-label{font-size:10px;letter-spacing:3px;font-weight:700;text-transform:uppercase;margin-bottom:16px}
+.for-yes .for-label{color:var(--sky)}
+.for-no .for-label{color:rgba(255,255,255,.3)}
+.for-list{list-style:none}
+.for-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55}
+.for-list li:last-child{border-bottom:none}
+.for-yes .for-list li{color:rgba(255,255,255,.82)}
+.for-no .for-list li{color:rgba(255,255,255,.38)}
+.chk-yes{color:var(--sky);flex-shrink:0;font-weight:700;margin-top:2px}
+.chk-no{color:rgba(255,255,255,.2);flex-shrink:0;font-weight:700;margin-top:2px}
+
+/* ── INVESTMENT ── */
+.invest-wrap{max-width:560px;margin:0 auto}
+.invest-card{background:var(--white);border:2px solid var(--orange);border-radius:16px;padding:48px 44px;text-align:center;position:relative}
+.invest-badge{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 20px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
+.invest-price{font-family:'Bebas Neue',sans-serif;font-size:82px;color:var(--navy);line-height:1;letter-spacing:2px}
+.invest-price sup{font-size:36px;vertical-align:super}
+.invest-price sub{font-size:18px;vertical-align:sub;color:var(--muted)}
+.invest-period{font-size:13px;color:var(--muted);margin-bottom:28px;margin-top:4px}
+.invest-hr{border:none;border-top:1px solid var(--border);margin:24px 0}
+.invest-roi{background:var(--off);border-radius:8px;padding:18px 22px;text-align:left;margin-bottom:28px}
+.invest-roi p{font-size:14px;color:var(--muted);line-height:1.7}
+.invest-roi strong{color:var(--orange)}
+.invest-list{list-style:none;text-align:left}
+.invest-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text);padding:9px 0;border-bottom:1px solid var(--border);line-height:1.5}
+.invest-list li:last-child{border-bottom:none}
+.inv-chk{color:var(--orange);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ── CTA ── */
+.cta-sec{background:var(--orange);padding:84px 40px;text-align:center}
+.cta-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,58px);color:#fff;letter-spacing:2px;margin-bottom:16px}
+.cta-p{font-size:17px;color:rgba(255,255,255,.8);max-width:580px;margin:0 auto 36px;line-height:1.7}
+.cta-btn{display:inline-flex;align-items:center;gap:12px;background:var(--navy);color:#fff;text-decoration:none;padding:20px 40px;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;transition:background .2s,transform .15s;border:none;cursor:pointer}
+.cta-btn:hover{background:#0a1728;transform:translateY(-2px)}
+.cta-sub{margin-top:18px;font-size:13px;color:rgba(255,255,255,.6);font-style:italic}
+
+/* ── GATE 2 EMBEDDED ── */
+.g2-wrap{background:#060e1c;padding:80px 40px;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.g2-hex{width:50px;height:50px;background:rgba(232,98,26,.4);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;margin:0 auto 20px;animation:pulse 3s ease-in-out infinite}
+.g2-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;color:#fff;margin-bottom:8px}
+.g2-sub{font-size:14px;color:rgba(255,255,255,.38);margin-bottom:28px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.65}
+.g2-form{max-width:380px;margin:0 auto}
+
+/* ── MEMBER CONTENT ── */
+#member-content{display:none}
+.mem-welcome{background:var(--navy);padding:80px 40px;border-top:3px solid var(--orange)}
+.mem-badge{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;font-size:10px;font-weight:700;letter-spacing:3px;padding:6px 16px;border-radius:20px;text-transform:uppercase;margin-bottom:24px}
+.mem-sec{padding:72px 40px}
+.mem-sec-w{max-width:860px;margin:0 auto}
+.mem-sec.alt{background:var(--off)}
+.mem-sec.dark{background:var(--navy)}
+.mem-sec.darkest{background:#060e1c}
+.mem-eyebrow{font-size:10px;letter-spacing:4px;color:var(--orange);font-weight:700;text-transform:uppercase;margin-bottom:10px}
+.mem-eyebrow.lt{color:var(--amber)}
+.mem-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,42px);letter-spacing:2px;margin-bottom:16px;color:var(--navy)}
+.mem-h.lt{color:#fff}
+.mem-p{font-size:16px;color:var(--muted);line-height:1.75;max-width:700px;margin-bottom:18px}
+.mem-p.lt{color:rgba(255,255,255,.6)}
+
+/* logistics */
+.log-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:28px}
+.log-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px}
+.log-card h4{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:8px}
+.log-card p{font-size:14px;color:var(--muted);line-height:1.6}
+.log-placeholder{color:var(--orange);font-style:italic}
+
+/* curriculum */
+.curric{display:flex;flex-direction:column;margin-top:36px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.curric-row{display:grid;grid-template-columns:76px 1fr;border-bottom:1px solid var(--border);background:var(--white);transition:background .15s}
+.curric-row:last-child{border-bottom:none}
+.curric-row:hover{background:var(--off)}
+.curric-num{background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 6px;text-align:center}
+.wk-label{font-size:8px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;font-weight:600}
+.wk-n{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#fff;line-height:1}
+.wk-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);margin-top:5px}
+.curric-body{padding:14px 20px}
+.curric-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:6px}
+.ct-f{background:rgba(46,127,212,.1);color:#1A4B8C}
+.ct-i{background:rgba(232,98,26,.1);color:var(--orange)}
+.ct-p{background:rgba(22,163,74,.1);color:#15803d}
+.ct-m{background:rgba(240,147,64,.12);color:#b45309}
+.curric-body h4{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.curric-body p{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* scoreboard */
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:28px}
+.score-card{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:22px;text-align:center}
+.score-abbr{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--navy);line-height:1}
+.score-name{font-size:12px;font-weight:700;color:var(--orange);letter-spacing:1px;text-transform:uppercase;margin:6px 0}
+.score-desc{font-size:12px;color:var(--muted);line-height:1.55}
+.score-key{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-top:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:20px}
+.sk-item{text-align:center}
+.sk-n{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1}
+.sk-l{font-size:11px;color:rgba(255,255,255,.38);margin-top:2px;line-height:1.3}
+
+/* standards */
+.stds{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+.std-item{display:flex;gap:18px;align-items:flex-start;padding:20px 24px;background:var(--white);border:1px solid var(--border);border-radius:10px;border-left:3px solid var(--orange)}
+.std-n{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);line-height:1;flex-shrink:0;width:22px}
+.std-body h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.std-body p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* week 1 prep */
+.prep-list{display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-top:28px}
+.prep-item{display:flex;gap:16px;align-items:flex-start;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+.prep-item:last-child{border-bottom:none}
+.prep-circle{width:26px;height:26px;border-radius:50%;border:2px solid var(--orange);flex-shrink:0;margin-top:2px}
+.prep-item h4{font-size:14px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:3px}
+.prep-item p{font-size:13px;color:rgba(255,255,255,.38);line-height:1.55}
+.contact-box{margin-top:32px;background:rgba(232,98,26,.1);border:1px solid rgba(232,98,26,.22);border-radius:10px;padding:22px 26px}
+.contact-box p{font-size:15px;color:rgba(255,255,255,.82);line-height:1.7}
+.contact-box strong{color:var(--amber)}
+
+/* ── FOOTER ── */
+.footer{background:var(--navy);padding:48px 40px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-hex{width:40px;height:40px;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:#fff;margin:0 auto 14px}
+.footer-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;margin-bottom:4px}
+.footer-tag{font-size:12px;color:rgba(255,255,255,.28);font-style:italic;margin-bottom:20px}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.14)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  .sec{padding:64px 24px}
+  .hero{padding:56px 24px;min-height:80vh}
+  .pres-grid{grid-template-columns:repeat(2,1fr)}
+  .for-grid{grid-template-columns:1fr}
+  .coach-layout{grid-template-columns:1fr}
+  .coach-photo{display:none}
+  .nav{padding:0 20px}
+  .invest-card{padding:36px 24px}
+  .cta-sec{padding:56px 24px}
+  .g2-wrap{padding:56px 24px}
+  .mem-sec{padding:48px 24px}
+  .mem-welcome{padding:56px 24px}
+  .curric-num{display:none}
+  .curric-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- ═══════════════════════════════
+     GATE 1 — CANDIDATE ACCESS
+═══════════════════════════════ -->
+<div id="gate1">
+  <div class="gate-inner">
+    <div class="gate-mark">LPL</div>
+    <p class="gate-eyebrow">Restricted Access · Invitation Only</p>
+    <h1 class="gate-title">The Leadership<br>Pressure Lab™</h1>
+    <p class="gate-sub">This page contains confidential program information for invited candidates and accepted cohort members. Enter your access code to continue.</p>
+    <div class="gate-row">
+      <input type="text" id="g1in" class="gate-input" placeholder="Enter code" autocomplete="off" maxlength="12" spellcheck="false">
+      <button class="gate-btn" onclick="checkG1()">ACCESS</button>
+    </div>
+    <div class="gate-err" id="g1err"></div>
+    <p class="gate-hint">Access code provided directly by Coach Joe Clementi</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════ -->
+<div id="main" style="display:none">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-hex">LPL</div>
+    <div class="nav-name">The Leadership Pressure Lab™<small>Cohort Program · Confidential</small></div>
+  </div>
+  <a href="#apply" class="nav-apply">Apply Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-chip anim">Cohort 1 · Now Accepting Applications</div>
+    <h1 class="hero-h1 anim d1">THIS IS WHERE<br><em>PRESSURE</em><br>BECOMES PURPOSE</h1>
+    <p class="hero-p anim d2">The Leadership Pressure Lab™ Cohort is a <strong>selective, 12-week coaching program</strong> for automotive leaders ready to lead differently — with a measurable scoreboard to prove it happened.</p>
+    <a href="#recognize" class="hero-cta anim d3">
+      See If This Is For You
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M8 13l-4-4m4 4l4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="hero-scroll anim d4">Scroll to explore</div>
+  </div>
+</section>
+
+<!-- RECOGNITION: THE MIRROR -->
+<section class="sec sec-light" id="recognize">
+  <div class="sec-w">
+    <p class="eyebrow anim">The Mirror</p>
+    <h2 class="sh anim">Does Any Of This Sound Like Your Week?</h2>
+    <p class="sp anim">Not hypothetical. These are the real situations living inside every dealership — and the leadership gap that makes each one worse than it has to be.</p>
+    <div class="rec-grid">
+      <div class="rec-card anim d1"><p>Your best manager just gave notice. You already know why. And you already know it will happen again if nothing changes.</p></div>
+      <div class="rec-card anim d2"><p>Month-end performance depends more on your presence than your process. When you step away, the results follow you out the door.</p></div>
+      <div class="rec-card anim d1"><p>You're coaching the same behaviors you coached six months ago. Same conversation. Different face. Same result.</p></div>
+      <div class="rec-card anim d2"><p>CSI scores fluctuate — and you know exactly why. Fixing it seems to require your direct involvement every single time.</p></div>
+      <div class="rec-card anim d1"><p>Your managers solve the problem in front of them. They don't develop the people around them. Nobody ever showed them the difference.</p></div>
+      <div class="rec-card anim d2"><p>You can't clone yourself. But your store needs leaders who lead the way you do — and right now, they're not there yet.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE REAL PROBLEM -->
+<section class="sec sec-navy" id="problem">
+  <div class="sec-w">
+    <p class="eyebrow eyebrow-amber anim">The Diagnosis</p>
+    <h2 class="sh lt anim">The Real Problem<br>Isn't What You Think</h2>
+    <p class="sp lt anim">Your managers aren't broken. They're untrained — not in product knowledge, but in the <em>practice of leading under pressure</em>.</p>
+    <p class="sp lt anim">OEM training covered the vehicle. The finance product. The service process. <strong>Nobody covered the person behind it.</strong></p>
+    <p class="sp lt anim">What your managers are missing isn't more information. It's identity — the belief, built through repeated daily practice, that they are leaders first and operators second. That gap is costing your store every time a good manager leaves or an average one stays.</p>
+    <div class="stat-row anim">
+      <div class="stat-cell">
+        <div class="stat-n">66%</div>
+        <div class="stat-l">Annual management turnover in automotive retail</div>
+        <div class="stat-source">NADA Industry Data</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-n">$75K–$150K</div>
+        <div class="stat-l">Cost of replacing one manager — per event</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-n">$0</div>
+        <div class="stat-l">Spent on leadership-specific coaching at most dealerships</div>
+      </div>
+    </div>
+    <p class="sp lt anim" style="margin-top:36px;font-style:italic;font-size:16px;border-left:3px solid var(--orange);padding-left:20px;margin-bottom:0">"The stores with the lowest turnover are not the stores with the best pay plans. They are the stores with the best leaders. Develop the leaders — the numbers follow." <strong style="color:rgba(255,255,255,.9);font-style:normal;display:block;margin-top:8px;font-size:14px">— Coach Joe Clementi</strong></p>
+  </div>
+</section>
+
+<!-- COACH JOE -->
+<section class="sec sec-light" id="coach">
+  <div class="sec-w">
+    <p class="eyebrow anim">The Coach</p>
+    <h2 class="sh anim">I Didn't Study Automotive Leadership. I Lived It.</h2>
+    <div class="coach-layout">
+      <div class="anim">
+        <div class="coach-photo">
+          <div class="coach-hex">CJ</div>
+          <div class="coach-nameplate">
+            <strong>Coach Joe Clementi</strong>
+            <span>Leadership Performance Expert</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="sp anim">I've sat in the sales tower at the end of a month-end Thursday. I know what a deal-desk conversation sounds like when a manager is leading — and when they're just surviving. I know the difference between a CSI problem and a coaching problem. They are almost always the same problem.</p>
+        <p class="sp anim">That experience is why this system is different. It was built <em>for</em> your world — not adapted to it. Every framework, every session, every coaching moment is grounded in how automotive retail actually operates at 5 PM on the last Friday of the month.</p>
+        <ul class="coach-creds">
+          <li class="anim d1"><span class="cred-dot"></span><span>Creator of The P.R.E.S.S.U.R.E. System™ — the only 8-behavior leadership framework built specifically for the speed, pressure, and performance demands of automotive retail</span></li>
+          <li class="anim d2"><span class="cred-dot"></span><span>Decades of direct experience inside franchised dealerships — not observing them, running them across General Manager, Sales Manager, F&amp;I, and Fixed Ops contexts</span></li>
+          <li class="anim d3"><span class="cred-dot"></span><span>Methodology grounded in behavioral science: BJ Fogg's habit formation research, James Clear's identity-based change principles, and deliberate practice theory — applied to the realities of a dealership floor</span></li>
+          <li class="anim d4"><span class="cred-dot"></span><span>Featured speaker at dealer associations, NADA, and 20 Group events — serving GMs, Sales Managers, F&amp;I Directors, and Service Directors nationally</span></li>
+        </ul>
+        <div class="coach-quote anim">
+          <p>"Most programs give you insights. This one installs behaviors. There is a difference between knowing what great leadership looks like and practicing it on a Monday morning when everything breaks at once."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE SYSTEM -->
+<section class="sec sec-navy" id="system">
+  <div class="sec-w">
+    <p class="eyebrow eyebrow-amber anim">The Framework</p>
+    <h2 class="sh lt anim">The P.R.E.S.S.U.R.E. System™</h2>
+    <p class="sp lt anim">Eight leadership behaviors. Observable. Measurable. Coachable. This is the backbone of everything that happens inside the cohort — and the reason results are tracked weekly, not imagined at the end.</p>
+    <div class="pres-grid">
+      <div class="pres-cell anim d1"><div class="pres-letter">P</div><div class="pres-word">Perspective</div><div class="pres-desc">Mindset before method. How you see your role determines how your team experiences every moment of pressure.</div></div>
+      <div class="pres-cell anim d2"><div class="pres-letter">R</div><div class="pres-word">Reality</div><div class="pres-desc">The honest scoreboard. The gap between what leaders say and what teams actually experience. No spin allowed.</div></div>
+      <div class="pres-cell anim d1"><div class="pres-letter">E</div><div class="pres-word">Execution</div><div class="pres-desc">Eight specific behaviors installed through the workbook system. Clarity. Coaching. Accountability. Daily practice.</div></div>
+      <div class="pres-cell anim d2"><div class="pres-letter">S</div><div class="pres-word">Systems</div><div class="pres-desc">Cadence and accountability structures that make behavior change survive beyond the coaching session.</div></div>
+      <div class="pres-cell anim d1"><div class="pres-letter">S</div><div class="pres-word">Standards</div><div class="pres-desc">Culture is what you tolerate. Standards define what is acceptable, expected, and non-negotiable in your store.</div></div>
+      <div class="pres-cell anim d2"><div class="pres-letter">U</div><div class="pres-word">Upgrade</div><div class="pres-desc">Continuous growth through coaching, reflection, and deliberate practice. Leaders who stop growing, stop leading.</div></div>
+      <div class="pres-cell anim d1"><div class="pres-letter">R</div><div class="pres-word">Results</div><div class="pres-desc">Connecting behavior to business outcomes. What you measure moves. What you ignore drifts — quietly and expensively.</div></div>
+      <div class="pres-cell anim d2"><div class="pres-letter">E</div><div class="pres-word">Elevate</div><div class="pres-desc">Multiply leadership. Develop the next leader. Build a legacy that does not depend on your presence in the room.</div></div>
+    </div>
+    <p class="pres-note anim">"Every session, every commitment, every score maps to one of these eight behaviors."</p>
+  </div>
+</section>
+
+<!-- THE COHORT -->
+<section class="sec sec-off" id="program">
+  <div class="sec-w">
+    <p class="eyebrow anim">The Program</p>
+    <h2 class="sh anim">What The Pressure Lab Cohort™ Is</h2>
+    <p class="sp anim">This is not a course. Not a webinar. It is a <strong>coaching program with a live scoreboard</strong> — designed to produce observable, measurable leadership behavior change over 12 weeks. The scoreboard makes leadership visible. Visible behavior is coachable behavior.</p>
+    <div class="cohort-stats anim">
+      <div class="cs"><div class="cs-n">3<span>×</span>7</div><div class="cs-l">Three Groups · Seven Seats Each</div></div>
+      <div class="cs"><div class="cs-n">12<span>wks</span></div><div class="cs-l">Full Program Duration</div></div>
+      <div class="cs"><div class="cs-n">45<span>min</span></div><div class="cs-l">Weekly Session Length</div></div>
+      <div class="cs"><div class="cs-n">100<span>%</span></div><div class="cs-l">Automotive-Specific</div></div>
+    </div>
+    <div class="cohort-steps">
+      <div class="cs-step anim"><div class="cs-step-n">1</div><div><h4>Day 1: Your Pressure Score™ Assessment</h4><p>Every member completes a behavioral baseline across all 8 P.R.E.S.S.U.R.E. elements. This is your honest starting point — the number that makes the Day 90 comparison meaningful and your progress undeniable.</p></div></div>
+      <div class="cs-step anim"><div class="cs-step-n">2</div><div><h4>Weekly: Group Sessions and Public Commitments</h4><p>45-minute group coaching sessions, weekly. Every session closes with a specific, behavioral commitment — made in front of the group. Every commitment is tracked on the live LPL™ Scoreboard. Follow-through builds the pattern. The pattern becomes the leader.</p></div></div>
+      <div class="cs-step anim"><div class="cs-step-n">3</div><div><h4>Monthly: One-on-One with Coach Joe</h4><p>One individual coaching session per month. This is where individual breakthroughs happen — where group learning gets applied to your specific store, your specific team, and your specific pressure points. No agenda except your development.</p></div></div>
+      <div class="cs-step anim"><div class="cs-step-n">4</div><div><h4>Day 90: New Pressure Score + Leadership Case Study</h4><p>You finish with a new Pressure Score. The distance between Day 1 and Day 90 becomes your story — evidence for your DP, your GM, and most importantly, your own belief in what is possible when leadership is intentional.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="sec sec-navy" id="fit">
+  <div class="sec-w">
+    <p class="eyebrow eyebrow-amber anim">The Selection</p>
+    <h2 class="sh lt anim">Is This For You?</h2>
+    <p class="sp lt anim">This cohort is selective because selectivity produces results. Seven leaders per group — not seventy. The size is intentional. Small, accountable groups outperform large audiences every time in every study on behavior change. If every seat were open to everyone, the group would not be worth what it costs.</p>
+    <div class="for-grid">
+      <div class="for-card for-yes anim">
+        <div class="for-label">This is for you if...</div>
+        <ul class="for-list">
+          <li><span class="chk-yes">✓</span>You are a GM, Sales Manager, F&amp;I Director, or Service Director in automotive retail</li>
+          <li><span class="chk-yes">✓</span>You are already good at the job and serious about becoming a great leader</li>
+          <li><span class="chk-yes">✓</span>You are tired of being the only real coach in the building</li>
+          <li><span class="chk-yes">✓</span>You want behavior change that holds on a Monday morning when everything breaks at once</li>
+          <li><span class="chk-yes">✓</span>You are willing to show up, do the work, and be publicly accountable for your commitments</li>
+          <li><span class="chk-yes">✓</span>You understand that honest self-assessment is the starting point — not the weakness</li>
+        </ul>
+      </div>
+      <div class="for-card for-no anim d2">
+        <div class="for-label">This is not for you if...</div>
+        <ul class="for-list">
+          <li><span class="chk-no">✗</span>You are looking for a shortcut or a quick fix to a structural leadership problem</li>
+          <li><span class="chk-no">✗</span>You plan to attend sessions but skip the weekly commitment and follow-through work</li>
+          <li><span class="chk-no">✗</span>You believe the leadership gap in your store belongs entirely to everyone else</li>
+          <li><span class="chk-no">✗</span>You are unwilling to be honest about your current behavior under pressure</li>
+          <li><span class="chk-no">✗</span>You already think you know everything there is to know about leading in a dealership</li>
+          <li><span class="chk-no">✗</span>You want to observe from the sidelines rather than practice in the game</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTMENT -->
+<section class="sec sec-light" id="invest">
+  <div class="sec-w" style="display:flex;flex-direction:column;align-items:center">
+    <p class="eyebrow anim" style="text-align:center">The Investment</p>
+    <h2 class="sh anim" style="text-align:center">What It Costs.<br>What It Returns.</h2>
+    <p class="sp anim" style="text-align:center;margin:0 auto 48px">Before you look at the number below, consider the one that matters more: what is your current leadership gap costing your store every month?</p>
+    <div class="invest-wrap anim">
+      <div class="invest-card">
+        <div class="invest-badge">Cohort 1 · Limited Seats · Open Now</div>
+        <div class="invest-price"><sup>$</sup>399<sub>/mo</sub></div>
+        <p class="invest-period">Per cohort member · 12-week program · $4,788 total</p>
+        <hr class="invest-hr">
+        <div class="invest-roi">
+          <p>One management replacement costs your store <strong>$75,000–$150,000</strong>. The full cohort is <strong>$4,788 per leader</strong>. If this program prevents one departure, closes one CSI gap, or develops one manager who no longer requires daily intervention — it has returned its investment many times over.</p>
+        </div>
+        <ul class="invest-list">
+          <li><span class="inv-chk">✓</span>12 weekly group coaching sessions — 45 minutes, automotive-specific, virtual</li>
+          <li><span class="inv-chk">✓</span>Day 1 and Day 90 Pressure Score™ assessments — your before-and-after proof</li>
+          <li><span class="inv-chk">✓</span>Live LPL™ Leadership Scoreboard — behavior tracked weekly, publicly within the group</li>
+          <li><span class="inv-chk">✓</span>One individual 1:1 coaching session with Coach Joe per month (3 total)</li>
+          <li><span class="inv-chk">✓</span>8 Pressure Behavior Workbooks — one per behavior, yours to keep</li>
+          <li><span class="inv-chk">✓</span>Weekly commitment and follow-through accountability tracking</li>
+          <li><span class="inv-chk">✓</span>90-Day Leadership Progress Report with behavior trend analysis</li>
+          <li><span class="inv-chk">✓</span>Access to the LPL™ Member Portal and alumni community</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION CTA -->
+<div class="cta-sec" id="apply">
+  <div style="max-width:680px;margin:0 auto">
+    <p style="font-size:10px;letter-spacing:4px;color:rgba(255,255,255,.6);text-transform:uppercase;font-weight:700;margin-bottom:12px">Ready To Lead Differently?</p>
+    <h2 class="cta-h">Apply For Cohort 1</h2>
+    <p class="cta-p">Three groups. Seven seats per group. Applications are reviewed in the order received. The cohort closes when seats fill. This is not a webinar — it is a selective coaching program, and the application is step one of the process.</p>
+    <a href="YOUR_APPLICATION_URL_HERE" class="cta-btn">
+      Start Your Application
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M15 9l-5-5m5 5l-5 5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <p class="cta-sub">21 total seats · 3 groups of 7 · Cohort 1 begins [START DATE — update before sending]</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     GATE 2 — MEMBER ACCESS
+═══════════════════════════════ -->
+<div class="g2-wrap" id="gate2section">
+  <div class="g2-hex">LPL</div>
+  <p class="gate-eyebrow">Accepted Cohort Members Only</p>
+  <h2 class="g2-title">Member Access</h2>
+  <p class="g2-sub">Already accepted into Cohort 1? Enter your member code to unlock your onboarding materials, full 12-week curriculum, session logistics, and first-session preparation guide.</p>
+  <div class="g2-form">
+    <div class="gate-row">
+      <input type="text" id="g2in" class="gate-input" placeholder="Member code" autocomplete="off" maxlength="12" spellcheck="false">
+      <button class="gate-btn" onclick="checkG2()">ENTER</button>
+    </div>
+    <div class="gate-err" id="g2err"></div>
+    <p class="gate-hint">Member code included in your acceptance email from Coach Joe</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     MEMBER CONTENT
+═══════════════════════════════ -->
+<div id="member-content">
+
+  <!-- WELCOME -->
+  <div class="mem-welcome">
+    <div style="max-width:860px;margin:0 auto">
+      <div class="mem-badge">✓ Accepted — Cohort 1 Member</div>
+      <p class="eyebrow eyebrow-amber" style="margin-bottom:12px">Welcome to The Lab</p>
+      <h2 class="sh lt" style="font-size:clamp(36px,6vw,62px);margin-bottom:28px">You're In.<br>Now the Work Starts.</h2>
+      <p class="sp lt">You applied. You were accepted. That decision already tells me something about you — you're serious about your own development. Not because someone told you to be. Because you chose to be.</p>
+      <p class="sp lt">The sections below contain everything you need before your first session. Read all of it. Do the prep work. Come to Session 1 ready to be honest about where you are. The group will be ready. I will be ready. The only question is whether you are.</p>
+      <p class="sp lt" style="font-style:italic;color:rgba(255,255,255,.38);margin-bottom:0">— Coach Joe Clementi, The Leadership Pressure Lab™</p>
+    </div>
+  </div>
+
+  <!-- COHORT DETAILS -->
+  <div class="mem-sec alt">
+    <div class="mem-sec-w">
+      <p class="mem-eyebrow">Program Details</p>
+      <h3 class="mem-h">Your Cohort Details</h3>
+      <p class="mem-p">Your specific group assignment, session day and time, and confirmed start date will arrive via email from Coach Joe within 48 hours of acceptance. Below are the program logistics that apply across all three groups.</p>
+      <div class="log-grid">
+        <div class="log-card"><h4>Session Format</h4><p>Virtual group coaching via <span class="log-placeholder">[PLATFORM — Coach Joe to update]</span>. Sessions run 45–60 minutes. Session recordings available within 24 hours for schedule conflicts — notify Coach Joe in advance.</p></div>
+        <div class="log-card"><h4>Group Size &amp; Assignment</h4><p>7 members per group. You will be assigned to one of three groups based on your role, schedule, and application. Group assignments confirmed in your acceptance email.</p></div>
+        <div class="log-card"><h4>Start Date</h4><p><span class="log-placeholder">[START DATE — Coach Joe to update]</span>. Confirm your availability by replying to your acceptance email within 48 hours of receiving it.</p></div>
+        <div class="log-card"><h4>Session Day &amp; Time</h4><p><span class="log-placeholder">[DAY &amp; TIME — Coach Joe to update]</span>. Sessions are scheduled to avoid month-end blackouts and peak dealership volume periods. Your group session time is fixed for all 12 weeks.</p></div>
+        <div class="log-card"><h4>1:1 Sessions with Coach Joe</h4><p>One individual coaching session per month — three total across the 12-week program. Scheduling links sent in your onboarding email. Protect these. They are where your deepest individual work happens.</p></div>
+        <div class="log-card"><h4>Investment &amp; Billing</h4><p>$399 per month, billed monthly. First charge processes on <span class="log-placeholder">[DATE — Coach Joe to update]</span>. Payment link included in acceptance email. Cancellation requires 30-day notice after Week 4.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12-WEEK CURRICULUM -->
+  <div class="mem-sec">
+    <div class="mem-sec-w">
+      <p class="mem-eyebrow">The Curriculum</p>
+      <h3 class="mem-h">Your 12-Week Journey</h3>
+      <p class="mem-p">Every week maps to one element of the P.R.E.S.S.U.R.E. System™. You complete one behavior workbook per week, make one specific commitment to the group, and track your follow-through on the live LPL™ Scoreboard. The curriculum is automotive-specific at every step — no translation required.</p>
+      <div class="curric">
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">1</span><span class="wk-dot"></span></div><div class="curric-body"><span class="curric-tag ct-f">Foundation Phase</span><h4>Perspective — Mindset Before Method</h4><p>Your leadership audit. How do you actually see your role, your team, and your responsibility under pressure? We start here before installing anything else. Includes: Perspective Workbook + Day 1 Pressure Score™ Assessment (completed before this session).</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">2</span><span class="wk-dot"></span></div><div class="curric-body"><span class="curric-tag ct-f">Foundation Phase</span><h4>Reality — The Honest Scoreboard</h4><p>The gap between what you say as a leader and what your team actually experiences. CSI data. Turnover history. Coaching frequency. Reality is where coaching starts — and where most leaders have never been willing to look.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">3</span><span class="wk-dot"></span></div><div class="curric-body"><span class="curric-tag ct-f">Foundation Phase</span><h4>Execution — Installing the First Behaviors</h4><p>The 8 Pressure Behaviors begin here. Clarity in communication. Coaching frequency. Pre-shift preparation. We identify your single highest-leverage behavior and begin installing it through the workbook system.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">4</span><span class="wk-dot" style="background:var(--sky)"></span></div><div class="curric-body"><span class="curric-tag ct-i">Installation Phase</span><h4>Systems — Cadence That Outlasts the Coaching Session</h4><p>Behavior change without a system is inspiration, not transformation. We install the weekly leadership cadence, accountability structure, and scoreboard rhythm that makes the change survive on a Tuesday morning when I'm not in the room.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">5</span><span class="wk-dot" style="background:var(--sky)"></span></div><div class="curric-body"><span class="curric-tag ct-i">Installation Phase</span><h4>Standards — Define What Is Non-Negotiable</h4><p>Culture is what you tolerate. This week you define what is acceptable, what is expected, and what is non-negotiable in your department. The difference between a high-retention store and a revolving door almost always lives in this conversation.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">6</span><span class="wk-dot" style="background:var(--sky)"></span></div><div class="curric-body"><span class="curric-tag ct-m">Mid-Program</span><h4>Mid-Program Review + Behavior Recalibration</h4><p>Group reset. Score review. Where are you versus Week 1? What behaviors are compounding? What is drifting? This session recalibrates priorities for the second half. Individual 1:1 sessions with Coach Joe this week for all members.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">7</span><span class="wk-dot" style="background:var(--amber)"></span></div><div class="curric-body"><span class="curric-tag ct-m">Performance Phase</span><h4>Upgrade — Deliberate Practice and Continuous Growth</h4><p>Leaders who stop growing stop leading. This week focuses on building a personal practice of deliberate leadership development — and teaching the leaders below you to do the same. This is where the system starts to multiply.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">8</span><span class="wk-dot" style="background:var(--amber)"></span></div><div class="curric-body"><span class="curric-tag ct-m">Performance Phase</span><h4>Results — Connecting Behavior to Business Outcomes</h4><p>What you measure moves. We identify each member's primary leading indicator — the single behavior most directly connected to their key business metric. Gross per unit. CSI. Show rates. Retention. These are not accidents. They are downstream of leadership behavior.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">9</span><span class="wk-dot" style="background:var(--amber)"></span></div><div class="curric-body"><span class="curric-tag ct-m">Performance Phase</span><h4>Pressure Under Fire — Advanced Scenario Coaching</h4><p>Live scenario-based group coaching using real situations members bring from their stores this week. Deal-desk breakdowns. Difficult team conversations. Performance management moments. The full P.R.E.S.S.U.R.E. framework applied to the situations happening right now in your world.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">10</span><span class="wk-dot" style="background:#16a34a"></span></div><div class="curric-body"><span class="curric-tag ct-p">Legacy Phase</span><h4>Elevate — Multiply Your Leadership</h4><p>The best leaders don't just run great operations — they build great leaders who run great operations without them. This week focuses on developing the people below you using the same principles you've been installing. Your influence begins to compound.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">11</span><span class="wk-dot" style="background:#16a34a"></span></div><div class="curric-body"><span class="curric-tag ct-p">Legacy Phase</span><h4>Building Your Leadership Legacy</h4><p>What does leadership look like in your store when you are not in the room? We build the structure, the standards, and the cultural architecture that answers that question definitively — and permanently. Your legacy plan is complete by end of session.</p></div></div>
+        <div class="curric-row"><div class="curric-num"><span class="wk-label">WK</span><span class="wk-n">12</span><span class="wk-dot" style="background:#16a34a"></span></div><div class="curric-body"><span class="curric-tag ct-p">Legacy Phase</span><h4>Day 90 — Pressure Score, Case Study &amp; Graduation</h4><p>Final Pressure Score™ Assessment. Your before-and-after story. Your 90-day leadership case study — real data, real behavior change, real business impact. Group celebration. Forward commitment. The cohort closes. The alumni community begins. The next chapter starts here.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCOREBOARD -->
+  <div class="mem-sec dark">
+    <div class="mem-sec-w">
+      <p class="mem-eyebrow lt">The Tracking System</p>
+      <h3 class="mem-h lt">The LPL™ Leadership Scoreboard</h3>
+      <p class="mem-p lt">Every week, you score yourself across three dimensions. These are not grades. They are mirrors. The scoreboard works because of honesty — and Coach Joe can see the patterns when scores don't match behavior. Protect the integrity of this room.</p>
+      <div class="score-grid">
+        <div class="score-card"><div class="score-abbr">C</div><div class="score-name">Consistency</div><div class="score-desc">Did I practice my leadership behavior consistently this week — or only when it was convenient?</div></div>
+        <div class="score-card"><div class="score-abbr">Q</div><div class="score-name">Quality</div><div class="score-desc">Did I execute the behavior effectively — or did I go through the motions without real intention?</div></div>
+        <div class="score-card"><div class="score-abbr">P</div><div class="score-name">Presence</div><div class="score-desc">Was I intentional and present — or reactive and distracted when leadership moments arrived?</div></div>
+      </div>
+      <div class="score-key">
+        <div class="sk-item"><div class="sk-n" style="color:var(--orange)">5</div><div class="sk-l">Elite — highest level practice</div></div>
+        <div class="sk-item"><div class="sk-n" style="color:var(--sky)">4</div><div class="sk-l">Strong — consistent, compounding</div></div>
+        <div class="sk-item"><div class="sk-n" style="color:var(--amber)">3</div><div class="sk-l">Developing — effort present</div></div>
+        <div class="sk-item"><div class="sk-n" style="color:#f56565">2</div><div class="sk-l">Struggling — patterns visible</div></div>
+        <div class="sk-item"><div class="sk-n" style="color:#fc8181">1</div><div class="sk-l">Not practicing — needs direct intervention</div></div>
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,.28);margin-top:18px;font-style:italic;text-align:center">"A leader who scores a 3 and reflects honestly is learning. A leader who gives themselves a 5 every week is not." — Coach Joe</p>
+    </div>
+  </div>
+
+  <!-- STANDARDS -->
+  <div class="mem-sec alt">
+    <div class="mem-sec-w">
+      <p class="mem-eyebrow">What Coach Joe Expects</p>
+      <h3 class="mem-h">The Cohort Standards</h3>
+      <p class="mem-p">These are not suggestions. They are the conditions that make this cohort work. When every member holds these standards, the group becomes the most valuable leadership development room in automotive retail. These are the non-negotiables.</p>
+      <div class="stds">
+        <div class="std-item"><div class="std-n">1</div><div class="std-body"><h4>Show Up. Every Week.</h4><p>Sessions are 45 minutes and non-negotiable. A genuine conflict? Notify Coach Joe in advance, access the recording within 24 hours, and submit your weekly commitment through the member portal. Two unaddressed absences means forfeiting your seat — without refund.</p></div></div>
+        <div class="std-item"><div class="std-n">2</div><div class="std-body"><h4>One Commitment. Specific. Behavioral. Weekly.</h4><p>Every session closes with a commitment — not a goal, a behavior. "I will conduct a 10-minute coaching conversation with each of my managers before noon every Monday this week." Specific enough to answer yes or no on follow-through. Vague commitments produce vague results. Every time.</p></div></div>
+        <div class="std-item"><div class="std-n">3</div><div class="std-body"><h4>Score Yourself Honestly.</h4><p>The scoreboard produces insight only when scores reflect reality. A leader who scores a 3 and reflects honestly is building self-awareness. A leader who inflates their score is lying to themselves — and the group pays the cost of it in diminished accountability.</p></div></div>
+        <div class="std-item"><div class="std-n">4</div><div class="std-body"><h4>What Happens In The Lab, Stays In The Lab.</h4><p>Members share real situations — real numbers, real failures, real breakthroughs. Confidentiality is the standard that makes depth possible. Names, situations, and specifics shared in sessions remain exclusively within the group. This is non-negotiable.</p></div></div>
+        <div class="std-item"><div class="std-n">5</div><div class="std-body"><h4>Protect Your 1:1 Sessions with Coach Joe.</h4><p>One coaching session per month. Scheduling link provided in your onboarding email. Cancellations require 48-hour notice. The individual session is where your deepest development work happens. Give it the same respect you'd give your most important customer appointment.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 1 PREP -->
+  <div class="mem-sec darkest">
+    <div class="mem-sec-w">
+      <p class="mem-eyebrow lt">Before Session One</p>
+      <h3 class="mem-h lt">Your Week 1 Preparation</h3>
+      <p class="mem-p lt">Five things. Complete all five before your first session. Come prepared — the group will be ready, I will be ready, and the only variable is whether you show up having done the work.</p>
+      <div class="prep-list">
+        <div class="prep-item">
+          <div class="prep-circle"></div>
+          <div><h4>Complete Your Pressure Score™ Assessment</h4><p>Link in your acceptance email. The assessment takes 12 minutes. Answer honestly — this is for your development, not for Coach Joe's approval. Your score across all 8 P.R.E.S.S.U.R.E. behaviors becomes your Day 1 baseline. Complete it at least 48 hours before Session 1.</p></div>
+        </div>
+        <div class="prep-item">
+          <div class="prep-circle"></div>
+          <div><h4>Pull One Real Number From Your Store</h4><p>Come with one honest data point: last quarter's management turnover rate, your most recent CSI score, gross per unit by department, or coaching conversations per week. The number does not need to be good. It needs to be real. This is where your work begins.</p></div>
+        </div>
+        <div class="prep-item">
+          <div class="prep-circle"></div>
+          <div><h4>Log Into the LPL™ Member Portal</h4><p>Credentials in your acceptance email. Familiarize yourself with the scoreboard, the commitment tracker, and the weekly reflection prompts before Session 1. You don't need to fill anything in yet — just know where everything lives so the tool doesn't get in the way of the work.</p></div>
+        </div>
+        <div class="prep-item">
+          <div class="prep-circle"></div>
+          <div><h4>Write Down Your Single Biggest Leadership Pressure</h4><p>One sentence: the leadership situation in your store that, if it changed, would have the most significant positive impact on your team and your results. Bring it to Session 1. That is where we start — with the real thing, not a theory about it.</p></div>
+        </div>
+        <div class="prep-item">
+          <div class="prep-circle"></div>
+          <div><h4>Sign and Return Your Commitment Contract</h4><p>The Commitment Contract is attached to your acceptance email. Sign it. Return it. Not because it is a legal document — but because the act of signing a written commitment is the first leadership behavior of the cohort. Start practicing now.</p></div>
+        </div>
+      </div>
+      <div class="contact-box">
+        <p>Questions before Session 1? Contact Coach Joe directly: <strong>[EMAIL — Coach Joe to update]</strong><br>Schedule a pre-session 15-minute call: <strong>[CALENDLY LINK — Coach Joe to update]</strong></p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /member-content -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-hex">LPL</div>
+  <div class="footer-name">The Leadership Pressure Lab™</div>
+  <p class="footer-tag">"If it isn't visible, it isn't coachable." — Coach Joe Clementi</p>
+  <p class="footer-copy">© 2026 Joseph "Coach Joe" Clementi · Built on The P.R.E.S.S.U.R.E. System™ · Confidential · All Rights Reserved</p>
+</footer>
+
+</div><!-- /main -->
+
+<script>
+var G1='LPL2026', G2='PRESSLAB7';
+
+function checkG1(){
+  var inp=document.getElementById('g1in');
+  var err=document.getElementById('g1err');
+  var val=inp.value.trim().toUpperCase();
+  if(val===G1){
+    var gate=document.getElementById('gate1');
+    var main=document.getElementById('main');
+    gate.classList.add('exit');
+    document.body.classList.remove('locked');
+    setTimeout(function(){
+      gate.style.display='none';
+      main.style.display='block';
+      main.style.opacity='0';
+      main.style.transition='opacity .6s ease';
+      setTimeout(function(){ main.style.opacity='1'; initAnims(); },50);
+    },700);
+  } else {
+    err.textContent='Incorrect code. Please check with Coach Joe.';
+    inp.classList.add('err');
+    inp.value='';
+    setTimeout(function(){ inp.classList.remove('err'); err.textContent=''; },2200);
+  }
+}
+
+function checkG2(){
+  var inp=document.getElementById('g2in');
+  var err=document.getElementById('g2err');
+  var val=inp.value.trim().toUpperCase();
+  if(val===G2){
+    var gs=document.getElementById('gate2section');
+    var mc=document.getElementById('member-content');
+    gs.style.transition='opacity .5s ease,transform .5s ease';
+    gs.style.opacity='0';
+    gs.style.transform='translateY(-12px)';
+    setTimeout(function(){
+      gs.style.display='none';
+      mc.style.display='block';
+      mc.style.opacity='0';
+      mc.style.transition='opacity .6s ease';
+      mc.scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(function(){ mc.style.opacity='1'; initAnims(); },300);
+    },500);
+  } else {
+    err.textContent='Incorrect member code. Contact Coach Joe for assistance.';
+    inp.classList.add('err');
+    inp.value='';
+    setTimeout(function(){ inp.classList.remove('err'); err.textContent=''; },2500);
+  }
+}
+
+document.getElementById('g1in').addEventListener('keydown',function(e){ if(e.key==='Enter') checkG1(); });
+document.getElementById('g2in').addEventListener('keydown',function(e){ if(e.key==='Enter') checkG2(); });
+
+['g1in','g2in'].forEach(function(id){
+  var el=document.getElementById(id);
+  el.addEventListener('input',function(){ el.value=el.value.toUpperCase(); });
+});
+
+function initAnims(){
+  var els=document.querySelectorAll('.anim:not(.in)');
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); }});
+  },{threshold:0.08});
+  els.forEach(function(el){
+    var r=el.getBoundingClientRect();
+    if(r.top < window.innerHeight){ el.classList.add('in'); }
+    else{ obs.observe(el); }
+  });
+}
+</script>
+</body>
+</html>
