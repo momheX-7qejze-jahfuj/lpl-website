@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rethinking The Flag — White Paper | The Leadership Pressure Lab™ | Coach Joe</title>
+  <meta name="description" content="A research-backed white paper on technician compensation reform in franchised dealerships. The case for retiring the pay architecture that built the industry. By Coach Joe Clementi.">
+  <meta name="author" content="Joseph Clementi — Coach Joe">
+  <meta name="robots" content="index, follow">
+  <meta name="copyright" content="© 2026 Joseph Clementi. All rights reserved.">
+  <link rel="canonical" href="https://leadershippressurelab.com/whitepaper.html">
+  <meta property="og:title" content="Rethinking The Flag — White Paper | Coach Joe">
+  <meta property="og:description" content="The case for retiring the flat-rate pay architecture that built the automotive industry. Research-backed compensation reform for franchised dealerships.">
+  <meta property="og:image" content="https://leadershippressurelab.com/images/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23C8992B%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2224%22 fill=%22%230A1F3D%22 font-family=%22Georgia%22>J</text></svg>">
+  <style>
+    /* WHITEPAPER PAGE SPECIFIC */
+    .wp-hero { background: var(--navy); padding: calc(var(--nav-h) + 5rem) 0 5rem; position: relative; overflow: hidden; }
+    .wp-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 80% 40%, rgba(200,153,43,.12) 0%, transparent 65%); pointer-events: none; }
+    .wp-cover { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 3rem 2.5rem; position: relative; }
+    .wp-cover::before { content: 'WHITE PAPER'; position: absolute; top: -13px; left: 2.5rem; font-family: var(--font-m); font-size: .62rem; letter-spacing: .14em; background: var(--gold); color: var(--navy); padding: 3px 14px; border-radius: 20px; font-weight: 700; }
+    .wp-cover h1 { font-size: clamp(2rem,4vw,3rem); margin-bottom: .5rem; }
+    .wp-cover .subtitle { font-family: var(--font-d); font-style: italic; font-size: 1.1rem; color: var(--mid); margin-bottom: 1.5rem; }
+    .wp-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.25rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .wp-meta-item { font-size: .82rem; color: var(--mid); }
+    .wp-meta-item strong { display: block; font-size: .72rem; font-family: var(--font-m); letter-spacing: .08em; text-transform: uppercase; color: var(--navy); margin-bottom: .2rem; }
+    .wp-stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin: 2rem 0; }
+    .wp-stat { background: var(--navy-light); border-radius: 10px; padding: 1.25rem; text-align: center; }
+    .wp-stat .num { font-family: var(--font-d); font-size: 1.8rem; color: var(--navy); display: block; line-height: 1; }
+    .wp-stat .lbl { font-size: .75rem; color: var(--steel); margin-top: .35rem; line-height: 1.4; }
+    /* ACCESS GATE */
+    .wp-gate-section { background: var(--gold-pale); border: 2px solid var(--gold); border-radius: 16px; padding: 2.5rem; margin-top: 2rem; text-align: center; }
+    .wp-gate-section h3 { margin-bottom: .75rem; color: var(--navy); }
+    .wp-gate-section p { color: var(--mid); font-size: .95rem; margin-bottom: 1.75rem; }
+    .wp-gate-form { display: flex; gap: .75rem; max-width: 420px; margin: 0 auto; }
+    .wp-gate-form input { flex: 1; padding: .85rem 1rem; border: 1.5px solid rgba(200,153,43,.5); border-radius: 8px; font-family: var(--font-s); font-size: .9rem; background: var(--white); letter-spacing: .1em; text-align: center; color: var(--navy); }
+    .wp-gate-form input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,153,43,.15); }
+    .wp-error { color: #c0392b; font-size: .85rem; margin-top: .75rem; display: none; }
+    .wp-access { display: none; background: var(--white); border: 2px solid var(--gold); border-radius: 16px; padding: 2.5rem; margin-top: 2rem; text-align: center; }
+    .wp-access h3 { color: var(--navy); margin-bottom: .75rem; }
+    .wp-access p { color: var(--mid); font-size: .92rem; margin-bottom: 1.5rem; }
+    .wp-download-btn { display: inline-flex; align-items: center; gap: .75rem; background: var(--gold); color: var(--navy); font-weight: 700; font-size: 1rem; padding: 1rem 2.5rem; border-radius: 10px; text-decoration: none; transition: background .2s, transform .15s, box-shadow .2s; }
+    .wp-download-btn:hover { background: #d9a82e; color: var(--navy); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(200,153,43,.35); }
+    .wp-request-form { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; margin-top: 1.5rem; text-align: left; }
+    .toc-item { display: flex; align-items: center; gap: 1rem; padding: .65rem 0; border-bottom: 1px solid var(--border); }
+    .toc-item:last-child { border: none; }
+    .toc-num { font-family: var(--font-m); font-size: .7rem; color: var(--gold); min-width: 28px; }
+    .toc-title { font-size: .9rem; color: var(--navy); font-weight: 500; }
+    .toc-check { margin-left: auto; color: var(--gold); font-size: .85rem; }
+    @media(max-width:768px){ .wp-stat-row{grid-template-columns:1fr 1fr} .wp-gate-form{flex-direction:column} }
+    @media(max-width:480px){ .wp-stat-row{grid-template-columns:1fr} }
+  </style>
+</head>
+<body id="top">
+<nav class="nav"><div class="nav__inner">
+  <a class="nav__logo" href="index.html"><div class="nav__logo-mark">J</div><div class="nav__logo-text">Coach Joe<small>The Leadership Pressure Lab™</small></div></a>
+  <ul class="nav__links"><li><a class="nav__link" href="about.html">About</a></li><li><a class="nav__link" href="system.html">The System</a></li><li><a class="nav__link" href="products.html">Products</a></li><li><a class="nav__link" href="pricing.html">Pricing</a></li><li><a class="nav__link" href="monday-brief.html">Monday Brief</a></li><li><a class="nav__link nav__cta" href="strategy-call.html">Book a Strategy Call</a></li></ul>
+  <button class="nav__hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div></nav>
+<div class="nav__mobile"><a class="nav__link" href="about.html">About</a><a class="nav__link" href="system.html">System</a><a class="nav__link" href="products.html">Products</a><a class="nav__link" href="pricing.html">Pricing</a><a class="nav__link" href="monday-brief.html">Monday Brief</a><a class="nav__link nav__cta" href="strategy-call.html">Book Your Strategy Call →</a></div>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="wp-hero">
+  <div class="container">
+    <div class="grid-2" style="align-items:start;gap:4rem">
+      <div class="reveal">
+        <nav class="breadcrumb" style="font-family:var(--font-m);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem">
+          <a href="index.html" style="color:var(--gold)">Home</a><span>›</span>White Paper
+        </nav>
+        <span class="eyebrow">Research · Compensation Reform · Franchised Dealerships</span>
+        <h1 style="color:var(--white);font-size:clamp(2.4rem,4.5vw,3.8rem);line-height:1.07;margin-bottom:.75rem">
+          Rethinking<br><em style="color:var(--gold)">The Flag</em>
+        </h1>
+        <p style="font-family:var(--font-d);font-style:italic;font-size:1.2rem;color:rgba(255,255,255,.65);margin-bottom:1.5rem;line-height:1.5">The Case for Retiring the Pay Architecture That Built the Industry</p>
+        <p style="font-size:.95rem;color:rgba(255,255,255,.55);max-width:520px;line-height:1.72;margin-bottom:2rem">Franchised dealerships handled 12 percent fewer service visits in 2024 than in 2018. Revenue per transaction is at a record high. The customer base is quietly shrinking. This paper argues the upstream cause is structural — and that the flat-rate pay system is producing exactly the behavioral outputs its design privileges. The central question is whether that design still fits the work.</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <a class="btn btn--gold" href="#access">Access the Paper <span class="btn__icon">↓</span></a>
+          <a class="btn btn--outline" href="strategy-call.html">Book a Strategy Call</a>
+        </div>
+      </div>
+      <div class="reveal reveal-d2">
+        <div class="wp-cover">
+          <h1 style="font-size:1.9rem">Rethinking The Flag</h1>
+          <div class="subtitle">The Case for Retiring the Pay Architecture That Built the Industry</div>
+          <div class="wp-meta">
+            <div class="wp-meta-item"><strong>Author</strong>Joseph "Coach Joe" Clementi</div>
+            <div class="wp-meta-item"><strong>Publisher</strong>The Leadership Pressure Lab™</div>
+            <div class="wp-meta-item"><strong>Year</strong>2026</div>
+            <div class="wp-meta-item"><strong>Subject</strong>Technician Compensation Reform</div>
+            <div class="wp-meta-item"><strong>Focus</strong>Franchised Dealerships · Fixed Operations</div>
+          </div>
+          <div class="wp-stat-row">
+            <div class="wp-stat"><span class="num">$617K</span><span class="lbl">Estimated annual gross impact — 10-tech store</span></div>
+            <div class="wp-stat"><span class="num">12%</span><span class="lbl">Fewer service visits since 2018</span></div>
+            <div class="wp-stat"><span class="num">5</span><span class="lbl">Compensation models — all financially modeled</span></div>
+          </div>
+          <p style="font-size:.84rem;color:var(--mid);text-align:center;margin:0">© 2026 Joseph Clementi · All Rights Reserved · Proprietary Research</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section class="section section--white">
+  <div class="container">
+    <div class="grid-2" style="align-items:start;gap:5rem">
+      <div class="reveal">
+        <span class="eyebrow">What This Paper Covers</span>
+        <h2>12 chapters. One structural argument.</h2>
+        <p style="color:var(--mid);margin:1rem 0 2rem">This is not a thought piece. It is a financially modeled, behaviorally grounded, legally reviewed case for why the flat-rate compensation system is producing the customer experience outcomes dealerships are now paying to fix — and five specific models to replace it.</p>
+        <div>
+          <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">The Slow Leak — What the Numbers Know</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">The Market Reality — What the Data Actually Says</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">The Perception Gap — Expensive by Reputation, Competitive by Fact</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">The Psychology of Flat-Rate — What Dan Pink Told Us</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">The Case for Reform — Where Motivation Meets the Service Drive</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Five Compensation Models — A Balanced Analysis</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">Financial Impact Analysis — The Math Behind Each Model</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">Legal Considerations — The California Standard and Beyond</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Implementation Roadmap — Moving Without Breaking the Shop</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">11</span><span class="toc-title">Conclusion — The Technician Is the Brand</span><span class="toc-check">✦</span></div>
+          <div class="toc-item"><span class="toc-num">12</span><span class="toc-title">References</span><span class="toc-check">✦</span></div>
+        </div>
+      </div>
+      <div class="reveal reveal-d2">
+        <span class="eyebrow">The Central Finding</span>
+        <h2>The flat-rate system is not broken. It is doing exactly what it was designed to do.</h2>
+        <div class="pull-quote" style="margin:1.5rem 0"><p>The problem is that the work it was designed for has fundamentally changed. ADAS calibration, hybrid diagnostics, and complex repair communication now demand analysis, precision, and critical thinking. The flat-rate system rewards speed. That mismatch has a measurable cost.</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem">
+          <div class="card" style="padding:1.25rem;text-align:center">
+            <div style="font-family:var(--font-d);font-size:1.8rem;color:var(--gold)">$261</div>
+            <div style="font-size:.8rem;color:var(--mid);margin-top:.35rem">Average franchised dealer repair cost 2025</div>
+          </div>
+          <div class="card card--gold" style="padding:1.25rem;text-align:center">
+            <div style="font-family:var(--font-d);font-size:1.8rem;color:var(--navy)">$275</div>
+            <div style="font-size:.8rem;color:var(--mid);margin-top:.35rem">Average independent shop repair cost 2025</div>
+          </div>
+        </div>
+        <p style="font-size:.85rem;color:var(--mid);margin-top:1rem;text-align:center">Dealerships are cheaper. Customers are still leaving. The problem is not the price. It is the behavior that produces the perception.</p>
+        <div style="background:var(--navy);border-radius:12px;padding:1.5rem;margin-top:1.5rem">
+          <p style="color:rgba(255,255,255,.55);font-size:.82rem;margin:0;line-height:1.7"><strong style="color:var(--gold)">Research foundation:</strong> Cox Automotive (2025), S&amp;P Global Mobility (2025), Ariely et al. (2009), Pink (2009), NADA Workforce Study (2025), U.S. Bureau of Labor Statistics (2025), Gonzalez v. Downtown LA Motors (2013)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESS GATE -->
+<section class="section section--gold" id="access">
+  <div class="container--narrow">
+    <div class="reveal" style="text-align:center;margin-bottom:2rem">
+      <span class="eyebrow">Access the Full Paper</span>
+      <h2>Rethinking The Flag</h2>
+      <p style="color:var(--mid)">Enter your access code below to download the complete white paper. Do not have an access code? Request one using the form below.</p>
+    </div>
+
+    <!-- PASSWORD GATE -->
+    <div class="wp-gate-section reveal" id="wp-gate">
+      <div style="font-size:2rem;margin-bottom:1rem">🔒</div>
+      <h3>Enter Your Access Code</h3>
+      <p>Your access code was provided after your strategy call or authorization from Coach Joe. Enter it exactly as given.</p>
+      <div class="wp-gate-form">
+        <input type="password" id="wp-password" placeholder="Enter access code" autocomplete="off" onkeypress="if(event.key==='Enter')checkWPAccess()">
+        <button onclick="checkWPAccess()" class="btn btn--gold" style="white-space:nowrap;padding:.85rem 1.5rem">Unlock →</button>
+      </div>
+      <div class="wp-error" id="wp-error">Incorrect access code. Contact Coach Joe at joe@leadershippressurelab.com</div>
+      <p style="font-size:.78rem;color:var(--mid);margin-top:1.25rem">Do not have an access code? Complete the request form below.</p>
+    </div>
+
+    <!-- ACCESS GRANTED -->
+    <div class="wp-access reveal" id="wp-access">
+      <div style="font-size:2.5rem;margin-bottom:1rem">✅</div>
+      <h3>Access Granted</h3>
+      <p>Thank you. Click below to download the complete white paper. This document is for your personal use only. Redistribution is prohibited.</p>
+      <a class="wp-download-btn" href="assets/rethinking-the-flag-whitepaper.pdf" download="Rethinking-The-Flag-Whitepaper-Coach-Joe-2026.pdf">
+        ⬇ Download Rethinking The Flag (PDF)
+      </a>
+      <p style="font-size:.78rem;color:var(--mid);margin-top:1.5rem">© 2026 Joseph "Coach Joe" Clementi · The Leadership Pressure Lab™ · All Rights Reserved<br>Unauthorized reproduction or distribution of this document is prohibited.</p>
+    </div>
+
+    <!-- REQUEST FORM -->
+    <div class="wp-request-form reveal" id="wp-request">
+      <h3 style="text-align:center;margin-bottom:.5rem;font-size:1.3rem">Request Access</h3>
+      <p style="text-align:center;color:var(--mid);font-size:.9rem;margin-bottom:1.75rem">No access code yet? Complete this form. Coach Joe reviews every request personally and responds within one business day.</p>
+      <form action="https://formspree.io/f/YOUR-FORM-ID" method="POST">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label" for="req-fname">First name</label><input type="text" id="req-fname" name="first_name" class="form-input" required autocomplete="given-name"></div>
+          <div class="form-group"><label class="form-label" for="req-lname">Last name</label><input type="text" id="req-lname" name="last_name" class="form-input" required autocomplete="family-name"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label" for="req-email">Email address</label><input type="email" id="req-email" name="email" class="form-input" required autocomplete="email"></div>
+          <div class="form-group"><label class="form-label" for="req-role">Your role</label>
+            <select id="req-role" name="role" class="form-input" required>
+              <option value="">Select role...</option>
+              <option>Dealer Principal</option><option>General Manager</option>
+              <option>Fixed Operations Director</option><option>Service Manager</option>
+              <option>HR / Talent Director</option><option>Consultant / 20 Group</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label" for="req-store">Dealership / Company name</label><input type="text" id="req-store" name="dealership" class="form-input" required></div>
+        <div class="form-group"><label class="form-label" for="req-why">Why are you requesting this paper? (one sentence is fine)</label><textarea id="req-why" name="reason" class="form-input" rows="3" required></textarea></div>
+        <input type="hidden" name="source" value="whitepaper-request">
+        <input type="hidden" name="_subject" value="White Paper Access Request — Rethinking The Flag">
+        <button type="submit" class="btn btn--navy" style="width:100%;justify-content:center;margin-top:.5rem">Submit Access Request →</button>
+      </form>
+      <p style="font-size:.78rem;color:var(--mid);margin-top:1rem;text-align:center">Your information is never sold or shared. This request goes directly to Coach Joe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="section section--dark">
+  <div class="container--narrow" style="text-align:center">
+    <div class="reveal">
+      <span class="eyebrow">Go Deeper</span>
+      <h2 style="color:var(--white)">The paper identifies the problem.<br>The Pressure Lab installs the solution.</h2>
+      <p style="color:rgba(255,255,255,.6);margin:1rem 0 2rem">The P.R.E.S.S.U.R.E. System™ addresses the behavioral root causes this white paper documents. Book a free strategy call and we will show you how it applies to your specific store.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn--gold btn--lg" href="strategy-call.html">Book a Free Strategy Call →</a>
+        <a class="btn btn--outline" href="system.html">Explore The PRESSURE System™</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer"><div class="container">
+  <div class="footer__grid">
+    <div class="footer__brand"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:16px;color:var(--navy)">J</div><div style="font-family:var(--font-d);font-size:1rem;color:var(--white)">Coach Joe<small style="display:block;font-family:var(--font-m);font-size:.58rem;letter-spacing:.1em;color:rgba(255,255,255,.4)">The Leadership Pressure Lab™</small></div></div><p>The only behavior-based leadership system built for automotive retail.</p><p style="font-size:.74rem;color:rgba(255,255,255,.28);margin-top:.65rem">© 2026 Joseph "Coach Joe" Clementi · All Rights Reserved</p></div>
+    <div><div class="footer__heading">Navigate</div><nav class="footer__links"><a href="index.html">Home</a><a href="about.html">About</a><a href="system.html">The System</a><a href="products.html">Products</a><a href="pricing.html">Pricing</a></nav></div>
+    <div><div class="footer__heading">Resources</div><nav class="footer__links"><a href="monday-brief.html">Monday Brief</a><a href="whitepaper.html">White Paper</a><a href="torque.html">Torque Drive OS™</a><a href="cohort.html">Apply for Cohort</a><a href="strategy-call.html">Book a Call</a></nav></div>
+    <div><div class="footer__heading">Connect</div><nav class="footer__links"><a href="https://linkedin.com/in/YOUR-PROFILE" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:joe@leadershippressurelab.com">joe@leadershippressurelab.com</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></nav></div>
+  </div>
+  <div class="footer__bottom"><span>© 2026 <span>Joseph "Coach Joe" Clementi</span> · The Leadership Pressure Lab™ · All Rights Reserved</span><div class="footer__legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="sitemap.xml">Sitemap</a></div></div>
+</div></footer>
+<a href="#top" class="back-top" aria-label="Back to top">↑</a>
+<div class="cookie-banner"><p>We use cookies. See our <a href="privacy.html">Privacy Policy</a>.</p><div class="cookie-banner__btns"><button class="cookie-btn cookie-btn--decline">Decline</button><button class="cookie-btn cookie-btn--accept">Accept</button></div></div>
+<script src="js/main.js"></script>
+<script>
+/* ============================================================
+   WHITEPAPER ACCESS GATE
+   To change the password: edit the value below.
+   © 2026 Joseph "Coach Joe" Clementi — All Rights Reserved
+   ============================================================ */
+const WP_ACCESS_CODE = 'PRESSURE2026';
+
+function checkWPAccess() {
+  const input = document.getElementById('wp-password').value.trim().toUpperCase();
+  const correct = WP_ACCESS_CODE.toUpperCase();
+  const errorEl = document.getElementById('wp-error');
+  if (input === correct) {
+    document.getElementById('wp-gate').style.display = 'none';
+    document.getElementById('wp-access').style.display = 'block';
+    document.getElementById('wp-request').style.display = 'none';
+    sessionStorage.setItem('lpl_wp_access', '1');
+    window.scrollTo({ top: document.getElementById('wp-access').offsetTop - 100, behavior: 'smooth' });
+  } else {
+    errorEl.style.display = 'block';
+    document.getElementById('wp-password').value = '';
+    document.getElementById('wp-password').focus();
+  }
+}
+
+// Restore access if already unlocked this session
+if (sessionStorage.getItem('lpl_wp_access') === '1') {
+  document.getElementById('wp-gate').style.display = 'none';
+  document.getElementById('wp-access').style.display = 'block';
+}
+</script>
+</body>
+</html>
