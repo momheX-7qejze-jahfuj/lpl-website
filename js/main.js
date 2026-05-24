@@ -102,4 +102,17 @@
     }
   };
 
+
+  /* RESOURCES DROPDOWN — close on outside click */
+  document.addEventListener('click', (e) => {
+    const drop = e.target.closest('.nav__has-drop');
+    document.querySelectorAll('.nav__has-drop').forEach(d => {
+      if (d !== drop) d.querySelector('.nav__dropdown')?.style.removeProperty('opacity');
+    });
+  });
+  /* Prevent default on dropdown trigger link */
+  document.querySelectorAll('.nav__drop-trigger').forEach(t => {
+    t.addEventListener('click', e => { e.preventDefault(); });
+  });
+
 })();
