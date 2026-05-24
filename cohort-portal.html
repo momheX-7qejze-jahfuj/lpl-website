@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Portal | The Pressure Lab Cohort™ | Coach Joe</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="copyright" content="© 2026 Joseph Clementi. All rights reserved.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .portal-gate{min-height:100vh;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:2rem}
+    .gate-card{background:rgba(255,255,255,.05);border:1px solid rgba(200,153,43,.25);border-radius:20px;padding:3rem 2.5rem;width:100%;max-width:440px;text-align:center;backdrop-filter:blur(10px)}
+    .portal-wrap{display:none;min-height:100vh;background:var(--cream)}
+    .portal-wrap.open{display:block}
+    .portal-header{background:var(--navy);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--gold)}
+    .portal-nav{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+    .portal-nav a{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.65);padding:.45rem .85rem;border-radius:6px;text-decoration:none;transition:background .2s,color .2s}
+    .portal-nav a:hover,.portal-nav a.active{background:rgba(255,255,255,.1);color:var(--white)}
+    .portal-nav a.portal-cta-btn{background:var(--gold);color:var(--navy);font-weight:700}
+    .portal-nav a.portal-cta-btn:hover{background:#d9a82e}
+    .portal-section{display:none;padding:2.5rem 0}
+    .portal-section.active{display:block}
+    .portal-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+    .pcard{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.75rem;margin-bottom:1.25rem}
+    .pcard h3{font-size:1.1rem;margin-bottom:.5rem;color:var(--navy)}
+    .pcard p{font-size:.9rem;color:var(--mid);margin:0}
+    .score-slider{-webkit-appearance:none;width:100%;height:8px;border-radius:4px;background:linear-gradient(to right,var(--gold) 0%,var(--gold) var(--pct,50%),var(--border) var(--pct,50%),var(--border) 100%);outline:none;cursor:pointer}
+    .score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--navy);border:3px solid var(--gold);cursor:pointer}
+    .score-val{font-family:var(--font-d);font-size:1.5rem;color:var(--navy);min-width:32px;text-align:center}
+    .score-row{display:flex;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)}
+    .score-row:last-child{border:none}
+    .score-label{font-weight:600;font-size:.9rem;color:var(--navy);min-width:140px}
+    .score-desc{font-size:.78rem;color:var(--mid);display:block;margin-top:.2rem}
+    .session-item{display:flex;align-items:center;gap:1rem;padding:1rem;border:1px solid var(--border);border-radius:10px;margin-bottom:.75rem;background:var(--white);transition:border-color .2s,box-shadow .2s;cursor:pointer}
+    .session-item:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(200,153,43,.1)}
+    .session-item.locked{opacity:.55;cursor:not-allowed}
+    .session-item.complete{border-color:var(--steel);background:var(--navy-light)}
+    .sess-num{width:44px;height:44px;border-radius:10px;background:var(--navy);color:var(--gold);font-family:var(--font-d);font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .sess-num.complete{background:var(--steel);color:var(--white)}
+    .sess-num.locked{background:var(--border);color:var(--mid)}
+    .progress-bar-wrap{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:1rem 0}
+    .progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--steel));border-radius:4px;transition:width .5s}
+    .stat-mini{background:var(--navy);border-radius:12px;padding:1.25rem;text-align:center}
+    .stat-mini .n{font-family:var(--font-d);font-size:2rem;color:var(--gold);display:block;line-height:1}
+    .stat-mini .l{font-family:var(--font-m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:.35rem;display:block}
+    @media(max-width:768px){.portal-nav{gap:.25rem}.portal-nav a{font-size:.7rem;padding:.4rem .6rem}}
+  </style>
+</head>
+<body id="top" style="margin:0;padding:0">
+
+<!-- ── GATE ─────────────────────────────────────────────── -->
+<div class="portal-gate" id="gate">
+  <div class="gate-card">
+    <div style="font-size:2.5rem;margin-bottom:1rem">🔐</div>
+    <div style="font-family:var(--font-d);font-size:1.75rem;color:var(--white);margin-bottom:.5rem">Member Portal</div>
+    <div style="font-family:var(--font-m);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1.75rem">The Pressure Lab Cohort™</div>
+    <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:2rem;line-height:1.65">Enter your cohort access code. Your code was provided by Coach Joe at enrollment. Keep it private.</p>
+    <div style="margin-bottom:1rem">
+      <input type="password" id="portal-pw" placeholder="Enter access code" autocomplete="off"
+        style="width:100%;padding:.95rem 1rem;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;font-family:var(--font-s);font-size:1rem;color:var(--white);text-align:center;letter-spacing:.15em;box-sizing:border-box"
+        onkeypress="if(event.key==='Enter')checkPortal()">
+    </div>
+    <button onclick="checkPortal()" class="btn btn--gold" style="width:100%;justify-content:center;font-size:1rem;padding:1rem">Enter Portal →</button>
+    <div id="gate-error" style="color:#e74c3c;font-size:.82rem;margin-top:.85rem;display:none">Incorrect code. Contact Coach Joe at joe@leadershippressurelab.com</div>
+    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.08)">
+      <p style="font-size:.78rem;color:rgba(255,255,255,.3);margin:0">Not enrolled? <a href="cohort.html" style="color:var(--gold)">Apply for the Cohort™</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ── PORTAL ────────────────────────────────────────────── -->
+<div class="portal-wrap" id="portal">
+
+  <!-- PORTAL HEADER -->
+  <div class="portal-header">
+    <a href="index.html" style="display:flex;align-items:center;gap:.65rem;text-decoration:none;flex-shrink:0">
+      <div style="width:32px;height:32px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:14px;color:var(--navy)">J</div>
+      <div style="font-family:var(--font-d);font-size:.9rem;color:var(--white);line-height:1.2">Coach Joe<br><small style="font-family:var(--font-m);font-size:.55rem;letter-spacing:.08em;color:rgba(255,255,255,.38)">Pressure Lab Cohort™</small></div>
+    </a>
+    <nav class="portal-nav">
+      <a href="#" class="active" onclick="showSection('dashboard',this)">Dashboard</a>
+      <a href="#" onclick="showSection('sessions',this)">Sessions</a>
+      <a href="#" onclick="showSection('checkin',this)">Weekly Check-In</a>
+      <a href="#" onclick="showSection('resources',this)">Resources</a>
+      <a href="strategy-call.html" class="portal-cta-btn">Book a Call</a>
+    </nav>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div class="portal-section active" id="sec-dashboard">
+    <div class="portal-inner">
+      <div style="margin-bottom:2rem">
+        <span style="font-family:var(--font-m);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Welcome Back</span>
+        <h1 style="font-size:clamp(1.6rem,3vw,2.4rem);color:var(--navy);margin-top:.25rem">Your Pressure Dashboard</h1>
+      </div>
+
+      <!-- STATS ROW -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem">
+        <div class="stat-mini"><span class="n" id="dash-avg">--</span><span class="l">Avg Behavior Score</span></div>
+        <div class="stat-mini"><span class="n" id="dash-week">--</span><span class="l">Current Week</span></div>
+        <div class="stat-mini"><span class="n" id="dash-best">--</span><span class="l">Highest Element</span></div>
+        <div class="stat-mini"><span class="n" id="dash-focus">--</span><span class="l">Focus Element</span></div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="pcard" style="margin-bottom:1.25rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <h3 style="margin:0">6-Month Progress Arc</h3>
+          <span id="prog-pct" style="font-family:var(--font-m);font-size:.8rem;color:var(--gold)">Week 1 of 24</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar" style="width:4%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-m);font-size:.65rem;color:var(--mid)"><span>Start</span><span>Month 3</span><span>Month 6 Complete</span></div>
+      </div>
+
+      <!-- BEHAVIOR SCORES GRID -->
+      <div class="pcard">
+        <h3>Current Behavior Scores</h3>
+        <p style="font-size:.85rem;color:var(--mid);margin-bottom:1.5rem">Your 8 PRESSURE element scores from your most recent weekly check-in. Update via Weekly Check-In tab.</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem" id="score-grid">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- SCORE HISTORY CHART -->
+      <div class="pcard" style="margin-top:1.25rem">
+        <h3>Progress Over Time</h3>
+        <p style="font-size:.85rem;color:var(--mid);margin-bottom:1rem">Average behavior score by week. Complete your weekly check-ins to build your arc.</p>
+        <canvas id="progress-chart" height="200"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SESSIONS SECTION -->
+  <div class="portal-section" id="sec-sessions">
+    <div class="portal-inner">
+      <div style="margin-bottom:2rem">
+        <span style="font-family:var(--font-m);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Curriculum</span>
+        <h1 style="font-size:clamp(1.6rem,3vw,2.4rem);color:var(--navy);margin-top:.25rem">Your 12-Session Arc</h1>
+        <p style="color:var(--mid);font-size:.95rem">Sessions unlock weekly as you progress. Complete your weekly check-in to unlock the next session.</p>
+      </div>
+      <div id="sessions-list">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEKLY CHECK-IN SECTION -->
+  <div class="portal-section" id="sec-checkin">
+    <div class="portal-inner" style="max-width:760px">
+      <div style="margin-bottom:2rem">
+        <span style="font-family:var(--font-m);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Weekly Check-In</span>
+        <h1 style="font-size:clamp(1.6rem,3vw,2.4rem);color:var(--navy);margin-top:.25rem">Score Your Week</h1>
+        <p style="color:var(--mid)">Rate each of the 8 PRESSURE behaviors from 1 (not present) to 5 (consistent and deliberate). Be honest. The dashboard tracks your arc.</p>
+      </div>
+      <div class="pcard">
+        <form id="checkin-form" action="https://formspree.io/f/YOUR-FORM-ID" method="POST">
+          <input type="hidden" name="_subject" value="Weekly Behavior Check-In — Pressure Lab Cohort™">
+          <input type="hidden" name="source" value="cohort-portal-checkin">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.25rem">
+            <div class="form-group"><label class="form-label" for="ci-name">Your name</label><input type="text" id="ci-name" name="participant_name" class="form-input" required></div>
+            <div class="form-group"><label class="form-label" for="ci-week">Week number (1–24)</label><input type="number" id="ci-week" name="week_number" class="form-input" min="1" max="24" required></div>
+          </div>
+
+          <div style="font-family:var(--font-m);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)">Rate Each Behavior 1–5</div>
+
+          <div id="score-inputs"></div>
+
+          <div style="font-family:var(--font-m);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:1.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)">Reflection</div>
+
+          <div class="form-group"><label class="form-label" for="ci-win">This week's biggest leadership win</label><textarea id="ci-win" name="weekly_win" class="form-input" rows="2" placeholder="Describe one moment where you led deliberately this week..."></textarea></div>
+          <div class="form-group"><label class="form-label" for="ci-gap">The behavior that needs the most attention next week</label><textarea id="ci-gap" name="focus_next_week" class="form-input" rows="2" placeholder="Which PRESSURE element will you prioritize?"></textarea></div>
+          <div class="form-group"><label class="form-label" for="ci-commit">Your Monday Commitment for next week</label><textarea id="ci-commit" name="monday_commitment" class="form-input" rows="2" placeholder="One specific, observable, time-bound behavior commitment..."></textarea></div>
+
+          <div style="background:var(--navy-light);border-radius:10px;padding:1rem;margin:1.25rem 0;font-size:.84rem;color:var(--steel)"><strong style="color:var(--navy)">Your scores go directly to Coach Joe.</strong> He reviews every submission before your next session. Be honest — the data only helps you if it is accurate.</div>
+
+          <button type="submit" class="btn btn--gold" style="width:100%;justify-content:center;font-size:1rem;padding:1rem">Submit Weekly Check-In →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESOURCES SECTION -->
+  <div class="portal-section" id="sec-resources">
+    <div class="portal-inner">
+      <div style="margin-bottom:2rem">
+        <span style="font-family:var(--font-m);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Member Resources</span>
+        <h1 style="font-size:clamp(1.6rem,3vw,2.4rem);color:var(--navy);margin-top:.25rem">Your Resource Library</h1>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem">
+        <div class="pcard" style="text-align:center"><div style="font-size:2rem;margin-bottom:.75rem">📋</div><h3>PRESSURE Workbooks</h3><p>All 8 behavior workbooks. Download and complete each one in sequence.</p><div style="margin-top:1rem;font-family:var(--font-m);font-size:.7rem;color:var(--steel)">Available Week 1 onward</div></div>
+        <div class="pcard" style="text-align:center"><div style="font-size:2rem;margin-bottom:.75rem">⚙</div><h3>Torque Drive OS™</h3><p>The full operating system: 7 pillars, 5 pre-decision rules, and the Weekly Rhythm Map.</p><a class="btn btn--navy btn--sm" href="torque.html" style="margin-top:1rem;display:inline-flex">View System →</a></div>
+        <div class="pcard" style="text-align:center"><div style="font-size:2rem;margin-bottom:.75rem">📄</div><h3>Rethinking The Flag</h3><p>The compensation reform white paper. Foundational research for your leadership context.</p><a class="btn btn--navy btn--sm" href="whitepaper.html" style="margin-top:1rem;display:inline-flex">Access Paper →</a></div>
+        <div class="pcard" style="text-align:center"><div style="font-size:2rem;margin-bottom:.75rem">📬</div><h3>The Monday Brief</h3><p>Weekly behavioral science insight in automotive language. Reinforces cohort sessions.</p><a class="btn btn--navy btn--sm" href="monday-brief.html" style="margin-top:1rem;display:inline-flex">Subscribe →</a></div>
+        <div class="pcard" style="text-align:center"><div style="font-size:2rem;margin-bottom:.75rem">📅</div><h3>Book a Coaching Call</h3><p>Need direct coaching between sessions? Book a 1:1 with Coach Joe.</p><a class="btn btn--gold btn--sm" href="strategy-call.html" style="margin-top:1rem;display:inline-flex">Book a Call →</a></div>
+        <div class="pcard" style="text-align:center"><div style="font-size:2rem;margin-bottom:.75rem">👥</div><h3>Refer a Peer — Save $600</h3><p>Refer one leader who enrolls and both of you drop to $299/month for the remaining term.</p><a class="btn btn--navy btn--sm" href="cohort.html#apply" style="margin-top:1rem;display:inline-flex">Refer Now →</a></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .portal-wrap -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+/* ============================================================
+   THE PRESSURE LAB COHORT™ — MEMBER PORTAL
+   © 2026 Joseph "Coach Joe" Clementi · All Rights Reserved
+   Portal Access Code: COHORT2026
+   (Change in line below — search for PORTAL_CODE)
+   ============================================================ */
+
+const PORTAL_CODE = 'COHORT2026';
+
+const PRESSURE_ELEMENTS = [
+  { key:'P', label:'Perspective', desc:'Mindset before method' },
+  { key:'R1', label:'Reality', desc:'Honest scoreboard' },
+  { key:'E', label:'Execution', desc:'Torque Drive behaviors' },
+  { key:'S1', label:'Systems', desc:'Cadence & rhythm' },
+  { key:'S2', label:'Standards', desc:'Responsible Ownership™' },
+  { key:'U', label:'Upgrade', desc:'Continuous improvement' },
+  { key:'R2', label:'Results', desc:'Dashboard & outcomes' },
+  { key:'Ev', label:'Elevate', desc:'Legacy & multiplication' }
+];
+
+const SESSIONS = [
+  { num:1, title:'Baseline Assessment', desc:'PRESSURE Score + Responsible Ownership Audit', element:'All' },
+  { num:2, title:'P — Perspective', desc:'Leadership stance under pressure', element:'P' },
+  { num:3, title:'R — Reality', desc:'Honest scoreboard + Behavior Chain Mapping', element:'R' },
+  { num:4, title:'E — Execution', desc:'Torque Drive OS™ Installation', element:'E' },
+  { num:5, title:'S — Systems', desc:'Weekly Rhythm Map + Cadence Architecture', element:'S' },
+  { num:6, title:'S — Standards', desc:'Responsible Ownership™ Implementation', element:'S' },
+  { num:7, title:'Midpoint Review', desc:'Month 3 Behavior Score Assessment', element:'All' },
+  { num:8, title:'U — Upgrade', desc:'Friday Learning Lab + Growth Architecture', element:'U' },
+  { num:9, title:'R — Results', desc:'Pressure Dashboard + Business Outcome Connection', element:'R' },
+  { num:10, title:'E — Elevate', desc:'Succession, Multiplication + Legacy Planning', element:'E' },
+  { num:11, title:'Integration Lab', desc:'Full System Live Practice', element:'All' },
+  { num:12, title:'6-Month Review', desc:'Final Scores + Next Quarter Planning', element:'All' }
+];
+
+function checkPortal() {
+  const input = document.getElementById('portal-pw').value.trim().toUpperCase();
+  if (input === PORTAL_CODE.toUpperCase()) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('portal').classList.add('open');
+    sessionStorage.setItem('lpl_portal', '1');
+    initPortal();
+  } else {
+    document.getElementById('gate-error').style.display = 'block';
+    document.getElementById('portal-pw').value = '';
+    document.getElementById('portal-pw').focus();
+  }
+}
+
+document.getElementById('portal-pw')?.addEventListener('keypress', e => { if(e.key==='Enter') checkPortal(); });
+
+if (sessionStorage.getItem('lpl_portal') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('portal').classList.add('open');
+  initPortal();
+}
+
+function showSection(name, link) {
+  document.querySelectorAll('.portal-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.portal-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('sec-' + name)?.classList.add('active');
+  if (link) link.classList.add('active');
+  return false;
+}
+
+function getScores() {
+  try { return JSON.parse(localStorage.getItem('lpl_scores') || '{}'); } catch { return {}; }
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('lpl_history') || '[]'); } catch { return []; }
+}
+
+function initPortal() {
+  renderScoreGrid();
+  renderSessions();
+  renderCheckIn();
+  renderChart();
+  updateDashStats();
+}
+
+function renderScoreGrid() {
+  const scores = getScores();
+  const grid = document.getElementById('score-grid');
+  if (!grid) return;
+  grid.innerHTML = PRESSURE_ELEMENTS.map(el => {
+    const score = scores[el.key] || 0;
+    const color = score >= 4 ? '#4A7FA5' : score >= 3 ? '#C8992B' : score > 0 ? '#e74c3c' : '#ccc';
+    const label = score > 0 ? score + ' / 5' : 'Not scored';
+    return `<div style="text-align:center;padding:1rem;background:var(--navy-light);border-radius:10px">
+      <div style="font-family:var(--font-d);font-size:2rem;color:var(--navy)">${el.key.replace(/[12]/g,'')}</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--navy);margin:.25rem 0">${el.label}</div>
+      <div style="font-family:var(--font-m);font-size:1rem;color:${color};font-weight:700;margin-top:.35rem">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderSessions() {
+  const list = document.getElementById('sessions-list');
+  if (!list) return;
+  const week = parseInt(localStorage.getItem('lpl_week') || '1');
+  list.innerHTML = SESSIONS.map(s => {
+    const unlocked = s.num <= Math.ceil(week / 2);
+    const complete = s.num < Math.ceil(week / 2);
+    const cls = complete ? 'complete' : unlocked ? '' : 'locked';
+    const numCls = complete ? 'complete' : unlocked ? '' : 'locked';
+    const icon = complete ? '✓' : unlocked ? s.num : '🔒';
+    return `<div class="session-item ${cls}">
+      <div class="sess-num ${numCls}">${icon}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:.92rem;color:var(--navy)">Session ${s.num}: ${s.title}</div>
+        <div style="font-size:.82rem;color:var(--mid);margin-top:.2rem">${s.desc}</div>
+      </div>
+      <div style="font-family:var(--font-m);font-size:.65rem;color:var(--gold);background:rgba(200,153,43,.12);padding:.3rem .75rem;border-radius:20px">${s.element}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderCheckIn() {
+  const container = document.getElementById('score-inputs');
+  if (!container) return;
+  const scores = getScores();
+  container.innerHTML = PRESSURE_ELEMENTS.map(el => {
+    const val = scores[el.key] || 3;
+    const pct = ((val - 1) / 4 * 100) + '%';
+    return `<div class="score-row">
+      <div style="flex:1">
+        <div class="score-label">${el.key.replace(/[12]/g,'')} — ${el.label}<span class="score-desc">${el.desc}</span></div>
+      </div>
+      <input type="range" name="score_${el.key}" min="1" max="5" value="${val}" class="score-slider" style="flex:2;--pct:${pct}"
+        oninput="this.nextElementSibling.textContent=this.value;this.style.setProperty('--pct',(((this.value-1)/4)*100)+'%');saveScore('${el.key}',this.value)">
+      <div class="score-val">${val}</div>
+    </div>`;
+  }).join('');
+}
+
+function saveScore(key, val) {
+  const scores = getScores();
+  scores[key] = parseInt(val);
+  localStorage.setItem('lpl_scores', JSON.stringify(scores));
+  renderScoreGrid();
+  updateDashStats();
+}
+
+function updateDashStats() {
+  const scores = getScores();
+  const vals = Object.values(scores).filter(v => v > 0);
+  const avg = vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '--';
+  const best = vals.length ? PRESSURE_ELEMENTS.find(e => scores[e.key] === Math.max(...vals))?.label || '--' : '--';
+  const worst = vals.length ? PRESSURE_ELEMENTS.find(e => scores[e.key] === Math.min(...vals))?.label || '--' : '--';
+  const week = localStorage.getItem('lpl_week') || '1';
+  document.getElementById('dash-avg').textContent = avg;
+  document.getElementById('dash-week').textContent = week;
+  document.getElementById('dash-best').textContent = best;
+  document.getElementById('dash-focus').textContent = worst;
+  const pct = Math.round((parseInt(week)/24)*100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = `Week ${week} of 24`;
+}
+
+function renderChart() {
+  const canvas = document.getElementById('progress-chart');
+  if (!canvas) return;
+  const history = getHistory();
+  const labels = history.map(h => 'Wk ' + h.week);
+  const data = history.map(h => h.avg);
+  if (labels.length === 0) { labels.push('Week 1'); data.push(null); }
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Avg Behavior Score',
+        data,
+        borderColor: '#C8992B',
+        backgroundColor: 'rgba(200,153,43,.1)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#C8992B',
+        pointRadius: 5,
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 1, max: 5, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,.06)' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+/* Save check-in locally and track week */
+document.getElementById('checkin-form')?.addEventListener('submit', function(e) {
+  const week = document.getElementById('ci-week')?.value;
+  if (week) {
+    localStorage.setItem('lpl_week', week);
+    const history = getHistory();
+    const scores = getScores();
+    const vals = Object.values(scores).filter(v=>v>0);
+    const avg = vals.length ? parseFloat((vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1)) : 0;
+    const existing = history.findIndex(h => h.week === parseInt(week));
+    if (existing >= 0) history[existing] = { week: parseInt(week), avg };
+    else history.push({ week: parseInt(week), avg });
+    history.sort((a,b)=>a.week-b.week);
+    localStorage.setItem('lpl_history', JSON.stringify(history));
+  }
+});
+</script>
+</body>
+</html>
