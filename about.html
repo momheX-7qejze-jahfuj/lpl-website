@@ -24,7 +24,15 @@
     <li><a class="nav__link" href="system.html">The System</a></li>
     <li><a class="nav__link" href="products.html">Products</a></li>
     <li><a class="nav__link" href="pricing.html">Pricing</a></li>
-    <li><a class="nav__link" href="monday-brief.html">Monday Brief</a></li>
+    <li class="nav__has-drop">
+      <a class="nav__link nav__drop-trigger" href="#" aria-haspopup="true">Resources ▾</a>
+      <div class="nav__dropdown" role="menu">
+        <a class="nav__drop-item" href="whitepaper.html" role="menuitem">📄 &nbsp;White Paper</a>
+        <a class="nav__drop-item" href="torque.html" role="menuitem">⚙ &nbsp;Torque Drive OS™</a>
+        <a class="nav__drop-item" href="cohort.html" role="menuitem">★ &nbsp;Apply for Cohort™</a>
+        <a class="nav__drop-item" href="monday-brief.html" role="menuitem">📬 &nbsp;Monday Brief</a>
+      </div>
+    </li>
     <li><a class="nav__link nav__cta" href="strategy-call.html">Book a Strategy Call</a></li>
   </ul>
   <button class="nav__hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -34,9 +42,16 @@
   <a class="nav__link" href="system.html">The PRESSURE System™</a>
   <a class="nav__link" href="products.html">Products</a>
   <a class="nav__link" href="pricing.html">Pricing</a>
-  <a class="nav__link" href="monday-brief.html">Monday Brief</a>
+  <div style="border-top:1px solid rgba(255,255,255,.1);margin:.5rem 0;padding-top:.5rem">
+    <div style="font-family:var(--font-m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:.5rem 1rem .25rem">Resources</div>
+    <a class="nav__link" href="whitepaper.html">📄 &nbsp;White Paper — Rethinking The Flag</a>
+    <a class="nav__link" href="torque.html">⚙ &nbsp;Torque Drive OS™</a>
+    <a class="nav__link" href="cohort.html">★ &nbsp;Apply for The Cohort™</a>
+    <a class="nav__link" href="monday-brief.html">📬 &nbsp;The Monday Brief</a>
+  </div>
   <a class="nav__link nav__cta" href="strategy-call.html">Book Your Strategy Call →</a>
 </div>
+
 <main id="main">
 <div class="page-hero">
   <div class="container">
@@ -84,6 +99,56 @@
     </div>
   </div>
 </section>
+
+<!-- INDUSTRY ENDORSEMENTS -->
+<section class="section section--white" aria-labelledby="endorsements-heading">
+  <div class="container">
+    <div class="section-header section-header--center reveal">
+      <div class="gold-rule"></div>
+      <span class="eyebrow">Industry Endorsements</span>
+      <h2 id="endorsements-heading">What the industry says about Coach Joe</h2>
+      <p style="color:var(--mid)">From 35-year Fixed Ops veterans to automotive training presidents — these are the voices from inside the business.</p>
+    </div>
+    <div class="grid-3">
+      <article class="testimonial reveal reveal-d1" itemscope itemtype="https://schema.org/Review">
+        <meta itemprop="datePublished" content="2026">
+        <div class="testimonial__quote" itemprop="reviewBody">Coach Joe understands the importance of the leadership role in building a successful business. He knows exactly what it takes to create both employee retention and customer retention — leading to a highly profitable organization. I highly recommend Joe Clementi; I only wish we'd had the opportunity to work together earlier in my career.</div>
+        <div class="testimonial__author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <div class="testimonial__avatar" aria-hidden="true">MV</div>
+          <div>
+            <div class="testimonial__name" itemprop="name">Mike Vogel</div>
+            <div class="testimonial__role">Automotive Fixed Ops Director · 35+ Years Industry Experience · Fixed Ops Retention Coach</div>
+          </div>
+        </div>
+      </article>
+      <article class="testimonial reveal reveal-d2" itemscope itemtype="https://schema.org/Review">
+        <meta itemprop="datePublished" content="2011">
+        <div class="testimonial__quote" itemprop="reviewBody">Joseph Clementi is a very organized, disciplined educator and leader who gets the most from his dealer team. With a knack for analyzing his store's metrics and converting them into performance-based goal-setting initiatives, Joseph is a true master of his craft. I strongly recommend him to anyone interested in a progressive, thorough dealership leader.</div>
+        <div class="testimonial__author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <div class="testimonial__avatar" aria-hidden="true">JW</div>
+          <div>
+            <div class="testimonial__name" itemprop="name">Joe Webb</div>
+            <div class="testimonial__role">President · DealerKnows Consulting · Automotive Sales Trainer & Keynote Speaker</div>
+          </div>
+        </div>
+      </article>
+      <article class="testimonial reveal reveal-d3" itemscope itemtype="https://schema.org/Review">
+        <meta itemprop="datePublished" content="2011">
+        <div class="testimonial__quote" itemprop="reviewBody">Joe demonstrated his depth of knowledge in fixed operations early in our relationship, and his direct involvement was instrumental to the success of our program. He is more of a successful coach to his managers than a traditional manager — he develops each person's talent deliberately. It is my pleasure to have him as a client.</div>
+        <div class="testimonial__author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <div class="testimonial__avatar" aria-hidden="true">CS</div>
+          <div>
+            <div class="testimonial__name" itemprop="name">Chris Schmidt</div>
+            <div class="testimonial__role">Client · Fixed Operations Program · Dealership Management</div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div style="text-align:center;margin-top:2rem" class="reveal">
+      <a href="https://linkedin.com/in/joseph-clementi-92178714/details/recommendations/" target="_blank" rel="noopener" class="btn btn--navy">View All LinkedIn Recommendations →</a>
+    </div>
+  </div>
+</section>
 <section class="section section--gold">
   <div class="container--narrow" style="text-align:center">
     <div class="reveal">
@@ -94,33 +159,23 @@
     </div>
   </div>
 </section>
-</main><footer class="footer">
-  <div class="container">
-    <div class="footer__grid">
-      <div class="footer__brand">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:16px;color:var(--navy)">J</div><div style="font-family:var(--font-d);font-size:1rem;color:var(--white)">Coach Joe<br><small style="font-family:var(--font-m);font-size:.58rem;letter-spacing:.1em;color:rgba(255,255,255,.4)">The Leadership Pressure Lab™</small></div></div>
-        <p>The only behavior-based leadership system built for automotive retail. Transforming managers into deliberate coaches — one store at a time.</p>
-        <p style="font-size:.76rem;color:rgba(255,255,255,.28);margin-top:.75rem">© 2026 Joseph "Coach Joe" Clementi · All Rights Reserved<br>The P.R.E.S.S.U.R.E. System™, Pressure Test™, Responsible Ownership™, and Torque Drive OS™ are exclusive intellectual property of Joseph Clementi.</p>
-      </div>
-      <div><div class="footer__heading">Navigate</div><nav class="footer__links"><a href="index.html">Home</a><a href="about.html">About Coach Joe</a><a href="system.html">The PRESSURE System™</a><a href="products.html">Products</a><a href="pricing.html">Pricing</a></nav></div>
-      <div><div class="footer__heading">Resources</div><nav class="footer__links"><a href="monday-brief.html">The Monday Brief</a><a href="keynote.html">Free Keynote</a><a href="pressure-test.html">The Pressure Test™</a><a href="cohort.html">The Cohort™</a><a href="strategy-call.html">Book a Call</a></nav></div>
-      <div>
-        <div class="footer__heading">Connect</div>
-        <nav class="footer__links"><a href="https://linkedin.com/in/YOUR-PROFILE" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:joe@coachjoeleadership.com">Email Coach Joe</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></nav>
-        <div style="margin-top:1.5rem"><div class="footer__heading">Monday Brief</div>
-        <form action="https://formspree.io/f/YOUR-FORM-ID" method="POST" style="display:flex;flex-direction:column;gap:.65rem">
-          <input type="email" name="email" placeholder="your@email.com" class="form-input form-input--dark" required style="font-size:.82rem;padding:.6rem .85rem">
-          <input type="hidden" name="source" value="footer">
-          <button type="submit" class="btn btn--gold btn--sm" style="justify-content:center">Get Monday Brief →</button>
-        </form></div>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      <span>© 2026 <span>Joseph "Coach Joe" Clementi</span> · The Leadership Pressure Lab™ · All Rights Reserved</span>
-      <div class="footer__legal"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="sitemap.xml">Sitemap</a></div>
-    </div>
+</main><footer class="footer"><div class="container">
+  <div class="footer__grid">
+    <div class="footer__brand"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="width:36px;height:36px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:16px;color:var(--navy)">J</div><div style="font-family:var(--font-d);font-size:1rem;color:var(--white)">Coach Joe<small style="display:block;font-family:var(--font-m);font-size:.58rem;letter-spacing:.1em;color:rgba(255,255,255,.4)">The Leadership Pressure Lab™</small></div></div><p>The only behavior-based leadership system built for automotive retail. Transforming managers into deliberate coaches — one store at a time.</p><p style="font-size:.74rem;color:rgba(255,255,255,.28);margin-top:.65rem">© 2026 Joseph "Coach Joe" Clementi · All Rights Reserved<br>The P.R.E.S.S.U.R.E. System™, Pressure Test™, Responsible Ownership™, and Torque Drive OS™ are the exclusive intellectual property of Joseph Clementi.</p></div>
+    <div><div class="footer__heading">Navigate</div><nav class="footer__links"><a href="index.html">Home</a><a href="about.html">About Coach Joe</a><a href="system.html">The PRESSURE System™</a><a href="products.html">Products</a><a href="pricing.html">Pricing</a></nav></div>
+    <div><div class="footer__heading">Resources</div><nav class="footer__links"><a href="whitepaper.html">📄 White Paper</a><a href="torque.html">⚙ Torque Drive OS™</a><a href="cohort.html">★ Apply for Cohort™</a><a href="monday-brief.html">Monday Brief</a><a href="pressure-test.html">The Pressure Test™</a><a href="keynote.html">Free Keynote</a><a href="strategy-call.html">Book a Strategy Call</a></nav></div>
+    <div><div class="footer__heading">Connect</div><nav class="footer__links"><a href="https://linkedin.com/in/YOUR-PROFILE" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:joe@leadershippressurelab.com">joe@leadershippressurelab.com</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></nav>
+    <div style="margin-top:1.5rem"><div class="footer__heading">Monday Brief</div>
+    <form action="https://formspree.io/f/YOUR-FORM-ID" method="POST" style="display:flex;flex-direction:column;gap:.65rem">
+      <input type="email" name="email" placeholder="your@email.com" class="form-input form-input--dark" required style="font-size:.82rem;padding:.6rem .85rem">
+      <input type="hidden" name="source" value="footer">
+      <button type="submit" class="btn btn--gold btn--sm" style="justify-content:center">Subscribe Free →</button>
+    </form></div></div>
   </div>
-</footer>
+  <div class="footer__bottom"><span>© 2026 <span>Joseph "Coach Joe" Clementi</span> · The Leadership Pressure Lab™ · All Rights Reserved</span><div class="footer__legal"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a><a href="sitemap.xml">Sitemap</a></div></div>
+</div></footer>
 <a href="#top" class="back-top" aria-label="Back to top">↑</a>
 <div class="cookie-banner"><p>We use cookies to improve your experience. See our <a href="privacy.html">Privacy Policy</a>.</p><div class="cookie-banner__btns"><button class="cookie-btn cookie-btn--decline">Decline</button><button class="cookie-btn cookie-btn--accept">Accept</button></div></div>
 <script src="js/main.js"></script>
+</body>
+</html>
