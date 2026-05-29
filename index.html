@@ -194,6 +194,210 @@
     <div class="trust-bar__item"><div class="trust-bar__dot" aria-hidden="true"></div>Serving Dealerships Nationwide</div>
   </div>
 </div>
+<!-- ═══════════════════════════════════════════════════════════
+     SYMPTOM SELECTOR SECTION  —  Issue 3 Fix
+     Lead with the symptom. Convert with the system.
+
+     HOW TO INSTALL (see install guide):
+     Paste this entire block into index.html, directly AFTER the
+     closing </section> of your hero, and BEFORE "The Real Cost"
+     section. It uses your existing style.css classes plus a
+     small scoped <style> block below.
+     ═══════════════════════════════════════════════════════════ -->
+
+<section class="section section--cream" id="symptom-finder" style="padding-top:4rem;padding-bottom:4rem;">
+  <div class="container">
+    <div class="section-header section-header--center" style="margin-bottom:2.5rem;">
+      <div class="gold-rule" style="margin:0 auto 1.25rem;"></div>
+      <span class="eyebrow">Start Here · 10 Seconds</span>
+      <h2 style="margin-bottom:.5rem;">What's Bleeding in Your Store<br>Right Now?</h2>
+      <p>Tap the one that stings most. We'll show you the behavior behind it.</p>
+    </div>
+
+    <!-- SYMPTOM BUTTONS -->
+    <div class="symptom-grid" id="symptomGrid">
+      <button class="symptom-btn" data-symptom="csi">
+        <span class="symptom-btn__icon">📉</span>
+        <span class="symptom-btn__label">My CSI keeps slipping and nobody can tell me why</span>
+      </button>
+      <button class="symptom-btn" data-symptom="turnover">
+        <span class="symptom-btn__icon">🚪</span>
+        <span class="symptom-btn__label">I keep losing good people and replacing them is killing me</span>
+      </button>
+      <button class="symptom-btn" data-symptom="reactive">
+        <span class="symptom-btn__icon">🔥</span>
+        <span class="symptom-btn__label">My managers react to fires instead of preventing them</span>
+      </button>
+      <button class="symptom-btn" data-symptom="inconsistent">
+        <span class="symptom-btn__icon">📊</span>
+        <span class="symptom-btn__label">Great month, terrible month — I can't make it consistent</span>
+      </button>
+    </div>
+
+    <!-- DYNAMIC RESPONSE PANEL -->
+    <div class="symptom-response" id="symptomResponse" aria-live="polite">
+      <div class="symptom-response__inner">
+        <span class="symptom-response__tag" id="responseTag">The Behavior Behind It</span>
+        <h3 id="responseHeadline">Tap a symptom above</h3>
+        <p id="responseBody">Each one traces back to a specific behavior nobody is coaching. We'll name yours in 20 minutes — in writing.</p>
+        <a href="/strategy-call.html" class="btn btn--gold btn--lg" id="responseCta" style="margin-top:.5rem;">
+          Book Your Free Diagnostic
+          <span class="btn__icon" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .symptom-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1rem;
+    max-width:840px;
+    margin:0 auto;
+  }
+  .symptom-btn{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    text-align:left;
+    background:var(--white);
+    border:1.5px solid var(--border);
+    border-radius:14px;
+    padding:1.3rem 1.5rem;
+    cursor:pointer;
+    transition:border-color .2s,transform .15s,box-shadow .2s;
+    font-family:var(--font-s);
+  }
+  .symptom-btn:hover{
+    border-color:var(--gold);
+    transform:translateY(-2px);
+    box-shadow:0 8px 28px rgba(10,31,61,.1);
+  }
+  .symptom-btn.active{
+    border-color:var(--gold);
+    background:var(--gold-pale);
+    box-shadow:0 8px 28px rgba(200,153,43,.2);
+  }
+  .symptom-btn__icon{
+    font-size:1.6rem;
+    flex-shrink:0;
+  }
+  .symptom-btn__label{
+    font-size:.95rem;
+    font-weight:600;
+    color:var(--navy);
+    line-height:1.4;
+  }
+  .symptom-response{
+    max-width:840px;
+    margin:1.5rem auto 0;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height .4s var(--ease),opacity .4s var(--ease),margin .4s var(--ease);
+  }
+  .symptom-response.show{
+    max-height:420px;
+    opacity:1;
+    margin-top:1.5rem;
+  }
+  .symptom-response__inner{
+    background:var(--navy);
+    border:1px solid rgba(200,153,43,.3);
+    border-radius:16px;
+    padding:2.5rem;
+    text-align:center;
+  }
+  .symptom-response__tag{
+    font-family:var(--font-m);
+    font-size:.65rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:block;
+    margin-bottom:1rem;
+  }
+  .symptom-response__inner h3{
+    color:var(--white);
+    font-size:1.5rem;
+    margin-bottom:1rem;
+    line-height:1.25;
+  }
+  .symptom-response__inner p{
+    color:rgba(255,255,255,.7);
+    font-size:1rem;
+    line-height:1.7;
+    max-width:600px;
+    margin:0 auto 1.75rem;
+  }
+  @media(max-width:768px){
+    .symptom-grid{grid-template-columns:1fr;}
+    .symptom-response__inner{padding:1.75rem;}
+    .symptom-response__inner h3{font-size:1.25rem;}
+  }
+</style>
+
+<script>
+(function(){
+  var data = {
+    csi: {
+      tag: "The Behavior Behind It",
+      headline: "CSI is a scoreboard. It only moves when the behavior moves.",
+      body: "When advisors aren't coached on the specific behaviors that drive the survey \u2014 the walkaround, the call-back, the follow-through \u2014 the score drifts and nobody can point to why. The diagnostic names the exact behavior costing you points, in writing, in 20 minutes."
+    },
+    turnover: {
+      tag: "The Behavior Behind It",
+      headline: "People don't quit dealerships. They quit how they're managed.",
+      body: "Your best people leave when they're managed reactively and never developed deliberately. The next manager you lose costs $75,000 minimum. The diagnostic shows you the leadership behavior driving the churn \u2014 before it costs you another one."
+    },
+    reactive: {
+      tag: "The Behavior Behind It",
+      headline: "A reactive manager was never taught to be anything else.",
+      body: "Fire-fighting isn't a personality. It's the absence of a coaching cadence nobody installed. The diagnostic identifies the missing rhythm that turns a reactive manager into a deliberate one \u2014 and hands you the 90-day plan to install it."
+    },
+    inconsistent: {
+      tag: "The Behavior Behind It",
+      headline: "Inconsistent results come from inconsistent behavior.",
+      body: "A great month followed by a terrible one means the result isn't anchored to a repeatable behavior. You're managing outcomes you can't control instead of the behavior that produces them. The diagnostic pinpoints the one behavior to stabilize first."
+    }
+  };
+
+  var grid = document.getElementById('symptomGrid');
+  var panel = document.getElementById('symptomResponse');
+  var tagEl = document.getElementById('responseTag');
+  var headEl = document.getElementById('responseHeadline');
+  var bodyEl = document.getElementById('responseBody');
+
+  grid.addEventListener('click', function(e){
+    var btn = e.target.closest('.symptom-btn');
+    if(!btn) return;
+    var key = btn.getAttribute('data-symptom');
+    var d = data[key];
+    if(!d) return;
+
+    // toggle active state
+    var all = grid.querySelectorAll('.symptom-btn');
+    for(var i=0;i<all.length;i++){ all[i].classList.remove('active'); }
+    btn.classList.add('active');
+
+    // populate + reveal
+    tagEl.textContent = d.tag;
+    headEl.textContent = d.headline;
+    bodyEl.textContent = d.body;
+    panel.classList.add('show');
+
+    // smooth scroll the panel into view on mobile
+    setTimeout(function(){
+      panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 150);
+  });
+})();
+</script>
+
+  
 
 <!-- THE PROBLEM -->
 <section class="section section--white" aria-labelledby="problem-heading">
