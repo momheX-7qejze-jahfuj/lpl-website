@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="The Leadership Quotient™ — Free daily leadership habit tracker for fixed ops leaders. Built by Coach Joe Clementi at The Leadership Pressure Lab™."/>
+<title>The Leadership Quotient™ | Leadership Pressure Lab™</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --navy:#1E3A5F;--navy2:#2a4f7f;--maroon:#7A1F2B;--maroon2:#9e2938;
+  --white:#fff;--bg:#f0f2f7;--surface:#F7F8FC;--border:#e0e4ed;
+  --text:#1a1a2e;--muted:#6b7280;--light:#9ca3af;
+  --green:#16a34a;--r:10px;--sh:0 4px 24px rgba(30,58,95,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.wrap{max-width:900px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+.banner{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--r);padding:1rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--sh);}
+.banner-text{color:#fff;}
+.banner-text strong{display:block;font-size:14px;margin-bottom:2px;}
+.banner-text span{font-size:12px;opacity:.8;}
+.banner-btns{display:flex;gap:8px;flex-shrink:0;}
+.b-gold{background:var(--maroon);color:#fff;border:none;border-radius:6px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.b-ghost{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:1rem;}
+.modal{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;}
+.modal-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;}
+.modal-brand{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--maroon);text-transform:uppercase;margin-bottom:4px;}
+.modal-title{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:1.2rem;line-height:1.5;}
+.mtabs{display:flex;margin-bottom:1.2rem;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+.mtab{flex:1;padding:9px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;color:var(--muted);}
+.mtab.on{background:var(--navy);color:#fff;}
+.fld{margin-bottom:.85rem;}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+.fld input,.fld select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;color:var(--text);outline:none;background:#fff;}
+.fld input:focus,.fld select:focus{border-color:var(--navy);}
+.btn-navy{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-navy:hover{background:var(--navy2);}
+.merr{font-size:12px;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:8px 12px;margin-bottom:.85rem;}
+.modal-note{font-size:11px;color:var(--light);text-align:center;margin-top:1rem;line-height:1.7;}
+.modal-note a{color:var(--navy);text-decoration:none;font-weight:700;}
+.hdr{background:#fff;border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh);}
+.hdr-left .hl-brand{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--maroon);text-transform:uppercase;}
+.hdr-left h1{font-size:19px;font-weight:700;color:var(--navy);line-height:1.2;}
+.hdr-left .hl-tag{font-size:11px;color:var(--muted);margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ubadge{font-size:12px;color:var(--muted);}
+.ubadge strong{color:var(--navy);}
+.b-sm{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:none;color:var(--muted);}
+.b-sm:hover{border-color:var(--maroon);color:var(--maroon);}
+.b-maroon{background:var(--maroon);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+.b-navy-out{background:none;color:var(--navy);border:1.5px solid var(--navy);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+.nav{display:flex;gap:4px;margin-bottom:1rem;background:#fff;border-radius:var(--r);padding:6px;box-shadow:var(--sh);}
+.ntab{flex:1;padding:8px 4px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;}
+.ntab.on{background:var(--navy);color:#fff;}
+.card{background:#fff;border-radius:var(--r);padding:1.25rem 1.5rem;box-shadow:var(--sh);margin-bottom:1rem;}
+.ctitle{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.env-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-bottom:.5rem;}
+.ecard{border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:.15s;}
+.ecard:hover{border-color:var(--navy);}
+.ecard.on{border-color:var(--navy);background:#eef2f9;}
+.eicon{font-size:18px;margin-bottom:4px;}
+.ename{font-size:13px;font-weight:700;color:var(--navy);}
+.edesc{font-size:11px;color:var(--muted);margin-top:2px;}
+.bsel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.bsel-btn{border:1.5px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;text-align:center;font-size:12px;font-weight:700;color:var(--navy);background:none;transition:.15s;}
+.bsel-btn:hover{border-color:var(--navy);}
+.bsel-btn.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.tarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;resize:vertical;font-family:inherit;outline:none;color:var(--text);}
+.tarea:focus{border-color:var(--navy);}
+.nudge-box{border-left:4px solid var(--maroon);background:linear-gradient(135deg,#eef2f9,#f7f0f2);border-radius:0 8px 8px 0;padding:12px 16px;}
+.nudge-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);margin-bottom:4px;}
+.nudge-txt{font-size:14px;color:var(--navy);line-height:1.65;font-style:italic;}
+.bnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;}
+.bpill{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);background:none;position:relative;}
+.bpill.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.pip{position:absolute;top:3px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--green);}
+.anchor{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);margin-bottom:1rem;}
+.pbar-wrap{height:6px;background:#e5e7eb;border-radius:3px;margin-bottom:1rem;}
+.pbar{height:100%;border-radius:3px;background:var(--navy);transition:width .4s;}
+.pbar.full{background:var(--maroon);}
+.hitem{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.hitem:last-child{border-bottom:none;}
+.chk{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);background:#fff;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.chk.on{background:var(--navy);border-color:var(--navy);}
+.htxt{font-size:14px;color:var(--text);line-height:1.5;flex:1;}
+.htxt.done{text-decoration:line-through;color:var(--light);}
+.hnudge{font-size:11px;color:var(--maroon);margin-top:3px;font-style:italic;}
+.srow{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.slbl{font-size:13px;color:var(--muted);}
+.scircs{display:flex;gap:6px;}
+.scirc{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:.15s;}
+.scirc.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+.ref-card{background:#f9f0f2;border:1.5px solid var(--maroon);border-radius:var(--r);padding:1.25rem;}
+.ref-prompt{font-size:14px;font-style:italic;color:var(--navy);margin-bottom:10px;line-height:1.6;}
+.ref-ta{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;resize:vertical;font-family:inherit;outline:none;min-height:80px;color:var(--text);}
+.ref-ta:focus{border-color:var(--maroon);}
+.b-save{padding:8px 18px;background:var(--maroon);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;}
+.mcrd{background:var(--surface);border-radius:8px;padding:12px;text-align:center;}
+.mval{font-size:24px;font-weight:700;color:var(--navy);}
+.mlbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.mdelta{font-size:11px;font-weight:700;margin-top:4px;}
+.up{color:var(--green);}
+.dn{color:#dc2626;}
+.vel-wrap{display:flex;align-items:center;gap:16px;padding:.75rem 0;}
+.vel-num{font-size:48px;font-weight:700;color:var(--navy);line-height:1;}
+.vel-info{flex:1;}
+.vel-lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);}
+.vel-desc{font-size:13px;color:var(--muted);margin-top:2px;}
+.vel-track{height:10px;background:#e5e7eb;border-radius:5px;margin-top:10px;}
+.vel-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--navy),var(--maroon));transition:width .6s;}
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.cwrap{position:relative;width:100%;}
+.glock{background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--r);padding:2.5rem 1.5rem;text-align:center;margin-bottom:1rem;}
+.glock p{font-size:14px;color:var(--muted);margin-bottom:1.25rem;line-height:1.7;}
+.foot{text-align:center;padding:2rem 1rem;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:1rem;}
+.foot strong{color:var(--maroon);}
+.foot a{color:var(--navy);text-decoration:none;font-weight:700;}
+.foot .legal{font-size:10px;color:var(--light);margin-top:6px;}
+.hide{display:none!important;}
+.fade{animation:fi .3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){
+  .bsel-grid{grid-template-columns:repeat(2,1fr);}
+  .mgrid{grid-template-columns:repeat(2,1fr);}
+  .hdr{flex-direction:column;gap:10px;text-align:center;}
+  .crow{grid-template-columns:1fr;}
+  .banner{flex-direction:column;text-align:center;}
+  .banner-btns{justify-content:center;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- SAVE BANNER -->
+<div id="banner" class="banner hide">
+  <div class="banner-text">
+    <strong>Your progress isn't saved yet.</strong>
+    <span>Create a free account to track your streak, save reflections, and see your trends build over time.</span>
+  </div>
+  <div class="banner-btns">
+    <button class="b-gold" onclick="openModal('signup')">Save My Progress &rarr;</button>
+    <button class="b-ghost" onclick="document.getElementById('banner').classList.add('hide')">Maybe Later</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hl-brand">The Leadership Pressure Lab&trade;</div>
+    <h1>The Leadership Quotient&trade;</h1>
+    <div class="hl-tag">Daily Behavior System &mdash; Fixed Ops Leaders</div>
+  </div>
+  <div class="hdr-right" id="hdrRight"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="ntab on" onclick="showTab('morning')">Morning Setup</button>
+  <button class="ntab" onclick="showTab('tracker')">Habit Tracker</button>
+  <button class="ntab" onclick="showTab('evening')">Evening Reflection</button>
+  <button class="ntab" onclick="showTab('progress')">My Progress</button>
+</div>
+
+<!-- MORNING -->
+<div id="tab-morning" class="fade">
+  <div class="card">
+    <div class="ctitle">Step 1 &mdash; What are you walking into today?</div>
+    <div class="env-grid" id="envGrid"></div>
+  </div>
+  <div id="nudgeBox" class="card hide">
+    <div class="nudge-box">
+      <div class="nudge-lbl">Coach Joe's Morning Nudge</div>
+      <div class="nudge-txt" id="nudgeTxt"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Step 2 &mdash; Lock in one behavior to lead with today</div>
+    <div class="bsel-grid" id="focusGrid"></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Step 3 &mdash; Write your intention</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">One sentence. What does a win look like today?</p>
+    <textarea class="tarea" id="intentTxt" rows="2" placeholder="e.g. I will coach two advisors through their own problems instead of solving for them..."></textarea>
+    <button class="btn-navy" style="margin-top:10px;max-width:200px;" onclick="saveMorning()">Lock It In &rarr;</button>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div id="tab-tracker" class="hide fade">
+  <div id="recapCard" class="card hide">
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="flex:1;">
+        <div class="ctitle">Today's Focus</div>
+        <div id="recapEnv" style="font-size:13px;color:var(--muted);margin-bottom:4px;"></div>
+        <div id="recapIntent" style="font-size:14px;font-style:italic;color:var(--navy);"></div>
+      </div>
+      <div style="text-align:center;min-width:56px;">
+        <div id="streakNum" style="font-size:22px;font-weight:700;color:var(--maroon);"></div>
+        <div style="font-size:10px;color:var(--muted);">Day Streak</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="bnav" id="behNav"></div>
+    <div class="anchor" id="anchorTxt"></div>
+    <div class="pbar-wrap"><div class="pbar" id="pbar" style="width:0%"></div></div>
+    <div id="habitList"></div>
+    <div class="srow">
+      <span class="slbl">Score this behavior:</span>
+      <div class="scircs" id="scoreRow"></div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENING -->
+<div id="tab-evening" class="hide fade">
+  <div class="card">
+    <div class="ctitle">Today's Behavior Recap</div>
+    <div id="eveningList"></div>
+  </div>
+  <div class="ref-card">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);margin-bottom:8px;">Leadership Pressure Check</div>
+    <div class="ref-prompt" id="refPrompt"></div>
+    <textarea class="ref-ta" id="refTxt" placeholder="Write your honest answer here..."></textarea>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="b-save" onclick="saveEvening()">Save Reflection</button>
+      <span id="saveConfirm" style="font-size:12px;color:var(--green);display:none;">&#10003; Saved</span>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem;">
+    <div class="ctitle">Tomorrow's Edge</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">One thing you'll do differently tomorrow:</p>
+    <textarea class="tarea" id="edgeTxt" rows="2" placeholder="Be specific. Vague intentions don't survive 7am..."></textarea>
+    <button class="btn-navy" style="margin-top:10px;max-width:240px;" onclick="saveEdge()">Set Tomorrow's Edge &rarr;</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="tab-progress" class="hide fade">
+  <div id="guestLock" class="glock hide">
+    <p><strong style="color:var(--navy);font-size:16px;">Your progress lives here.</strong><br><br>
+    Streak history, velocity score, behavior charts, and coaching insights &mdash; all of it builds the moment you create a free account.<br><br>
+    It takes 30 seconds. Your data starts compounding today.</p>
+    <button class="btn-navy" style="max-width:280px;margin:0 auto;" onclick="openModal('signup')">Create Free Account &rarr;</button>
+  </div>
+  <div id="progressContent">
+    <div class="mgrid" id="metricGrid"></div>
+    <div class="card">
+      <div class="ctitle">Leadership Velocity Score</div>
+      <div class="vel-wrap">
+        <div>
+          <div class="vel-num" id="velNum">--</div>
+          <div style="font-size:11px;color:var(--muted);">/ 100</div>
+        </div>
+        <div class="vel-info">
+          <div class="vel-lbl" id="velLbl">--</div>
+          <div class="vel-desc" id="velDesc">Complete your first session to unlock.</div>
+          <div class="vel-track"><div class="vel-fill" id="velBar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="crow">
+      <div class="card">
+        <div class="ctitle">7-Day Completion Rate</div>
+        <div class="cwrap" style="height:200px;"><canvas id="wkChart" role="img" aria-label="7-day completion bar chart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Behavior Breakdown &mdash; This Week</div>
+        <div class="cwrap" style="height:200px;"><canvas id="radChart" role="img" aria-label="Behavior radar chart"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Streak Calendar &mdash; All Behaviors</div>
+      <div id="streakCal"></div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--maroon);border-radius:0 var(--r) var(--r) 0;">
+      <div class="ctitle">Coaching Insight</div>
+      <div id="insightTxt" style="font-size:14px;color:var(--navy);line-height:1.75;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <strong>The Leadership Quotient&trade;</strong> is an original tool developed by
+  <strong>Joseph &ldquo;Coach Joe&rdquo; Clementi</strong><br>
+  &copy; 2026 The Leadership Pressure Lab&trade; &middot; All rights reserved &middot;
+  <a href="https://leadershippressurelab.com" target="_blank" rel="noopener">leadershippressurelab.com</a>
+  <div class="legal">Original proprietary framework. No third-party intellectual property reproduced. All behavioral content created by Joseph Clementi.</div>
+</div>
+
+</div>
+
+<!-- AUTH MODAL -->
+<div id="authModal" class="overlay hide">
+  <div class="modal fade">
+    <button class="modal-x" onclick="closeModal()">&#x2715;</button>
+    <div class="modal-brand">The Leadership Pressure Lab&trade;</div>
+    <div class="modal-title" id="mTitle">Save Your Progress</div>
+    <div class="modal-sub" id="mSub">Free account. No credit card. Your data stays yours.</div>
+    <div class="mtabs">
+      <button class="mtab on" onclick="switchModal('signup')">Create Account</button>
+      <button class="mtab" onclick="switchModal('signin')">Sign In</button>
+    </div>
+    <div id="mErr" class="merr hide"></div>
+    <div id="mUp">
+      <div class="fld"><label>First Name</label><input type="text" id="suN" placeholder="e.g. Marcus"/></div>
+      <div class="fld"><label>Work Email</label><input type="email" id="suE" placeholder="you@dealership.com"/></div>
+      <div class="fld"><label>Your Role</label>
+        <select id="suR">
+          <option value="">Select your role...</option>
+          <option>Fixed Ops Director</option>
+          <option>Service Manager</option>
+          <option>Service Advisor Lead</option>
+          <option>General Manager</option>
+          <option>Parts Manager</option>
+          <option>Other Dealership Leader</option>
+        </select>
+      </div>
+      <div class="fld"><label>Password</label><input type="password" id="suP" placeholder="Create a password (6+ chars)"/></div>
+      <button class="btn-navy" onclick="signUp()">Create Free Account &rarr;</button>
+    </div>
+    <div id="mIn" class="hide">
+      <div class="fld"><label>Email</label><input type="email" id="siE" placeholder="you@dealership.com"/></div>
+      <div class="fld"><label>Password</label><input type="password" id="siP" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"/></div>
+      <button class="btn-navy" onclick="signIn()">Sign In &rarr;</button>
+    </div>
+    <p class="modal-note">&copy; 2026 Joseph Clementi &middot; All original content &middot; No third-party IP<br>
+    <a href="https://leadershippressurelab.com" target="_blank" rel="noopener">leadershippressurelab.com</a></p>
+  </div>
+</div>
+
+<script>
+var ENVS=[
+  {id:"floor",icon:"&#128295;",name:"High-Volume Floor",desc:"15+ ROs open, advisors stretched",nudge:"You're walking into noise. Your job today isn't to solve every problem &mdash; it's to stay deliberate while everyone else reacts. One coaching moment is worth more than ten quick fixes."},
+  {id:"short",icon:"&#9888;&#65039;",name:"Short-Staffed",desc:"Advisor or tech called out",nudge:"Short-staffed is pressure. Pressure reveals leadership. Resist the urge to fill every gap yourself &mdash; protect your team's ownership even when it's tempting to jump in."},
+  {id:"newadv",icon:"&#127807;",name:"New Advisor On Deck",desc:"Onboarding or first 90 days",nudge:"New people are watching everything. Your patience, your questions, and your follow-through right now set the standard they'll carry for years. Slow down to build fast."},
+  {id:"perfrev",icon:"&#128202;",name:"Performance Review Week",desc:"Numbers, scorecards, conversations",nudge:"The review isn't the conversation that matters &mdash; the daily clarity before it is. If today is the first time they're hearing it, that's the real issue to solve."},
+  {id:"custesc",icon:"&#128680;",name:"Customer Escalation",desc:"RO dispute or CSI at risk",nudge:"How you handle an escalation in front of your team teaches them more than any training. Stay steady. Model the standard. Then debrief it &mdash; that's where the coaching lives."},
+  {id:"strategic",icon:"&#128506;&#65039;",name:"Planning / Strategic Day",desc:"Meetings, goals, no floor",nudge:"Off-floor days feel productive. Be careful. The real leadership work happens when you return. Set one intention for when you step back into the pressure."}
+];
+var BEHS=[
+  {id:"clarity",label:"Clarity",anchor:"DEFINE &rarr; CONFIRM &rarr; REINFORCE",
+   habits:[
+    {id:"c1",text:"I defined expectations clearly &mdash; not assumed they were understood",nudge:"Assumption is where performance breaks. Before you move on, ask: 'Walk me through it.'"},
+    {id:"c2",text:"I asked 'Walk me through your plan' before approving any action",nudge:"Speed feels efficient. Clarity is what's actually efficient."},
+    {id:"c3",text:"I confirmed understanding &mdash; not just agreement",nudge:"'Got it' is not confirmation. Make them say it back."},
+    {id:"c4",text:"I caught and corrected a gap before it became a problem",nudge:"A gap you find today is a problem you prevent next week."}
+   ],ref:"Where am I still assuming instead of confirming? Name one conversation I moved past too fast today."},
+  {id:"coaching",label:"Coaching",anchor:"ASK &rarr; PAUSE &rarr; GUIDE",
+   habits:[
+    {id:"co1",text:"I asked 'What do you think?' before giving my answer",nudge:"Every answer you give removes thinking from your team. Build thinkers, not order-takers."},
+    {id:"co2",text:"I paused and let silence work &mdash; didn't rush to fill it",nudge:"Silence is where thinking starts. Let it breathe."},
+    {id:"co3",text:"I guided a solution &mdash; didn't hand one over",nudge:"You're not building solutions. You're building people."},
+    {id:"co4",text:"Someone left a conversation more capable than when they entered",nudge:"That's the only metric that matters in coaching."}
+   ],ref:"Where did I answer too fast today? Who on my team is still waiting for me to coach instead of direct?"},
+  {id:"accountability",label:"Accountability",anchor:"DEFINE &rarr; COMMIT &rarr; FOLLOW UP",
+   habits:[
+    {id:"a1",text:"I defined a commitment specifically &mdash; what, when, how measured",nudge:"Vague commitment is no commitment. 'Let's make sure this gets done' is not accountability."},
+    {id:"a2",text:"I set a follow-up time before leaving the conversation",nudge:"If you didn't set the follow-up, the standard is already drifting."},
+    {id:"a3",text:"I followed through on a prior commitment today",nudge:"Accountability starts with you. Model it before you demand it."},
+    {id:"a4",text:"I addressed a repeated issue instead of hoping it resolves",nudge:"Standards don't drift. Leaders allow them to."}
+   ],ref:"What standard did I allow to slip today? Where am I hoping something sticks instead of making sure it does?"},
+  {id:"connection",label:"Connection",anchor:"ASK &rarr; LISTEN &rarr; UNDERSTAND",
+   habits:[
+    {id:"cn1",text:"I asked one real question &mdash; not 'How are things going?'",nudge:"'How are things?' gets 'Fine.' Real questions get real answers."},
+    {id:"cn2",text:"I created space in a conversation and let them fill it",nudge:"If you don't create space, they won't fill it. Stop talking sooner."},
+    {id:"cn3",text:"I listened without fixing, directing, or redirecting",nudge:"People don't hide problems. They hide from leaders who don't listen."},
+    {id:"cn4",text:"Someone opened up to me today &mdash; beyond surface level",nudge:"Trust is built in the moments you didn't rush past."}
+   ],ref:"Were my conversations about the work &mdash; or the person doing the work? Who have I been overlooking this week?"},
+  {id:"ownership",label:"Ownership",anchor:"ASSIGN &rarr; GUIDE &rarr; HOLD",
+   habits:[
+    {id:"o1",text:"I gave a problem back &mdash; didn't take it over",nudge:"Every time you take it back, you train them to give it up."},
+    {id:"o2",text:"I asked for their plan before offering mine",nudge:"'Walk me through what you've done' changes everything."},
+    {id:"o3",text:"I followed up without rescuing or stepping in",nudge:"You're not the solution. You're the system builder."},
+    {id:"o4",text:"I resisted the urge to jump in when it got uncomfortable",nudge:"Your restraint is their growth. Feel that discomfort &mdash; it's working."}
+   ],ref:"Where am I solving something someone else should be learning? Who on my team depends on me too much &mdash; and why?"},
+  {id:"execution",label:"Execution",anchor:"DECIDE &rarr; PROTECT &rarr; EXECUTE",
+   habits:[
+    {id:"e1",text:"I decided what mattered before the day started",nudge:"If you don't decide the day, the day decides you."},
+    {id:"e2",text:"I protected at least one leadership priority against urgency",nudge:"Everything feels urgent. Almost nothing is. Choose deliberately."},
+    {id:"e3",text:"I ended the day effective &mdash; not just busy",nudge:"Motion feels productive. Execution creates results."},
+    {id:"e4",text:"I chose meaningful over easy in at least one moment",nudge:"The easy path is almost never the leadership path."}
+   ],ref:"Did I decide the day or did the day decide me? What kept showing up that I kept letting win?"}
+];
+var REFS=[
+  "Where did you step in when you should have stepped back?",
+  "What conversation did you avoid today that you need to have tomorrow?",
+  "Who on your team didn't get the best version of you &mdash; and why?",
+  "Where did the noise win today? What would you protect differently tomorrow?",
+  "Name one moment today where you coached instead of directed. What made that possible?",
+  "What standard slipped today that you'll reset first thing tomorrow?"
+];
+var VLEVELS=[
+  {min:0,max:20,lbl:"Building Foundation",desc:"You're in the habit-install phase. Every session compounds."},
+  {min:21,max:40,lbl:"Gaining Traction",desc:"Consistency is building. The patterns are starting to stick."},
+  {min:41,max:60,lbl:"Operating Leader",desc:"You're executing the behaviors. The team is starting to feel it."},
+  {min:61,max:80,lbl:"High-Performance Zone",desc:"Deliberate. Consistent. Your leadership is ahead of your environment."},
+  {min:81,max:100,lbl:"Integrated Leader",desc:"This is the standard. You're building a team that doesn't need you to rescue it."}
+];
+
+var user=null,db={},activeBeh="clarity",hits=0,bannerDone=false,guest={};
+var TODAY=new Date().toISOString().slice(0,10);
+var wkObj=null,radObj=null;
+
+function gdb(){try{return JSON.parse(localStorage.getItem("lqdb")||"{}")}catch{return{}}}
+function sdb(){if(user)localStorage.setItem("lqdb",JSON.stringify(db));}
+function udb(){return user?(db[user]||(db[user]={})):guest;}
+function day(){var u=udb();return u[TODAY]||(u[TODAY]={}),u[TODAY];}
+
+function openModal(m){document.getElementById("authModal").classList.remove("hide");switchModal(m||"signup");}
+function closeModal(){document.getElementById("authModal").classList.add("hide");}
+function switchModal(m){
+  document.querySelectorAll(".mtab").forEach(function(t,i){t.classList.toggle("on",(i===0&&m==="signup")||(i===1&&m==="signin"));});
+  document.getElementById("mUp").classList.toggle("hide",m!=="signup");
+  document.getElementById("mIn").classList.toggle("hide",m!=="signin");
+  document.getElementById("mErr").classList.add("hide");
+  document.getElementById("mTitle").textContent=m==="signup"?"Save Your Progress":"Welcome Back";
+  document.getElementById("mSub").textContent=m==="signup"?"Free account. No credit card. Your data stays yours.":"Sign in to access your progress and streak history.";
+}
+function merr(msg){var e=document.getElementById("mErr");e.textContent=msg;e.classList.remove("hide");}
+function signUp(){
+  var n=document.getElementById("suN").value.trim(),e=document.getElementById("suE").value.trim().toLowerCase(),r=document.getElementById("suR").value,p=document.getElementById("suP").value;
+  if(!n||!e||!r||!p){merr("Please fill in all fields.");return;}
+  if(p.length<6){merr("Password must be at least 6 characters.");return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){merr("Please enter a valid email address.");return;}
+  db=gdb();var users=db._users||{};
+  if(users[e]){merr("An account with that email already exists. Try signing in.");return;}
+  users[e]={n:n,r:r,p:p,d:TODAY};db._users=users;
+  db[e]=Object.assign({},guest);sdb();login(e,n);
+}
+function signIn(){
+  var e=document.getElementById("siE").value.trim().toLowerCase(),p=document.getElementById("siP").value;
+  db=gdb();var users=db._users||{};
+  if(!users[e]||users[e].p!==p){merr("Email or password incorrect.");return;}
+  login(e,users[e].n);
+}
+function login(e,n){
+  user=e;localStorage.setItem("lqU",JSON.stringify({e:e,n:n}));
+  closeModal();document.getElementById("banner").classList.add("hide");
+  renderHdr();renderProgress();
+}
+function logout(){localStorage.removeItem("lqU");user=null;guest={};renderHdr();showTab("morning");}
+function checkSession(){
+  db=gdb();var s=localStorage.getItem("lqU");
+  if(s){try{var u=JSON.parse(s);user=u.e;}catch{}}
+}
+function track(){
+  if(user||bannerDone)return;
+  hits++;if(hits>=3){bannerDone=true;document.getElementById("banner").classList.remove("hide");}
+}
+function renderHdr(){
+  var h=document.getElementById("hdrRight");
+  if(user){
+    var nm=(db._users&&db._users[user])?db._users[user].n:user;
+    h.innerHTML='<div class="ubadge">Welcome, <strong>'+nm+'</strong></div>'+
+      '<button class="b-sm" onclick="logout()">Sign Out</button>'+
+      '<a href="https://leadershippressurelab.com/strategy-call.html" target="_blank" rel="noopener"><button class="b-maroon">Book Strategy Call &rarr;</button></a>';
+  }else{
+    h.innerHTML='<button class="b-navy-out" onclick="openModal(\'signin\')">Sign In</button>'+
+      '<button class="b-maroon" onclick="openModal(\'signup\')">Save Progress &rarr;</button>';
+  }
+}
+function buildEnvGrid(){
+  var d=day();
+  document.getElementById("envGrid").innerHTML=ENVS.map(function(e){
+    return'<div class="ecard'+(d.env===e.id?' on':'')+'" onclick="pickEnv(\''+e.id+'\')">'+
+      '<div class="eicon">'+e.icon+'</div><div class="ename">'+e.name+'</div><div class="edesc">'+e.desc+'</div></div>';
+  }).join("");
+}
+function pickEnv(id){
+  day().env=id;sdb();buildEnvGrid();track();
+  var e=ENVS.find(function(x){return x.id===id;});
+  document.getElementById("nudgeTxt").innerHTML=e.nudge;
+  document.getElementById("nudgeBox").classList.remove("hide");
+}
+function buildFocusGrid(){
+  var d=day();
+  document.getElementById("focusGrid").innerHTML=BEHS.map(function(b){
+    return'<button class="bsel-btn'+(d.fb===b.id?' on':'')+'" onclick="pickFocus(\''+b.id+'\')">'+b.label+'</button>';
+  }).join("");
+}
+function pickFocus(id){day().fb=id;sdb();buildFocusGrid();activeBeh=id;track();}
+function loadMorning(){
+  var d=day();
+  if(d.env){var e=ENVS.find(function(x){return x.id===d.env;});if(e){document.getElementById("nudgeTxt").innerHTML=e.nudge;document.getElementById("nudgeBox").classList.remove("hide");}}
+  if(d.intent)document.getElementById("intentTxt").value=d.intent;
+}
+function saveMorning(){
+  var v=document.getElementById("intentTxt").value.trim();
+  if(!v){alert("Add your intention first.");return;}
+  day().intent=v;sdb();track();showTab("tracker");
+}
+function buildBNav(){
+  document.getElementById("behNav").innerHTML=BEHS.map(function(b){
+    var bd=day()[b.id]||{},done=b.habits.filter(function(h){return bd[h.id];}).length;
+    return'<button class="bpill'+(activeBeh===b.id?' on':'')+'" onclick="swBeh(\''+b.id+'\')">'+b.label+(done===4?'<span class="pip"></span>':'')+'</button>';
+  }).join("");
+}
+function swBeh(id){activeBeh=id;buildBNav();renderTracker();}
+function renderTracker(){
+  buildBNav();
+  var b=BEHS.find(function(x){return x.id===activeBeh;}),d=day(),bd=d[activeBeh]||{};
+  var done=b.habits.filter(function(h){return bd[h.id];}).length,pct=Math.round(done/b.habits.length*100);
+  document.getElementById("anchorTxt").innerHTML=b.anchor;
+  var pb=document.getElementById("pbar");pb.style.width=pct+"%";pb.className="pbar"+(done===b.habits.length?" full":"");
+  document.getElementById("habitList").innerHTML=b.habits.map(function(h){
+    return'<div class="hitem">'+
+      '<div class="chk'+(bd[h.id]?' on':'')+'" onclick="toggleH(\''+b.id+'\',\''+h.id+'\')">'+
+      (bd[h.id]?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>':'')+
+      '</div><div><div class="htxt'+(bd[h.id]?' done':'')+'">'+h.text+'</div>'+
+      (!bd[h.id]?'<div class="hnudge">'+h.nudge+'</div>':'')+
+      '</div></div>';
+  }).join("");
+  var sc=d[activeBeh+"_sc"]||0;
+  document.getElementById("scoreRow").innerHTML=[1,2,3,4,5].map(function(n){
+    return'<button class="scirc'+(sc===n?' on':'')+'" onclick="setSc(\''+activeBeh+'\','+n+')">'+n+'</button>';
+  }).join("");
+  var rc=document.getElementById("recapCard");
+  if(d.intent){rc.classList.remove("hide");var e=ENVS.find(function(x){return x.id===d.env;});
+    document.getElementById("recapEnv").textContent=e?"Environment: "+e.name:"";
+    document.getElementById("recapIntent").textContent="\u201c"+d.intent+"\u201d";}
+  document.getElementById("streakNum").textContent=calcStreak();
+}
+function toggleH(bId,hId){
+  var d=day();if(!d[bId])d[bId]={};d[bId][hId]=!d[bId][hId];
+  sdb();track();renderTracker();
+}
+function setSc(bId,n){var d=day();d[bId+"_sc"]=d[bId+"_sc"]===n?0:n;sdb();renderTracker();}
+function renderEvening(){
+  var d=day();
+  document.getElementById("eveningList").innerHTML=BEHS.map(function(b){
+    var bd=d[b.id]||{},done=b.habits.filter(function(h){return bd[h.id];}).length,sc=d[b.id+"_sc"]||0;
+    return'<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">'+
+      '<div style="font-size:13px;font-weight:700;color:var(--navy);min-width:112px;">'+b.label+'</div>'+
+      '<div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;"><div style="height:6px;background:'+(done===4?'var(--maroon)':'var(--navy)')+';border-radius:3px;width:'+(done/4*100)+'%"></div></div>'+
+      '<div style="font-size:12px;color:var(--muted);min-width:30px;">'+done+'/4</div>'+
+      '<div style="font-size:12px;color:var(--maroon);min-width:52px;">'+(sc?"Score: "+sc:"")+'</div></div>';
+  }).join("");
+  document.getElementById("refPrompt").textContent=REFS[new Date().getDay()%REFS.length];
+  if(d.ref)document.getElementById("refTxt").value=d.ref;
+  if(d.edge)document.getElementById("edgeTxt").value=d.edge;
+}
+function saveEvening(){
+  day().ref=document.getElementById("refTxt").value;sdb();track();
+  var s=document.getElementById("saveConfirm");s.style.display="inline";setTimeout(function(){s.style.display="none";},2000);
+}
+function saveEdge(){day().edge=document.getElementById("edgeTxt").value;sdb();alert("Tomorrow's edge is set. Now protect it.");}
+function renderProgress(){
+  var isG=!user;
+  document.getElementById("guestLock").classList.toggle("hide",!isG);
+  document.getElementById("progressContent").classList.toggle("hide",isG);
+  if(isG)return;
+  var u=udb(),days=[];
+  for(var i=6;i>=0;i--){
+    var dt=new Date();dt.setDate(dt.getDate()-i);
+    var k=dt.toISOString().slice(0,10),lbl=i===0?"Today":dt.toLocaleDateString("en-US",{weekday:"short"}),dd=u[k]||{},tot=0,pos=0;
+    BEHS.forEach(function(b){b.habits.forEach(function(h){pos++;if(dd[b.id]&&dd[b.id][h.id])tot++;});});
+    days.push({k:k,lbl:lbl,tot:tot,pct:pos?Math.round(tot/pos*100):0});
+  }
+  var td=days[days.length-1],yd=days[days.length-2],streak=calcStreak(),vel=calcVel();
+  var nz=days.filter(function(d){return d.pct>0;}),avg=nz.length?Math.round(nz.reduce(function(s,d){return s+d.pct;},0)/nz.length):0;
+  document.getElementById("metricGrid").innerHTML=
+    '<div class="mcrd"><div class="mval">'+td.pct+'%</div><div class="mlbl">Today\'s Rate</div><div class="mdelta '+(td.pct>=yd.pct?"up":"dn")+'">'+(td.pct>=yd.pct?"&uarr;":"&darr;")+' vs yesterday</div></div>'+
+    '<div class="mcrd"><div class="mval">'+avg+'%</div><div class="mlbl">7-Day Average</div></div>'+
+    '<div class="mcrd"><div class="mval">'+streak+'</div><div class="mlbl">Day Streak</div></div>'+
+    '<div class="mcrd"><div class="mval">'+vel+'</div><div class="mlbl">Velocity Score</div></div>';
+  document.getElementById("velNum").textContent=vel;
+  var vl=VLEVELS.find(function(v){return vel>=v.min&&vel<=v.max;})||VLEVELS[0];
+  document.getElementById("velLbl").textContent=vl.lbl;document.getElementById("velDesc").textContent=vl.desc;
+  document.getElementById("velBar").style.width=vel+"%";
+  renderWkChart(days);renderRadChart();renderStreakCal();renderInsight(vel);
+}
+function calcStreak(){
+  var u=udb(),s=0;
+  for(var i=0;i<30;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var dd=u[d.toISOString().slice(0,10)]||{},tot=0;
+    BEHS.forEach(function(b){b.habits.forEach(function(h){if(dd[b.id]&&dd[b.id][h.id])tot++;});});
+    if(tot>0)s++;else if(i>0)break;
+  }return s;
+}
+function calcVel(){
+  var u=udb(),pts=0;
+  for(var i=0;i<7;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var dd=u[d.toISOString().slice(0,10)]||{},tot=0;
+    BEHS.forEach(function(b){b.habits.forEach(function(h){if(dd[b.id]&&dd[b.id][h.id])tot++;});});
+    pts+=tot/24;
+  }
+  return Math.min(100,Math.round(pts/7*80+Math.min(calcStreak(),7)/7*20));
+}
+function renderWkChart(days){
+  var ctx=document.getElementById("wkChart").getContext("2d");
+  if(wkObj)wkObj.destroy();
+  wkObj=new Chart(ctx,{type:"bar",data:{labels:days.map(function(d){return d.lbl;}),datasets:[{label:"Completion %",data:days.map(function(d){return d.pct;}),backgroundColor:days.map(function(_,i){return i===6?"#7A1F2B":"#1E3A5F";}),borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:function(v){return v+"%";},font:{size:11}},grid:{color:"rgba(0,0,0,0.05)"}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
+}
+function renderRadChart(){
+  var u=udb(),scores=BEHS.map(function(b){
+    var tot=0;for(var i=0;i<7;i++){var d=new Date();d.setDate(d.getDate()-i);var dd=u[d.toISOString().slice(0,10)]||{};tot+=b.habits.filter(function(h){return dd[b.id]&&dd[b.id][h.id];}).length;}
+    return Math.round(tot/(7*4)*100);
+  });
+  var ctx=document.getElementById("radChart").getContext("2d");
+  if(radObj)radObj.destroy();
+  radObj=new Chart(ctx,{type:"radar",data:{labels:BEHS.map(function(b){return b.label;}),datasets:[{label:"7-Day %",data:scores,backgroundColor:"rgba(30,58,95,0.15)",borderColor:"#1E3A5F",pointBackgroundColor:"#7A1F2B",pointRadius:4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:10},callback:function(v){return v+"%";}},grid:{color:"rgba(0,0,0,0.07)"},pointLabels:{font:{size:11,weight:"600"}}}}}});
+}
+function renderStreakCal(){
+  var u=udb(),html='<div style="display:flex;flex-wrap:wrap;gap:12px;">';
+  BEHS.forEach(function(b){
+    html+='<div style="flex:1;min-width:120px;"><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;">'+b.label+'</div><div style="display:flex;gap:4px;">';
+    for(var i=6;i>=0;i--){
+      var d=new Date();d.setDate(d.getDate()-i);
+      var dd=u[d.toISOString().slice(0,10)]||{},done=b.habits.filter(function(h){return dd[b.id]&&dd[b.id][h.id];}).length;
+      var bg=i===0?"#7A1F2B":done>0?"#1E3A5F":"#e5e7eb",fg=(i===0||done>0)?"white":"#9ca3af";
+      var lbl=i===0?"T":d.toLocaleDateString("en-US",{weekday:"narrow"});
+      html+='<div style="width:24px;height:24px;border-radius:4px;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:'+fg+';">'+lbl+'</div>';
+    }
+    html+='</div></div>';
+  });
+  document.getElementById("streakCal").innerHTML=html+'</div>';
+}
+function renderInsight(vel){
+  var u=udb(),weak=BEHS[0],min=999;
+  BEHS.forEach(function(b){
+    var tot=0;for(var i=0;i<7;i++){var d=new Date();d.setDate(d.getDate()-i);var dd=u[d.toISOString().slice(0,10)]||{};tot+=b.habits.filter(function(h){return dd[b.id]&&dd[b.id][h.id];}).length;}
+    if(tot<min){min=tot;weak=b;}
+  });
+  var streak=calcStreak(),lines=[];
+  if(streak===0)lines.push("You haven't logged a session yet. The first one is the hardest. Log today and the system starts building.");
+  else if(streak<3)lines.push(streak+"-day streak. The compound effect hasn't kicked in yet &mdash; it takes 5+ consecutive sessions before the behaviors start feeling automatic. Stay in it.");
+  else if(streak>=7)lines.push(streak+"-day streak. You're past the install phase. The behaviors are starting to compound. Now focus on depth, not just completion.");
+  lines.push("Your lowest behavior this week is <strong>"+weak.label+"</strong>. That's where the growth is. The anchor: <em>"+weak.anchor+"</em>. Pick one habit from that behavior and protect it tomorrow.");
+  if(vel>60)lines.push("Your velocity score signals you're operating above reactive. The next level isn't doing more &mdash; it's doing the same behaviors under higher pressure without compromising.");
+  document.getElementById("insightTxt").innerHTML=lines.join("<br><br>");
+}
+function showTab(id){
+  document.querySelectorAll('[id^="tab-"]').forEach(function(t){t.classList.add("hide");});
+  document.getElementById("tab-"+id).classList.remove("hide");
+  document.querySelectorAll(".ntab").forEach(function(t,i){t.classList.toggle("on",["morning","tracker","evening","progress"][i]===id);});
+  if(id==="tracker")renderTracker();
+  if(id==="evening")renderEvening();
+  if(id==="progress")renderProgress();
+}
+(function init(){
+  checkSession();if(user)db=gdb();
+  renderHdr();buildEnvGrid();buildFocusGrid();loadMorning();buildBNav();renderTracker();renderEvening();
+})();
+</script>
+</body>
+</html>
