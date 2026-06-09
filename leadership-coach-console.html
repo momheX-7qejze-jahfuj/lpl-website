@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership Performance Lab — Coach Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F3EC;--paper-2:#FBF9F3;--card:#FFFFFF;
+    --ink:#1B2A30;--ink-2:#445158;--muted:#7C8A90;--faint:#A7B1B4;
+    --line:#E8E2D6;--line-2:#DCD5C6;
+    --pine:#1A5E48;--pine-2:#16513E;--pine-soft:#E5EFE9;
+    --clay:#C0602B;--clay-soft:#FAEBDF;--gold:#B0863A;--gold-soft:#F6EEDD;--risk:#B5402F;
+    --shadow:0 1px 2px rgba(27,42,48,.04),0 8px 24px -12px rgba(27,42,48,.12);
+    --shadow-lg:0 2px 4px rgba(27,42,48,.05),0 24px 48px -20px rgba(27,42,48,.22);
+    --display:'Fraunces',Georgia,serif;--body:'Hanken Grotesk',sans-serif;--mono:'IBM Plex Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:9px}
+
+  .pbanner{background:var(--ink);color:#EAF3EE;font-size:12px;text-align:center;padding:9px 20px;font-family:var(--mono);letter-spacing:.02em}
+  .pbanner b{color:#9FD9C0}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 34px;background:rgba(246,243,236,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .mk{width:34px;height:34px;border-radius:10px;background:linear-gradient(150deg,var(--pine),var(--pine-2));display:grid;place-items:center;box-shadow:0 6px 16px -6px var(--pine)}
+  .brand .mk span{width:13px;height:13px;border:2.5px solid #fff;border-radius:50%;border-right-color:transparent;transform:rotate(-45deg)}
+  .brand b{font-family:var(--display);font-weight:600;font-size:15px;display:block;line-height:1.1}
+  .brand small{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .tb-r{display:flex;align-items:center;gap:14px}
+  .toggle{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink-2);cursor:pointer;user-select:none}
+  .sw{width:38px;height:22px;border-radius:12px;background:var(--line-2);position:relative;transition:.2s}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow);transition:.2s}
+  .toggle.on .sw{background:var(--pine)}.toggle.on .sw::after{left:18px}
+  .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pine),var(--pine-2));display:grid;place-items:center;color:#fff;font-weight:600;font-size:13px}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 34px 70px}
+  .hh{margin-bottom:22px}
+  .hh .kick{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine);margin-bottom:8px}
+  .hh h1{font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.02em;line-height:1.12}
+  .hh p{color:var(--ink-2);font-size:13.5px;margin-top:8px;max-width:680px}
+
+  .sect{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;margin:8px 2px 13px}
+  .sect .dot{width:6px;height:6px;border-radius:50%;background:var(--pine)}
+  .sect b{color:var(--ink);font-family:var(--body);font-weight:600;letter-spacing:0;text-transform:none;font-size:13px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .stat{padding:18px}
+  .stat .k{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+  .stat .v{font-family:var(--mono);font-weight:600;font-size:26px;letter-spacing:-.02em;line-height:1}
+  .stat .t{font-family:var(--mono);font-size:10.5px;margin-top:7px;display:inline-flex;gap:4px;align-items:center;padding:3px 7px;border-radius:6px}
+  .t.up{color:var(--pine);background:var(--pine-soft)}.t.dn{color:var(--clay);background:var(--clay-soft)}.t.fl{color:var(--muted);background:var(--paper)}
+
+  .two{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:26px;align-items:start}
+  .pad{padding:20px}
+  .bars{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+  .brow{display:grid;grid-template-columns:150px 1fr 34px;align-items:center;gap:10px;font-size:12px}
+  .brow .bl{color:var(--ink-2);font-weight:500}
+  .btrack{height:9px;border-radius:5px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+  .btrack i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--pine),#3a9c78)}
+  .brow .bn{font-family:var(--mono);font-size:11px;color:var(--pine);text-align:right}
+
+  .priv{padding:20px}
+  .priv .row{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--line);font-size:12.5px;line-height:1.45}
+  .priv .row:first-of-type{border-top:none}
+  .priv .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;flex:0 0 auto;font-size:12px;font-weight:700}
+  .priv .ic.y{background:var(--pine-soft);color:var(--pine)}.priv .ic.n{background:var(--clay-soft);color:var(--clay)}
+  .priv .row b{display:block;font-size:12.5px;margin-bottom:1px}
+  .priv .row span{color:var(--muted)}
+
+  /* cohort table */
+  .ldr{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:14px;align-items:center;padding:13px 0;border-top:1px solid var(--line)}
+  .ldr:first-of-type{border-top:none}
+  .pf{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:12px;font-family:var(--mono);flex:0 0 auto}
+  .who b{font-size:13px;display:block}.who small{font-size:11px;color:var(--muted)}
+  .idx{font-family:var(--mono);font-weight:600;font-size:17px;text-align:center;min-width:42px}
+  .idx.hi{color:var(--pine)}.idx.mid{color:var(--gold)}.idx.lo{color:var(--risk)}
+  .corn{font-size:11.5px;color:var(--ink-2);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:5px 9px;white-space:nowrap}
+  .last{font-family:var(--mono);font-size:10.5px;color:var(--faint);text-align:right;white-space:nowrap}
+  .trend{font-family:var(--mono);font-size:11px}.trend.up{color:var(--pine)}.trend.dn{color:var(--clay)}
+
+  .note{font-size:12px;color:var(--ink-2);line-height:1.55;background:var(--gold-soft);border-radius:12px;padding:14px;margin-top:16px}
+  .note b{color:var(--gold)}
+  @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.ldr{grid-template-columns:auto 1fr auto;row-gap:6px}.corn,.last{display:none}.wrap,.topbar{padding-left:18px;padding-right:18px}}
+</style>
+</head>
+<body>
+
+<div class="pbanner">PROTOTYPE · sample data only. Nothing here is stored, shared, or anonymized for real. <b>Real privacy is enforced by the backend, not this file.</b></div>
+
+<div class="topbar">
+  <div class="brand"><div class="mk"><span></span></div><div><b>Leadership Performance Lab</b><small>Coach Console</small></div></div>
+  <div class="tb-r">
+    <div class="toggle on" id="anonTog" onclick="toggleAnon()"><span class="sw"></span><span id="anonLbl">Anonymized</span></div>
+    <div class="avatar">JC</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hh">
+    <div class="kick">Your cohort · live</div>
+    <h1>How your leaders are developing. Theirs to own, yours to guide.</h1>
+    <p>Every leader you've shared the tool with, in one view. By default you see anonymous handles and progress, never their private journal or raw self-talk. Identity appears only where a leader has consented to be named.</p>
+  </div>
+
+  <!-- COHORT STATS -->
+  <div class="stats">
+    <div class="card stat"><div class="k">Active leaders</div><div class="v">24</div><div class="t up">▲ 3 this week</div></div>
+    <div class="card stat"><div class="k">Avg becoming index</div><div class="v">61</div><div class="t up">▲ 4 vs last month</div></div>
+    <div class="card stat"><div class="k">Avg streak</div><div class="v">9 <span style="font-size:13px;color:var(--muted)">days</span></div><div class="t fl">steady</div></div>
+    <div class="card stat"><div class="k">Need a nudge</div><div class="v" style="color:var(--clay)">5</div><div class="t dn">▲ index under 40</div></div>
+  </div>
+
+  <div class="two">
+    <!-- COHORT -->
+    <div class="card pad">
+      <div class="sect" style="margin-top:0"><span class="dot"></span><b>Your leaders</b> · anonymized by default</div>
+      <div id="ldrs"></div>
+    </div>
+
+    <!-- PRIVACY MODEL -->
+    <div>
+      <div class="card priv">
+        <div class="sect" style="margin-top:0"><span class="dot"></span><b>What you see, what stays private</b></div>
+        <div class="row"><div class="ic y">✓</div><div><b>Progress &amp; scores</b><span>Becoming index, streak, cornerstone focus, criteria trends.</span></div></div>
+        <div class="row"><div class="ic y">✓</div><div><b>Cohort patterns</b><span>Aggregate movement across everyone you coach.</span></div></div>
+        <div class="row"><div class="ic n">✕</div><div><b>Their private journal</b><span>Reflections and raw self-talk never reach you.</span></div></div>
+        <div class="row"><div class="ic n">✕</div><div><b>Their name, unless consented</b><span>Identity is split from behavior. Names appear only by opt-in.</span></div></div>
+        <div class="row"><div class="ic n">✕</div><div><b>Other leaders' data, to each other</b><span>No leader can ever see another. Isolation is enforced server-side.</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORNERSTONE DISTRIBUTION -->
+  <div class="sect"><span class="dot"></span><b>What your cohort is working on</b> · cornerstone focus this week</div>
+  <div class="card pad" style="margin-bottom:26px">
+    <div class="bars">
+      <div class="brow"><span class="bl">Lead Without Permission</span><span class="btrack"><i style="width:74%"></i></span><span class="bn">18</span></div>
+      <div class="brow"><span class="bl">Choose Your Council</span><span class="btrack"><i style="width:46%"></i></span><span class="bn">11</span></div>
+      <div class="brow"><span class="bl">Score the Reps</span><span class="btrack"><i style="width:88%"></i></span><span class="bn">21</span></div>
+      <div class="brow"><span class="bl">Set Your Floor</span><span class="btrack"><i style="width:58%"></i></span><span class="bn">14</span></div>
+      <div class="brow"><span class="bl">Author the Day</span><span class="btrack"><i style="width:67%"></i></span><span class="bn">16</span></div>
+    </div>
+    <div class="note"><b>Coach's read:</b> Your cohort scores reps well but avoids "Choose Your Council." They're tracking the work and dodging the hard conversations about who's in their corner. That's a group coaching theme for your next live session.</div>
+  </div>
+
+</div>
+
+<script>
+  const LEADERS=[
+    {h:'LDR-4471',name:'Marcus D.',role:'Service Manager',idx:78,trend:'up',corn:'Author the Day',last:'2h ago',named:true,color:'#1A5E48'},
+    {h:'LDR-2093',name:'(anonymous)',role:'Fixed Ops Director',idx:64,trend:'up',corn:'Score the Reps',last:'5h ago',named:false,color:'#B0863A'},
+    {h:'LDR-8812',name:'(anonymous)',role:'Lane Manager',idx:71,trend:'up',corn:'Lead Without Permission',last:'1d ago',named:false,color:'#3D6CA8'},
+    {h:'LDR-3357',name:'Renata S.',role:'Service Advisor',idx:38,trend:'dn',corn:'Set Your Floor',last:'3d ago',named:true,color:'#C0602B'},
+    {h:'LDR-6620',name:'(anonymous)',role:'Shop Foreman',idx:55,trend:'up',corn:'Choose Your Council',last:'8h ago',named:false,color:'#6b5ca0'},
+    {h:'LDR-1148',name:'(anonymous)',role:'Service Manager',idx:33,trend:'dn',corn:'Score the Reps',last:'4d ago',named:false,color:'#C24A3B'},
+    {h:'LDR-9904',name:'Theo K.',role:'Lane Manager',idx:82,trend:'up',corn:'Author the Day',last:'1h ago',named:true,color:'#1A5E48'}
+  ];
+  let anon=true;
+  function band(i){return i>=66?'hi':i>=45?'mid':'lo';}
+  function render(){
+    document.getElementById('ldrs').innerHTML=LEADERS.map(l=>{
+      const show = (!anon && l.named) ? l.name : l.h;
+      const init = (!anon && l.named) ? l.name.split(' ').map(x=>x[0]).join('').slice(0,2) : l.h.slice(-2);
+      return `<div class="ldr">
+        <div class="pf" style="background:${l.color}">${init}</div>
+        <div class="who"><b>${show}</b><small>${l.role}</small></div>
+        <div class="idx ${band(l.idx)}">${l.idx}</div>
+        <div class="corn">${l.corn}</div>
+        <div class="last"><span class="trend ${l.trend}">${l.trend==='up'?'▲':'▼'}</span> ${l.last}</div>
+      </div>`;}).join('');
+  }
+  function toggleAnon(){
+    anon=!anon;
+    document.getElementById('anonTog').classList.toggle('on',anon);
+    document.getElementById('anonLbl').textContent=anon?'Anonymized':'Consented names';
+    render();
+  }
+  render();
+</script>
+</body>
+</html>
