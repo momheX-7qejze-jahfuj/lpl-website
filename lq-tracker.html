@@ -122,6 +122,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .foot .legal{font-size:10px;color:var(--light);margin-top:6px;}
 .hide{display:none!important;}
 .fade{animation:fi .3s ease;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--navy);color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:600;box-shadow:0 8px 30px rgba(30,58,95,.35);z-index:1200;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.ntab .tck{color:#16a34a;font-weight:800;margin-right:3px;}
+.ntab.on .tck{color:#a7f3d0;}
+.edge-card{border-left:4px solid var(--navy);background:linear-gradient(135deg,#eef2f9,#f7f8fc);border-radius:0 var(--r) var(--r) 0;padding:14px 18px;margin-bottom:1rem;box-shadow:var(--sh);}
+.edge-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:4px;}
+.edge-txt{font-size:14px;font-style:italic;color:var(--navy);line-height:1.6;}
+.daydone{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--r);padding:1.75rem 1.5rem;color:#fff;text-align:center;box-shadow:var(--sh);margin-top:1rem;}
+.dd-kicker{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#f3c98b;margin-bottom:6px;}
+.dd-title{font-size:22px;font-weight:700;margin-bottom:14px;}
+.dd-stats{display:flex;justify-content:center;gap:26px;margin-bottom:14px;flex-wrap:wrap;}
+.dd-stat .v{font-size:26px;font-weight:700;}
+.dd-stat .l{font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;}
+.dd-line{font-size:13px;line-height:1.7;opacity:.92;max-width:480px;margin:0 auto 16px;font-style:italic;}
+.dd-cta{display:inline-block;background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;}
+.dd-cta2{display:inline-block;background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;margin-left:8px;}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:640px){
   .bsel-grid{grid-template-columns:repeat(2,1fr);}
@@ -152,24 +168,28 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="hdr">
   <div class="hdr-left">
     <div class="hl-brand">The Leadership Pressure Lab&trade;</div>
-    <h1>The The Pressure Gauge™&trade;</h1>
-    <div class="hl-tag">Daily Behavior System for Fixed Ops Leaders &mdash; Fixed Ops Leaders</div>
+    <h1>The Pressure Gauge&trade;</h1>
+    <div class="hl-tag">The Daily Behavior System for Fixed Ops Leaders</div>
   </div>
   <div class="hdr-right" id="hdrRight"></div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button class="ntab on" onclick="showTab('morning')">Morning Setup</button>
-  <button class="ntab" onclick="showTab('tracker')">Habit Tracker</button>
-  <button class="ntab" onclick="showTab('evening')">Evening Reflection</button>
-  <button class="ntab" onclick="showTab('progress')">My Progress</button>
+  <button class="ntab on" id="nt-morning" onclick="showTab('morning')">Morning Setup</button>
+  <button class="ntab" id="nt-tracker" onclick="showTab('tracker')">Habit Tracker</button>
+  <button class="ntab" id="nt-evening" onclick="showTab('evening')">Evening Reflection</button>
+  <button class="ntab" id="nt-progress" onclick="showTab('progress')">My Progress</button>
 </div>
 
 <!-- MORNING -->
 <div id="tab-morning" class="fade">
-  <div class="card">
-    <div class="ctitle">Step 1 &mdash; What are you walking into today?</div>
+  <div id="yedgeCard" class="edge-card hide">
+    <div class="edge-lbl">Yesterday's Edge. You committed to this.</div>
+    <div class="edge-txt" id="yedgeTxt"></div>
+  </div>
+  <div class="card" id="step1Card">
+    <div class="ctitle">Step 1. What are you walking into today?</div>
     <div class="env-grid" id="envGrid"></div>
   </div>
   <div id="nudgeBox" class="card hide">
@@ -178,12 +198,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="nudge-txt" id="nudgeTxt"></div>
     </div>
   </div>
-  <div class="card">
-    <div class="ctitle">Step 2 &mdash; Lock in one behavior to lead with today</div>
+  <div class="card" id="step2Card">
+    <div class="ctitle">Step 2. Lock in one behavior to lead with today</div>
     <div class="bsel-grid" id="focusGrid"></div>
   </div>
-  <div class="card">
-    <div class="ctitle">Step 3 &mdash; Write your intention</div>
+  <div class="card" id="step3Card">
+    <div class="ctitle">Step 3. Write your intention</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">One sentence. What does a win look like today?</p>
     <textarea class="tarea" id="intentTxt" rows="2" placeholder="e.g. I will coach two advisors through their own problems instead of solving for them..."></textarea>
     <button class="btn-navy" style="margin-top:10px;max-width:200px;" onclick="saveMorning()">Lock It In &rarr;</button>
@@ -227,16 +247,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);margin-bottom:8px;">Leadership Pressure Check</div>
     <div class="ref-prompt" id="refPrompt"></div>
     <textarea class="ref-ta" id="refTxt" placeholder="Write your honest answer here..."></textarea>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <button class="b-save" onclick="saveEvening()">Save Reflection</button>
-      <span id="saveConfirm" style="font-size:12px;color:var(--green);display:none;">&#10003; Saved</span>
-    </div>
   </div>
   <div class="card" style="margin-top:1rem;">
     <div class="ctitle">Tomorrow's Edge</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">One thing you'll do differently tomorrow:</p>
-    <textarea class="tarea" id="edgeTxt" rows="2" placeholder="Be specific. Vague intentions don't survive 7am..."></textarea>
-    <button class="btn-navy" style="margin-top:10px;max-width:240px;" onclick="saveEdge()">Set Tomorrow's Edge &rarr;</button>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">One thing you'll do differently tomorrow. Be specific. Vague intentions don't survive 7am.</p>
+    <textarea class="tarea" id="edgeTxt" rows="2" placeholder="e.g. I will hand the first escalation back to the advisor and coach them through it..."></textarea>
+    <button class="btn-navy" style="margin-top:12px;max-width:240px;" onclick="completeDay()">Complete My Day &rarr;</button>
+  </div>
+  <div id="dayDone" class="daydone hide">
+    <div class="dd-kicker">Session Logged</div>
+    <div class="dd-title">Day complete. The system is compounding.</div>
+    <div class="dd-stats">
+      <div class="dd-stat"><div class="v" id="ddPct">--</div><div class="l">Today's Rate</div></div>
+      <div class="dd-stat"><div class="v" id="ddStreak">--</div><div class="l">Day Streak</div></div>
+      <div class="dd-stat"><div class="v" id="ddVel">--</div><div class="l">Velocity</div></div>
+    </div>
+    <div class="dd-line" id="ddLine"></div>
+    <div id="ddCtas"></div>
   </div>
 </div>
 
@@ -244,7 +271,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div id="tab-progress" class="hide fade">
   <div id="guestLock" class="glock hide">
     <p><strong style="color:var(--navy);font-size:16px;">Your progress lives here.</strong><br><br>
-    Streak history, velocity score, behavior charts, and coaching insights &mdash; all of it builds the moment you create a free account.<br><br>
+    Streak history, velocity score, behavior charts, and coaching insights. All of it builds the moment you create a free account.<br><br>
     It takes 30 seconds. Your data starts compounding today.</p>
     <button class="btn-navy" style="max-width:280px;margin:0 auto;" onclick="openModal('signup')">Create Free Account &rarr;</button>
   </div>
@@ -270,12 +297,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="cwrap" style="height:200px;"><canvas id="wkChart" role="img" aria-label="7-day completion bar chart"></canvas></div>
       </div>
       <div class="card">
-        <div class="ctitle">Behavior Breakdown &mdash; This Week</div>
+        <div class="ctitle">Behavior Breakdown: This Week</div>
         <div class="cwrap" style="height:200px;"><canvas id="radChart" role="img" aria-label="Behavior radar chart"></canvas></div>
       </div>
     </div>
     <div class="card">
-      <div class="ctitle">Streak Calendar &mdash; All Behaviors</div>
+      <div class="ctitle">Streak Calendar: All Behaviors</div>
       <div id="streakCal"></div>
     </div>
     <div class="card" style="border-left:4px solid var(--maroon);border-radius:0 var(--r) var(--r) 0;">
@@ -287,7 +314,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- FOOTER -->
 <div class="foot">
-  <strong>The The Pressure Gauge™&trade;</strong> is an original tool developed by
+  <strong>The Pressure Gauge&trade;</strong> is an original tool developed by
   <strong>Joseph Clementi</strong><br>
   &copy; 2026 The Leadership Pressure Lab&trade; &middot; All rights reserved &middot;
   <a href="https://leadershippressurelab.com" target="_blank" rel="noopener">leadershippressurelab.com</a>
@@ -302,7 +329,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <button class="modal-x" onclick="closeModal()">&#x2715;</button>
     <div class="modal-brand">The Leadership Pressure Lab&trade;</div>
     <div class="modal-title" id="mTitle">Save Your Progress</div>
-    <div class="modal-sub" id="mSub">Free account. No credit card. Your data stays yours.</div>
+    <div class="modal-sub" id="mSub">Free account. No credit card. Your progress syncs securely to The Leadership Pressure Lab so your coach can track your growth.</div>
     <div class="mtabs">
       <button class="mtab on" onclick="switchModal('signup')">Create Account</button>
       <button class="mtab" onclick="switchModal('signin')">Sign In</button>
@@ -335,63 +362,86 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
+<div id="toast" class="toast"></div>
+
 <script>
+/* ===== LPL SYNC CONFIG =====
+   Paste your Google Apps Script Web App URL between the quotes below.
+   Until you do, the tool runs exactly as before with no syncing. */
+var LPL_SYNC_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+function lplSend(payload){
+  if(!LPL_SYNC_URL||LPL_SYNC_URL.indexOf("PASTE_")===0)return;
+  try{
+    fetch(LPL_SYNC_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(payload)});
+  }catch(err){}
+}
+var syncT=null;
+function scheduleSync(){
+  if(!user)return;
+  clearTimeout(syncT);
+  syncT=setTimeout(function(){
+    var prof=(db._users&&db._users[user])||{};
+    lplSend({type:"progress",email:user,name:prof.n||"",role:prof.r||"",ts:new Date().toISOString(),data:db[user]||{}});
+  },5000);
+}
+
 var ENVS=[
-  {id:"floor",icon:"&#128295;",name:"High-Volume Floor",desc:"15+ ROs open, advisors stretched",nudge:"You're walking into noise. Your job today isn't to solve every problem &mdash; it's to stay deliberate while everyone else reacts. One coaching moment is worth more than ten quick fixes."},
-  {id:"short",icon:"&#9888;&#65039;",name:"Short-Staffed",desc:"Advisor or tech called out",nudge:"Short-staffed is pressure. Pressure reveals leadership. Resist the urge to fill every gap yourself &mdash; protect your team's ownership even when it's tempting to jump in."},
+  {id:"floor",icon:"&#128295;",name:"High-Volume Floor",desc:"15+ ROs open, advisors stretched",nudge:"You're walking into noise. Your job today isn't to solve every problem. It's to stay deliberate while everyone else reacts. One coaching moment is worth more than ten quick fixes."},
+  {id:"short",icon:"&#9888;&#65039;",name:"Short-Staffed",desc:"Advisor or tech called out",nudge:"Short-staffed is pressure. Pressure reveals leadership. Resist the urge to fill every gap yourself. Protect your team's ownership even when it's tempting to jump in."},
   {id:"newadv",icon:"&#127807;",name:"New Advisor On Deck",desc:"Onboarding or first 90 days",nudge:"New people are watching everything. Your patience, your questions, and your follow-through right now set the standard they'll carry for years. Slow down to build fast."},
-  {id:"perfrev",icon:"&#128202;",name:"Performance Review Week",desc:"Numbers, scorecards, conversations",nudge:"The review isn't the conversation that matters &mdash; the daily clarity before it is. If today is the first time they're hearing it, that's the real issue to solve."},
-  {id:"custesc",icon:"&#128680;",name:"Customer Escalation",desc:"RO dispute or CSI at risk",nudge:"How you handle an escalation in front of your team teaches them more than any training. Stay steady. Model the standard. Then debrief it &mdash; that's where the coaching lives."},
+  {id:"perfrev",icon:"&#128202;",name:"Performance Review Week",desc:"Numbers, scorecards, conversations",nudge:"The review isn't the conversation that matters. The daily clarity before it is. If today is the first time they're hearing it, that's the real issue to solve."},
+  {id:"custesc",icon:"&#128680;",name:"Customer Escalation",desc:"RO dispute or CSI at risk",nudge:"How you handle an escalation in front of your team teaches them more than any training. Stay steady. Model the standard. Then debrief it. That's where the coaching lives."},
   {id:"strategic",icon:"&#128506;&#65039;",name:"Planning / Strategic Day",desc:"Meetings, goals, no floor",nudge:"Off-floor days feel productive. Be careful. The real leadership work happens when you return. Set one intention for when you step back into the pressure."}
 ];
 var BEHS=[
   {id:"clarity",label:"Clarity",anchor:"DEFINE &rarr; CONFIRM &rarr; REINFORCE",
    habits:[
-    {id:"c1",text:"I defined expectations clearly &mdash; not assumed they were understood",nudge:"Assumption is where performance breaks. Before you move on, ask: 'Walk me through it.'"},
+    {id:"c1",text:"I defined expectations clearly, not assumed they were understood",nudge:"Assumption is where performance breaks. Before you move on, ask: 'Walk me through it.'"},
     {id:"c2",text:"I asked 'Walk me through your plan' before approving any action",nudge:"Speed feels efficient. Clarity is what's actually efficient."},
-    {id:"c3",text:"I confirmed understanding &mdash; not just agreement",nudge:"'Got it' is not confirmation. Make them say it back."},
+    {id:"c3",text:"I confirmed understanding, not just agreement",nudge:"'Got it' is not confirmation. Make them say it back."},
     {id:"c4",text:"I caught and corrected a gap before it became a problem",nudge:"A gap you find today is a problem you prevent next week."}
    ],ref:"Where am I still assuming instead of confirming? Name one conversation I moved past too fast today."},
   {id:"coaching",label:"Coaching",anchor:"ASK &rarr; PAUSE &rarr; GUIDE",
    habits:[
     {id:"co1",text:"I asked 'What do you think?' before giving my answer",nudge:"Every answer you give removes thinking from your team. Build thinkers, not order-takers."},
-    {id:"co2",text:"I paused and let silence work &mdash; didn't rush to fill it",nudge:"Silence is where thinking starts. Let it breathe."},
-    {id:"co3",text:"I guided a solution &mdash; didn't hand one over",nudge:"You're not building solutions. You're building people."},
+    {id:"co2",text:"I paused and let silence work. I didn't rush to fill it",nudge:"Silence is where thinking starts. Let it breathe."},
+    {id:"co3",text:"I guided a solution. I didn't hand one over",nudge:"You're not building solutions. You're building people."},
     {id:"co4",text:"Someone left a conversation more capable than when they entered",nudge:"That's the only metric that matters in coaching."}
    ],ref:"Where did I answer too fast today? Who on my team is still waiting for me to coach instead of direct?"},
   {id:"accountability",label:"Accountability",anchor:"DEFINE &rarr; COMMIT &rarr; FOLLOW UP",
    habits:[
-    {id:"a1",text:"I defined a commitment specifically &mdash; what, when, how measured",nudge:"Vague commitment is no commitment. 'Let's make sure this gets done' is not accountability."},
+    {id:"a1",text:"I defined a commitment specifically: what, when, and how it gets measured",nudge:"Vague commitment is no commitment. 'Let's make sure this gets done' is not accountability."},
     {id:"a2",text:"I set a follow-up time before leaving the conversation",nudge:"If you didn't set the follow-up, the standard is already drifting."},
     {id:"a3",text:"I followed through on a prior commitment today",nudge:"Accountability starts with you. Model it before you demand it."},
     {id:"a4",text:"I addressed a repeated issue instead of hoping it resolves",nudge:"Standards don't drift. Leaders allow them to."}
    ],ref:"What standard did I allow to slip today? Where am I hoping something sticks instead of making sure it does?"},
   {id:"connection",label:"Connection",anchor:"ASK &rarr; LISTEN &rarr; UNDERSTAND",
    habits:[
-    {id:"cn1",text:"I asked one real question &mdash; not 'How are things going?'",nudge:"'How are things?' gets 'Fine.' Real questions get real answers."},
+    {id:"cn1",text:"I asked one real question, not 'How are things going?'",nudge:"'How are things?' gets 'Fine.' Real questions get real answers."},
     {id:"cn2",text:"I created space in a conversation and let them fill it",nudge:"If you don't create space, they won't fill it. Stop talking sooner."},
     {id:"cn3",text:"I listened without fixing, directing, or redirecting",nudge:"People don't hide problems. They hide from leaders who don't listen."},
-    {id:"cn4",text:"Someone opened up to me today &mdash; beyond surface level",nudge:"Trust is built in the moments you didn't rush past."}
-   ],ref:"Were my conversations about the work &mdash; or the person doing the work? Who have I been overlooking this week?"},
+    {id:"cn4",text:"Someone opened up to me today, beyond surface level",nudge:"Trust is built in the moments you didn't rush past."}
+   ],ref:"Were my conversations about the work. or the person doing the work? Who have I been overlooking this week?"},
   {id:"ownership",label:"Ownership",anchor:"ASSIGN &rarr; GUIDE &rarr; HOLD",
    habits:[
-    {id:"o1",text:"I gave a problem back &mdash; didn't take it over",nudge:"Every time you take it back, you train them to give it up."},
+    {id:"o1",text:"I gave a problem back. I didn't take it over",nudge:"Every time you take it back, you train them to give it up."},
     {id:"o2",text:"I asked for their plan before offering mine",nudge:"'Walk me through what you've done' changes everything."},
     {id:"o3",text:"I followed up without rescuing or stepping in",nudge:"You're not the solution. You're the system builder."},
-    {id:"o4",text:"I resisted the urge to jump in when it got uncomfortable",nudge:"Your restraint is their growth. Feel that discomfort &mdash; it's working."}
-   ],ref:"Where am I solving something someone else should be learning? Who on my team depends on me too much &mdash; and why?"},
+    {id:"o4",text:"I resisted the urge to jump in when it got uncomfortable",nudge:"Your restraint is their growth. Feel that discomfort. It's working."}
+   ],ref:"Where am I solving something someone else should be learning? Who on my team depends on me too much, and why?"},
   {id:"execution",label:"Execution",anchor:"DECIDE &rarr; PROTECT &rarr; EXECUTE",
    habits:[
     {id:"e1",text:"I decided what mattered before the day started",nudge:"If you don't decide the day, the day decides you."},
     {id:"e2",text:"I protected at least one leadership priority against urgency",nudge:"Everything feels urgent. Almost nothing is. Choose deliberately."},
-    {id:"e3",text:"I ended the day effective &mdash; not just busy",nudge:"Motion feels productive. Execution creates results."},
+    {id:"e3",text:"I ended the day effective, not just busy",nudge:"Motion feels productive. Execution creates results."},
     {id:"e4",text:"I chose meaningful over easy in at least one moment",nudge:"The easy path is almost never the leadership path."}
    ],ref:"Did I decide the day or did the day decide me? What kept showing up that I kept letting win?"}
 ];
 var REFS=[
   "Where did you step in when you should have stepped back?",
   "What conversation did you avoid today that you need to have tomorrow?",
-  "Who on your team didn't get the best version of you &mdash; and why?",
+  "Who on your team didn't get the best version of you, and why?",
   "Where did the noise win today? What would you protect differently tomorrow?",
   "Name one moment today where you coached instead of directed. What made that possible?",
   "What standard slipped today that you'll reset first thing tomorrow?"
@@ -409,7 +459,7 @@ var TODAY=new Date().toISOString().slice(0,10);
 var wkObj=null,radObj=null;
 
 function gdb(){try{return JSON.parse(localStorage.getItem("lqdb")||"{}")}catch{return{}}}
-function sdb(){if(user)localStorage.setItem("lqdb",JSON.stringify(db));}
+function sdb(){if(user){localStorage.setItem("lqdb",JSON.stringify(db));scheduleSync();}}
 function udb(){return user?(db[user]||(db[user]={})):guest;}
 function day(){var u=udb();return u[TODAY]||(u[TODAY]={}),u[TODAY];}
 
@@ -421,7 +471,7 @@ function switchModal(m){
   document.getElementById("mIn").classList.toggle("hide",m!=="signin");
   document.getElementById("mErr").classList.add("hide");
   document.getElementById("mTitle").textContent=m==="signup"?"Save Your Progress":"Welcome Back";
-  document.getElementById("mSub").textContent=m==="signup"?"Free account. No credit card. Your data stays yours.":"Sign in to access your progress and streak history.";
+  document.getElementById("mSub").textContent=m==="signup"?"Free account. No credit card. Your progress syncs securely to The Leadership Pressure Lab so your coach can track your growth.":"Sign in to access your progress and streak history.";
 }
 function merr(msg){var e=document.getElementById("mErr");e.textContent=msg;e.classList.remove("hide");}
 function signUp(){
@@ -432,7 +482,9 @@ function signUp(){
   db=gdb();var users=db._users||{};
   if(users[e]){merr("An account with that email already exists. Try signing in.");return;}
   users[e]={n:n,r:r,p:p,d:TODAY};db._users=users;
-  db[e]=Object.assign({},guest);sdb();login(e,n);
+  db[e]=Object.assign({},guest);
+  lplSend({type:"signup",email:e,name:n,role:r,ts:new Date().toISOString()});
+  sdb();login(e,n);
 }
 function signIn(){
   var e=document.getElementById("siE").value.trim().toLowerCase(),p=document.getElementById("siP").value;
@@ -441,9 +493,9 @@ function signIn(){
   login(e,users[e].n);
 }
 function login(e,n){
-  user=e;localStorage.setItem("lqU",JSON.stringify({e:e,n:n}));
+  user=e;localStorage.setItem("lqU",JSON.stringify({e:e,n:n}));sdb();scheduleSync();
   closeModal();document.getElementById("banner").classList.add("hide");
-  renderHdr();renderProgress();
+  renderHdr();renderProgress();updateJourney();
 }
 function logout(){localStorage.removeItem("lqU");user=null;guest={};renderHdr();showTab("morning");}
 function checkSession(){
@@ -466,6 +518,28 @@ function renderHdr(){
       '<button class="b-maroon" onclick="openModal(\'signup\')">Save Progress &rarr;</button>';
   }
 }
+var toastT=null;
+function toast(msg,ms){
+  var t=document.getElementById("toast");t.innerHTML=msg;t.classList.add("show");
+  clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},ms||2600);
+}
+function dayHits(){
+  var d=day(),tot=0;
+  BEHS.forEach(function(b){b.habits.forEach(function(h){if(d[b.id]&&d[b.id][h.id])tot++;});});
+  return tot;
+}
+function updateJourney(){
+  var d=day();
+  var states={morning:!!d.intent,tracker:dayHits()>0,evening:!!(d.ref&&d.done),progress:false};
+  ["morning","tracker","evening","progress"].forEach(function(id){
+    var el=document.getElementById("nt-"+id);if(!el)return;
+    var base=el.textContent.replace(/^\u2713\s*/,"");
+    el.innerHTML=(states[id]?'<span class="tck">&#10003;</span>':"")+base;
+  });
+}
+function scrollToCard(id){
+  setTimeout(function(){var el=document.getElementById(id);if(el&&el.scrollIntoView)el.scrollIntoView({behavior:"smooth",block:"center"});},200);
+}
 function buildEnvGrid(){
   var d=day();
   document.getElementById("envGrid").innerHTML=ENVS.map(function(e){
@@ -478,6 +552,7 @@ function pickEnv(id){
   var e=ENVS.find(function(x){return x.id===id;});
   document.getElementById("nudgeTxt").innerHTML=e.nudge;
   document.getElementById("nudgeBox").classList.remove("hide");
+  scrollToCard("step2Card");
 }
 function buildFocusGrid(){
   var d=day();
@@ -485,16 +560,26 @@ function buildFocusGrid(){
     return'<button class="bsel-btn'+(d.fb===b.id?' on':'')+'" onclick="pickFocus(\''+b.id+'\')">'+b.label+'</button>';
   }).join("");
 }
-function pickFocus(id){day().fb=id;sdb();buildFocusGrid();activeBeh=id;track();}
+function pickFocus(id){day().fb=id;sdb();buildFocusGrid();activeBeh=id;track();scrollToCard("step3Card");}
 function loadMorning(){
   var d=day();
   if(d.env){var e=ENVS.find(function(x){return x.id===d.env;});if(e){document.getElementById("nudgeTxt").innerHTML=e.nudge;document.getElementById("nudgeBox").classList.remove("hide");}}
   if(d.intent)document.getElementById("intentTxt").value=d.intent;
+  var y=new Date();y.setDate(y.getDate()-1);
+  var yd=udb()[y.toISOString().slice(0,10)];
+  if(yd&&yd.edge){
+    document.getElementById("yedgeTxt").textContent="\u201c"+yd.edge+"\u201d";
+    document.getElementById("yedgeCard").classList.remove("hide");
+  }
 }
 function saveMorning(){
   var v=document.getElementById("intentTxt").value.trim();
-  if(!v){alert("Add your intention first.");return;}
-  day().intent=v;sdb();track();showTab("tracker");
+  if(!v){toast("Add your intention first. One sentence. What does a win look like?");return;}
+  day().intent=v;sdb();track();
+  activeBeh=day().fb||activeBeh;
+  showTab("tracker");
+  toast("Locked in. Now go lead it. Check behaviors off as the day unfolds.");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 function buildBNav(){
   document.getElementById("behNav").innerHTML=BEHS.map(function(b){
@@ -528,8 +613,26 @@ function renderTracker(){
   document.getElementById("streakNum").textContent=calcStreak();
 }
 function toggleH(bId,hId){
-  var d=day();if(!d[bId])d[bId]={};d[bId][hId]=!d[bId][hId];
-  sdb();track();renderTracker();
+  var d=day();if(!d[bId])d[bId]={};
+  var was=!!d[bId][hId];
+  d[bId][hId]=!was;
+  sdb();track();renderTracker();updateJourney();
+  if(was)return;
+  var b=BEHS.find(function(x){return x.id===bId;});
+  var done=b.habits.filter(function(h){return d[bId][h.id];}).length;
+  if(done===b.habits.length){
+    var next=BEHS.find(function(x){
+      var bd=d[x.id]||{};
+      return x.id!==bId&&x.habits.filter(function(h){return bd[h.id];}).length<x.habits.length;
+    });
+    if(next){
+      toast("<strong>"+b.label+" complete.</strong> Moving you to "+next.label+"...");
+      setTimeout(function(){swBeh(next.id);},1100);
+    }else{
+      toast("<strong>All six behaviors logged.</strong> Time to close the day...",2800);
+      setTimeout(function(){showTab("evening");window.scrollTo({top:0,behavior:"smooth"});},1400);
+    }
+  }
 }
 function setSc(bId,n){var d=day();d[bId+"_sc"]=d[bId+"_sc"]===n?0:n;sdb();renderTracker();}
 function renderEvening(){
@@ -546,11 +649,42 @@ function renderEvening(){
   if(d.ref)document.getElementById("refTxt").value=d.ref;
   if(d.edge)document.getElementById("edgeTxt").value=d.edge;
 }
-function saveEvening(){
-  day().ref=document.getElementById("refTxt").value;sdb();track();
-  var s=document.getElementById("saveConfirm");s.style.display="inline";setTimeout(function(){s.style.display="none";},2000);
+function fillDayDone(){
+  var tot=dayHits(),pos=0;
+  BEHS.forEach(function(b){pos+=b.habits.length;});
+  var pct=pos?Math.round(tot/pos*100):0,streak=calcStreak(),vel=calcVel();
+  document.getElementById("ddPct").textContent=pct+"%";
+  document.getElementById("ddStreak").textContent=streak;
+  document.getElementById("ddVel").textContent=vel;
+  var line;
+  if(streak>=7)line="Seven straight days or more. You're past the install phase. This is what deliberate leadership looks like when nobody is watching.";
+  else if(streak>=3)line="Three or more consecutive days. The behaviors are starting to feel less like a checklist and more like how you operate. Stay in it.";
+  else line="Day logged. The first sessions are the hardest. Show up tomorrow and the compound effect starts working for you.";
+  document.getElementById("ddLine").textContent=line;
+  var ctas;
+  if(!user){
+    ctas='<button class="dd-cta" onclick="openModal(\'signup\')">Save My Streak Free &rarr;</button>'+
+      '<button class="dd-cta2" onclick="showTab(\'progress\')">View My Progress</button>';
+  }else if(streak>=5){
+    ctas='<a class="dd-cta" href="https://leadershippressurelab.com/strategy-call.html" target="_blank" rel="noopener">Book a Free Strategy Call &rarr;</a>'+
+      '<button class="dd-cta2" onclick="showTab(\'progress\')">View My Progress</button>';
+  }else{
+    ctas='<a class="dd-cta" href="https://leadershippressurelab.com/monday-brief.html" target="_blank" rel="noopener">Get the Monday Brief Free &rarr;</a>'+
+      '<button class="dd-cta2" onclick="showTab(\'progress\')">View My Progress</button>';
+  }
+  document.getElementById("ddCtas").innerHTML=ctas;
 }
-function saveEdge(){day().edge=document.getElementById("edgeTxt").value;sdb();alert("Tomorrow's edge is set. Now protect it.");}
+function completeDay(){
+  var d=day();
+  var ref=document.getElementById("refTxt").value.trim();
+  var edge=document.getElementById("edgeTxt").value.trim();
+  if(!ref){toast("Answer the Pressure Check first. The reflection is where the growth lives.");return;}
+  if(!edge){toast("Set Tomorrow's Edge before you close the day. One specific thing.");return;}
+  d.ref=ref;d.edge=edge;d.done=true;sdb();track();updateJourney();
+  fillDayDone();
+  var dd=document.getElementById("dayDone");dd.classList.remove("hide");
+  setTimeout(function(){if(dd.scrollIntoView)dd.scrollIntoView({behavior:"smooth",block:"center"});},150);
+}
 function renderProgress(){
   var isG=!user;
   document.getElementById("guestLock").classList.toggle("hide",!isG);
@@ -632,23 +766,39 @@ function renderInsight(vel){
   });
   var streak=calcStreak(),lines=[];
   if(streak===0)lines.push("You haven't logged a session yet. The first one is the hardest. Log today and the system starts building.");
-  else if(streak<3)lines.push(streak+"-day streak. The compound effect hasn't kicked in yet &mdash; it takes 5+ consecutive sessions before the behaviors start feeling automatic. Stay in it.");
+  else if(streak<3)lines.push(streak+"-day streak. The compound effect hasn't kicked in yet. It takes 5+ consecutive sessions before the behaviors start feeling automatic. Stay in it.");
   else if(streak>=7)lines.push(streak+"-day streak. You're past the install phase. The behaviors are starting to compound. Now focus on depth, not just completion.");
   lines.push("Your lowest behavior this week is <strong>"+weak.label+"</strong>. That's where the growth is. The anchor: <em>"+weak.anchor+"</em>. Pick one habit from that behavior and protect it tomorrow.");
-  if(vel>60)lines.push("Your velocity score signals you're operating above reactive. The next level isn't doing more &mdash; it's doing the same behaviors under higher pressure without compromising.");
+  if(vel>60)lines.push("Your velocity score signals you're operating above reactive. The next level isn't doing more. It's doing the same behaviors under higher pressure without compromising.");
+  if(streak>=7||vel>60)lines.push('You\'ve proven the consistency. If you want to install this across your whole management team, that\'s exactly what the P.R.E.S.S.U.R.E. System&trade; does in 90 days. <a href="https://leadershippressurelab.com/strategy-call.html" target="_blank" rel="noopener" style="color:var(--maroon);font-weight:700;">Book a free strategy call &rarr;</a>');
   document.getElementById("insightTxt").innerHTML=lines.join("<br><br>");
 }
 function showTab(id){
   document.querySelectorAll('[id^="tab-"]').forEach(function(t){t.classList.add("hide");});
   document.getElementById("tab-"+id).classList.remove("hide");
-  document.querySelectorAll(".ntab").forEach(function(t,i){t.classList.toggle("on",["morning","tracker","evening","progress"][i]===id);});
+  ["morning","tracker","evening","progress"].forEach(function(t){
+    document.getElementById("nt-"+t).classList.toggle("on",t===id);
+  });
   if(id==="tracker")renderTracker();
-  if(id==="evening")renderEvening();
+  if(id==="evening"){renderEvening();if(day().done){fillDayDone();document.getElementById("dayDone").classList.remove("hide");}}
   if(id==="progress")renderProgress();
+  updateJourney();
 }
 (function init(){
   checkSession();if(user)db=gdb();
+  var d=day();
+  if(d.fb)activeBeh=d.fb;
   renderHdr();buildEnvGrid();buildFocusGrid();loadMorning();buildBNav();renderTracker();renderEvening();
+  var h=new Date().getHours(),start="morning";
+  if(d.done)start="progress";
+  else if(!d.intent)start="morning";
+  else if(h>=16)start="evening";
+  else start="tracker";
+  showTab(start);
+  if(start!=="morning"){
+    if(start==="tracker")toast("Welcome back. Your intention is set. Keep checking behaviors off.");
+    if(start==="evening")toast("End of day. Time to close the loop with your reflection.");
+  }
 })();
 </script>
 </body>
