@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow,noarchive"/>
+<title>LPL Command Console</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --navy:#1E3A5F;--navy2:#2a4f7f;--maroon:#7A1F2B;--maroon2:#9e2938;
+  --white:#fff;--bg:#f0f2f7;--surface:#F7F8FC;--border:#e0e4ed;
+  --text:#1a1a2e;--muted:#6b7280;--light:#9ca3af;
+  --green:#16a34a;--r:10px;--sh:0 4px 24px rgba(30,58,95,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.hide{display:none!important;}
+.fade{animation:fi .3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* GATE */
+.gate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy) 0%,#16263d 100%);padding:1rem;}
+.gate-card{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.4);text-align:center;}
+.gate-brand{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--maroon);text-transform:uppercase;margin-bottom:6px;}
+.gate-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.gate-sub{font-size:12px;color:var(--muted);margin-bottom:1.5rem;}
+.gate-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;outline:none;text-align:center;letter-spacing:.1em;}
+.gate-input:focus{border-color:var(--navy);}
+.gate-btn{width:100%;padding:13px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;}
+.gate-btn:hover{background:var(--navy2);}
+.gate-err{font-size:12px;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:8px 12px;margin-top:12px;}
+.gate-note{font-size:10px;color:var(--light);margin-top:1.25rem;line-height:1.6;}
+
+/* CONSOLE */
+.wrap{max-width:1080px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+.hdr{background:#fff;border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh);flex-wrap:wrap;gap:10px;}
+.hl-brand{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--maroon);text-transform:uppercase;}
+.hdr h1{font-size:19px;font-weight:700;color:var(--navy);line-height:1.2;}
+.hl-tag{font-size:11px;color:var(--muted);margin-top:1px;}
+.b-sm{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:none;color:var(--muted);}
+.b-sm:hover{border-color:var(--maroon);color:var(--maroon);}
+.b-maroon{background:var(--maroon);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+.nav{display:flex;gap:4px;margin-bottom:1rem;background:#fff;border-radius:var(--r);padding:6px;box-shadow:var(--sh);}
+.ntab{flex:1;padding:9px 4px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;}
+.ntab.on{background:var(--navy);color:#fff;}
+.card{background:#fff;border-radius:var(--r);padding:1.25rem 1.5rem;box-shadow:var(--sh);margin-bottom:1rem;}
+.ctitle{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;}
+.mcrd{background:var(--surface);border-radius:8px;padding:14px;text-align:center;}
+.mval{font-size:26px;font-weight:700;color:var(--navy);}
+.mlbl{font-size:11px;color:var(--muted);margin-top:2px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:9px 10px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);}
+td{padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text);}
+tr.urow{cursor:pointer;transition:.12s;}
+tr.urow:hover{background:var(--surface);}
+.pillv{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#eef2f9;color:var(--navy);}
+.pillv.hot{background:#f9f0f2;color:var(--maroon);}
+.pillv.cold{background:#f3f4f6;color:var(--light);}
+.sel{width:100%;max-width:380px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;color:var(--text);outline:none;background:#fff;}
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.cwrap{position:relative;width:100%;}
+.tl-item{border-left:3px solid var(--navy);padding:10px 14px;margin-bottom:10px;background:var(--surface);border-radius:0 8px 8px 0;}
+.tl-date{font-size:11px;font-weight:700;color:var(--maroon);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;}
+.tl-row{font-size:13px;color:var(--text);line-height:1.6;margin-top:3px;}
+.tl-row strong{color:var(--navy);font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:14px;line-height:1.7;}
+.tblwrap{overflow-x:auto;}
+@media(max-width:720px){.mgrid{grid-template-columns:repeat(2,1fr);}.crow{grid-template-columns:1fr;}.hdr{flex-direction:column;text-align:center;}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate" class="gate">
+  <div class="gate-card fade">
+    <div class="gate-brand">The Leadership Pressure Lab</div>
+    <div class="gate-title">Command Console</div>
+    <div class="gate-sub">Authorized access only.</div>
+    <input type="password" class="gate-input" id="pw" placeholder="Enter console password" onkeydown="if(event.key==='Enter')unlock()"/>
+    <button class="gate-btn" onclick="unlock()">Unlock Console &rarr;</button>
+    <div id="gateErr" class="gate-err hide"></div>
+    <div class="gate-note">&copy; 2026 Joseph Clementi &middot; The Leadership Pressure Lab&trade;<br>This console is private and not indexed by search engines.</div>
+  </div>
+</div>
+
+<!-- CONSOLE -->
+<div id="console" class="wrap hide">
+  <div class="hdr">
+    <div>
+      <div class="hl-brand">The Leadership Pressure Lab&trade;</div>
+      <h1>Pressure Gauge Command Console</h1>
+      <div class="hl-tag">Private. Visible only to you.</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span id="lastLoad" style="font-size:11px;color:var(--muted);"></span>
+      <button class="b-maroon" onclick="loadData()">Refresh Data</button>
+      <button class="b-sm" onclick="lockConsole()">Lock</button>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="ntab on" id="nt-exec" onclick="showView('exec')">Executive Summary</button>
+    <button class="ntab" id="nt-user" onclick="showView('user')">User Progress</button>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div id="view-exec" class="fade">
+    <div class="mgrid" id="execStats"></div>
+    <div class="card">
+      <div class="ctitle">All Users. Sorted by Last Active.</div>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Streak</th><th>7-Day %</th><th>Velocity</th><th>Days Logged</th><th>Last Active</th></tr></thead>
+          <tbody id="execRows"></tbody>
+        </table>
+      </div>
+      <div id="execEmpty" class="empty hide">No user data has synced yet.<br>Data appears here after the first account creates and logs a session.</div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Recent Signups</div>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>When</th><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+          <tbody id="signupRows"></tbody>
+        </table>
+      </div>
+      <div id="signupEmpty" class="empty hide">No signups recorded yet.</div>
+    </div>
+  </div>
+
+  <!-- USER PROGRESS -->
+  <div id="view-user" class="hide fade">
+    <div class="card">
+      <div class="ctitle">Select a User</div>
+      <select class="sel" id="userSel" onchange="renderUser()"></select>
+    </div>
+    <div id="userBody" class="hide">
+      <div class="mgrid" id="userStats"></div>
+      <div class="crow">
+        <div class="card">
+          <div class="ctitle">14-Day Completion Rate</div>
+          <div class="cwrap" style="height:220px;"><canvas id="uWk"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">Behavior Breakdown: Last 7 Days</div>
+          <div class="cwrap" style="height:220px;"><canvas id="uRad"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Session Timeline: Last 14 Days</div>
+        <div id="uTimeline"></div>
+      </div>
+    </div>
+    <div id="userEmpty" class="empty hide">Select a user to see their progress.</div>
+  </div>
+</div>
+
+<script>
+/* ===== CONFIG =====
+   Paste the SAME Google Apps Script Web App URL you put in lq-tracker.html. */
+var LPL_DATA_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+/* SHA-256 fingerprint of the console password. The password itself is not in this file. */
+var KEY_HASH="20a52529891cc47d0b323ec6f9247d35d4a36eafc47018edfed86a6c13f57dce";
+
+var BEHS=[
+  {id:"clarity",label:"Clarity",n:4,h:["c1","c2","c3","c4"]},
+  {id:"coaching",label:"Coaching",n:4,h:["co1","co2","co3","co4"]},
+  {id:"accountability",label:"Accountability",n:4,h:["a1","a2","a3","a4"]},
+  {id:"connection",label:"Connection",n:4,h:["cn1","cn2","cn3","cn4"]},
+  {id:"ownership",label:"Ownership",n:4,h:["o1","o2","o3","o4"]},
+  {id:"execution",label:"Execution",n:4,h:["e1","e2","e3","e4"]}
+];
+var ENVNAMES={floor:"High-Volume Floor",short:"Short-Staffed",newadv:"New Advisor On Deck",perfrev:"Performance Review Week",custesc:"Customer Escalation",strategic:"Planning / Strategic Day"};
+var ALL=[],SIGNUPS=[],wkObj=null,radObj=null;
+
+async function sha256(str){
+  var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+}
+function gateErr(msg){var e=document.getElementById("gateErr");e.textContent=msg;e.classList.remove("hide");}
+async function unlock(){
+  var pw=document.getElementById("pw").value;
+  if(!pw){gateErr("Enter the console password.");return;}
+  var h=await sha256(pw);
+  if(h!==KEY_HASH){gateErr("Incorrect password.");document.getElementById("pw").value="";return;}
+  sessionStorage.setItem("lplKey",h);
+  enterConsole();
+}
+function lockConsole(){sessionStorage.removeItem("lplKey");location.reload();}
+function enterConsole(){
+  document.getElementById("gate").classList.add("hide");
+  document.getElementById("console").classList.remove("hide");
+  loadData();
+}
+async function loadData(){
+  var key=sessionStorage.getItem("lplKey");
+  if(!key)return;
+  if(!LPL_DATA_URL||LPL_DATA_URL.indexOf("PASTE_")===0){
+    document.getElementById("execEmpty").classList.remove("hide");
+    document.getElementById("execEmpty").innerHTML="The backend URL has not been pasted into this file yet.<br>Open this file in the GitHub editor and replace PASTE_YOUR_APPS_SCRIPT_URL_HERE with your Web App URL.";
+    return;
+  }
+  document.getElementById("lastLoad").textContent="Loading...";
+  try{
+    var res=await fetch(LPL_DATA_URL+"?action=data&key="+key);
+    var j=await res.json();
+    if(j.error){gateErrConsole("Unauthorized. The password fingerprint in your Apps Script does not match.");return;}
+    ALL=j.users||[];SIGNUPS=j.signups||[];
+    document.getElementById("lastLoad").textContent="Updated "+new Date().toLocaleTimeString();
+    renderExec();buildUserSel();
+  }catch(err){
+    document.getElementById("lastLoad").textContent="Could not reach backend.";
+  }
+}
+function gateErrConsole(msg){
+  document.getElementById("execEmpty").classList.remove("hide");
+  document.getElementById("execEmpty").textContent=msg;
+}
+
+/* ===== METRICS (mirrors the tool's math) ===== */
+function dayTotal(dd){
+  var t=0;BEHS.forEach(function(b){b.h.forEach(function(h){if(dd[b.id]&&dd[b.id][h])t++;});});return t;
+}
+function calcStreak(data){
+  var s=0;
+  for(var i=0;i<60;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var dd=data[d.toISOString().slice(0,10)]||{};
+    if(dayTotal(dd)>0)s++;else if(i>0)break;
+  }return s;
+}
+function calcVel(data){
+  var pts=0;
+  for(var i=0;i<7;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var dd=data[d.toISOString().slice(0,10)]||{};
+    pts+=dayTotal(dd)/24;
+  }
+  return Math.min(100,Math.round(pts/7*80+Math.min(calcStreak(data),7)/7*20));
+}
+function calc7(data){
+  var tot=0,n=0;
+  for(var i=0;i<7;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var t=dayTotal(data[d.toISOString().slice(0,10)]||{});
+    if(t>0){tot+=Math.round(t/24*100);n++;}
+  }
+  return n?Math.round(tot/n):0;
+}
+function daysLogged(data){
+  var n=0;
+  Object.keys(data).forEach(function(k){
+    if(/^\d{4}-\d{2}-\d{2}$/.test(k)){var dd=data[k];if(dayTotal(dd)>0||dd.intent||dd.ref)n++;}
+  });
+  return n;
+}
+function fmtDate(s){
+  if(!s)return"";
+  try{return new Date(s).toLocaleDateString("en-US",{month:"short",day:"numeric"})+" "+new Date(s).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}catch(e){return s;}
+}
+
+/* ===== EXECUTIVE SUMMARY ===== */
+function renderExec(){
+  var now=Date.now(),act7=0,sessions=0,velSum=0;
+  ALL.forEach(function(u){
+    var la=new Date(u.lastActive).getTime();
+    if(now-la<7*864e5)act7++;
+    sessions+=daysLogged(u.data);
+    velSum+=calcVel(u.data);
+  });
+  var avgVel=ALL.length?Math.round(velSum/ALL.length):0;
+  document.getElementById("execStats").innerHTML=
+    '<div class="mcrd"><div class="mval">'+ALL.length+'</div><div class="mlbl">Total Accounts</div></div>'+
+    '<div class="mcrd"><div class="mval">'+act7+'</div><div class="mlbl">Active Last 7 Days</div></div>'+
+    '<div class="mcrd"><div class="mval">'+sessions+'</div><div class="mlbl">Total Sessions Logged</div></div>'+
+    '<div class="mcrd"><div class="mval">'+avgVel+'</div><div class="mlbl">Average Velocity</div></div>';
+  var sorted=ALL.slice().sort(function(a,b){return new Date(b.lastActive)-new Date(a.lastActive);});
+  document.getElementById("execRows").innerHTML=sorted.map(function(u,i){
+    var st=calcStreak(u.data),vel=calcVel(u.data),sev=calc7(u.data);
+    var velCls=vel>=61?"hot":(vel>=21?"":"cold");
+    return'<tr class="urow" onclick="jumpToUser(\''+u.email.replace(/'/g,"\\'")+'\')">'+
+      '<td><strong>'+esc(u.name)+'</strong></td><td>'+esc(u.role)+'</td><td>'+esc(u.email)+'</td>'+
+      '<td>'+st+'</td><td>'+sev+'%</td><td><span class="pillv '+velCls+'">'+vel+'</span></td>'+
+      '<td>'+daysLogged(u.data)+'</td><td>'+fmtDate(u.lastActive)+'</td></tr>';
+  }).join("");
+  document.getElementById("execEmpty").classList.toggle("hide",ALL.length>0);
+  var sg=SIGNUPS.slice().reverse().slice(0,15);
+  document.getElementById("signupRows").innerHTML=sg.map(function(s){
+    return'<tr><td>'+fmtDate(s.ts)+'</td><td><strong>'+esc(s.name)+'</strong></td><td>'+esc(s.email)+'</td><td>'+esc(s.role)+'</td></tr>';
+  }).join("");
+  document.getElementById("signupEmpty").classList.toggle("hide",SIGNUPS.length>0);
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+/* ===== USER PROGRESS ===== */
+function buildUserSel(){
+  var sel=document.getElementById("userSel");
+  var cur=sel.value;
+  sel.innerHTML='<option value="">Choose a user...</option>'+ALL.map(function(u){
+    return'<option value="'+esc(u.email)+'">'+esc(u.name)+" ("+esc(u.role)+")</option>";
+  }).join("");
+  if(cur)sel.value=cur;
+  document.getElementById("userEmpty").classList.toggle("hide",!!sel.value);
+}
+function jumpToUser(email){
+  showView("user");
+  document.getElementById("userSel").value=email;
+  renderUser();
+}
+function renderUser(){
+  var email=document.getElementById("userSel").value;
+  var body=document.getElementById("userBody");
+  document.getElementById("userEmpty").classList.toggle("hide",!!email);
+  if(!email){body.classList.add("hide");return;}
+  var u=ALL.find(function(x){return x.email===email;});
+  if(!u){body.classList.add("hide");return;}
+  body.classList.remove("hide");
+  var data=u.data||{};
+  var st=calcStreak(data),vel=calcVel(data),sev=calc7(data),dl=daysLogged(data);
+  document.getElementById("userStats").innerHTML=
+    '<div class="mcrd"><div class="mval">'+st+'</div><div class="mlbl">Day Streak</div></div>'+
+    '<div class="mcrd"><div class="mval">'+vel+'</div><div class="mlbl">Velocity Score</div></div>'+
+    '<div class="mcrd"><div class="mval">'+sev+'%</div><div class="mlbl">7-Day Average</div></div>'+
+    '<div class="mcrd"><div class="mval">'+dl+'</div><div class="mlbl">Days Logged</div></div>';
+  var days=[];
+  for(var i=13;i>=0;i--){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var k=d.toISOString().slice(0,10);
+    days.push({lbl:i===0?"Today":d.toLocaleDateString("en-US",{month:"numeric",day:"numeric"}),pct:Math.round(dayTotal(data[k]||{})/24*100)});
+  }
+  var ctx=document.getElementById("uWk").getContext("2d");
+  if(wkObj)wkObj.destroy();
+  wkObj=new Chart(ctx,{type:"bar",data:{labels:days.map(function(d){return d.lbl;}),datasets:[{data:days.map(function(d){return d.pct;}),backgroundColor:days.map(function(_,i){return i===13?"#7A1F2B":"#1E3A5F";}),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:function(v){return v+"%";},font:{size:10}}},x:{ticks:{font:{size:9}},grid:{display:false}}}}});
+  var scores=BEHS.map(function(b){
+    var tot=0;
+    for(var i=0;i<7;i++){var d=new Date();d.setDate(d.getDate()-i);var dd=data[d.toISOString().slice(0,10)]||{};
+      tot+=b.h.filter(function(h){return dd[b.id]&&dd[b.id][h];}).length;}
+    return Math.round(tot/(7*4)*100);
+  });
+  var ctx2=document.getElementById("uRad").getContext("2d");
+  if(radObj)radObj.destroy();
+  radObj=new Chart(ctx2,{type:"radar",data:{labels:BEHS.map(function(b){return b.label;}),datasets:[{data:scores,backgroundColor:"rgba(30,58,95,0.15)",borderColor:"#1E3A5F",pointBackgroundColor:"#7A1F2B",pointRadius:3,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:9}},pointLabels:{font:{size:10,weight:"600"}}}}}});
+  var tl="";
+  for(var i=0;i<14;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var k=d.toISOString().slice(0,10),dd=data[k];
+    if(!dd)continue;
+    var t=dayTotal(dd);
+    if(t===0&&!dd.intent&&!dd.ref&&!dd.edge)continue;
+    tl+='<div class="tl-item"><div class="tl-date">'+(i===0?"Today":d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))+' &middot; '+t+'/24 behaviors'+(dd.done?' &middot; Day completed':'')+'</div>';
+    if(dd.env&&ENVNAMES[dd.env])tl+='<div class="tl-row"><strong>Environment:</strong> '+ENVNAMES[dd.env]+'</div>';
+    if(dd.intent)tl+='<div class="tl-row"><strong>Intention:</strong> '+esc(dd.intent)+'</div>';
+    if(dd.ref)tl+='<div class="tl-row"><strong>Reflection:</strong> '+esc(dd.ref)+'</div>';
+    if(dd.edge)tl+='<div class="tl-row"><strong>Tomorrow\'s Edge:</strong> '+esc(dd.edge)+'</div>';
+    tl+='</div>';
+  }
+  document.getElementById("uTimeline").innerHTML=tl||'<div class="empty">No sessions logged in the last 14 days.</div>';
+}
+function showView(v){
+  document.getElementById("view-exec").classList.toggle("hide",v!=="exec");
+  document.getElementById("view-user").classList.toggle("hide",v!=="user");
+  document.getElementById("nt-exec").classList.toggle("on",v==="exec");
+  document.getElementById("nt-user").classList.toggle("on",v==="user");
+}
+(function init(){
+  if(sessionStorage.getItem("lplKey")===KEY_HASH)enterConsole();
+})();
+</script>
+</body>
+</html>
