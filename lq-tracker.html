@@ -368,7 +368,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 /* ===== LPL SYNC CONFIG =====
    Paste your Google Apps Script Web App URL between the quotes below.
    Until you do, the tool runs exactly as before with no syncing. */
-var LPL_SYNC_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+var LPL_SYNC_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE""https://script.google.com/macros/s/YOURLONGCODE/exec";
 
 function lplSend(payload){
   if(!LPL_SYNC_URL||LPL_SYNC_URL.indexOf("PASTE_")===0)return;
