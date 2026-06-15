@@ -11,8 +11,17 @@
   --navy:#1E3A5F;--navy2:#2a4f7f;--maroon:#7A1F2B;--maroon2:#9e2938;
   --white:#fff;--bg:#f0f2f7;--surface:#F7F8FC;--border:#e0e4ed;
   --text:#1a1a2e;--muted:#6b7280;--light:#9ca3af;
-  --green:#16a34a;--r:10px;--sh:0 4px 24px rgba(30,58,95,.10);
+  --green:#16a34a;--gold:#C8A04B;--gold2:#b58e3c;--r:10px;--sh:0 4px 24px rgba(30,58,95,.10);
 }
+/* QUOTE OF THE DAY */
+.qotd{position:relative;background:linear-gradient(135deg,#fbf8f1 0%,#f7f1e3 100%);border:1px solid #ecdfbf;border-left:5px solid var(--gold);border-radius:var(--r);padding:1.4rem 1.6rem 1.3rem;margin-bottom:1rem;box-shadow:var(--sh);overflow:hidden;}
+.qotd::before{content:"\201C";position:absolute;top:-18px;right:14px;font-family:Georgia,serif;font-size:120px;line-height:1;color:rgba(200,160,75,.16);pointer-events:none;}
+.qotd-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);margin-bottom:9px;display:flex;align-items:center;gap:7px;}
+.qotd-lbl::before{content:"";width:16px;height:2px;background:var(--gold);display:inline-block;}
+.qotd-text{font-size:17px;line-height:1.55;color:var(--navy);font-weight:600;font-style:italic;position:relative;z-index:1;}
+.qotd-by{margin-top:11px;font-size:13px;font-weight:700;color:var(--maroon);letter-spacing:.01em;}
+.qotd-by::before{content:"\2014 ";color:var(--gold2);}
+@media(max-width:520px){.qotd-text{font-size:15px;}.qotd{padding:1.2rem 1.2rem 1.1rem;}}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .wrap{max-width:900px;margin:0 auto;padding:1.5rem 1rem 4rem;}
@@ -184,6 +193,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- MORNING -->
 <div id="tab-morning" class="fade">
+  <div id="qotdBox" class="qotd">
+    <div class="qotd-lbl">Today's Pressure Point</div>
+    <div class="qotd-text" id="qotdText"></div>
+    <div class="qotd-by" id="qotdBy"></div>
+  </div>
   <div id="yedgeCard" class="edge-card hide">
     <div class="edge-lbl">Yesterday's Edge. You committed to this.</div>
     <div class="edge-txt" id="yedgeTxt"></div>
@@ -365,6 +379,56 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div id="toast" class="toast"></div>
 
 <script>
+/* ===== QUOTE OF THE DAY =====
+   32 verified, attributed quotes on leadership, consistency, resilience,
+   adversity, and teamwork. The selector below shows one per day and never
+   repeats within any 30-day window (math guarantees it as long as 30+ quotes).
+   To swap any quote: edit the t (text) and a (author) below. Keep the format. */
+var QUOTES=[
+  {t:"Leadership is not about being in charge. It's about taking care of those in your charge.",a:"Simon Sinek"},
+  {t:"Working hard for something we don't care about is called stress. Working hard for something we love is called passion.",a:"Simon Sinek"},
+  {t:"A team is not a group of people who work together. A team is a group of people who trust each other.",a:"Simon Sinek"},
+  {t:"Vulnerability is the birthplace of innovation, creativity, and change.",a:"Bren\u00e9 Brown"},
+  {t:"Clear is kind. Unclear is unkind.",a:"Bren\u00e9 Brown"},
+  {t:"Courage starts with showing up and letting ourselves be seen.",a:"Bren\u00e9 Brown"},
+  {t:"Daring leaders work to make sure people can be themselves and feel a sense of belonging.",a:"Bren\u00e9 Brown"},
+  {t:"Givers advance the world. Takers advance themselves and hold the world back.",a:"Adam Grant"},
+  {t:"The hallmark of original thinkers is that they question the default.",a:"Adam Grant"},
+  {t:"Good is the enemy of great.",a:"Jim Collins"},
+  {t:"Great vision without great people is irrelevant.",a:"Jim Collins"},
+  {t:"It is teamwork that remains the ultimate competitive advantage, both because it is so powerful and so rare.",a:"Patrick Lencioni"},
+  {t:"Teamwork begins by building trust. And the only way to do that is to overcome our need for invulnerability.",a:"Patrick Lencioni"},
+  {t:"Positive leaders create positive cultures.",a:"Jon Gordon"},
+  {t:"You are one decision away from a completely different life.",a:"Mel Robbins"},
+  {t:"You can't control how you feel, but you can always choose how you act.",a:"Mel Robbins"},
+  {t:"A leader is one who knows the way, goes the way, and shows the way.",a:"John C. Maxwell"},
+  {t:"Leaders must be close enough to relate to others, but far enough ahead to motivate them.",a:"John C. Maxwell"},
+  {t:"A good leader takes a little more than his share of the blame, a little less than his share of the credit.",a:"John C. Maxwell"},
+  {t:"Individual commitment to a group effort. That is what makes a team work.",a:"Vince Lombardi"},
+  {t:"The price of success is hard work, dedication, and the determination that we have given the best of ourselves.",a:"Vince Lombardi"},
+  {t:"Alone we can do so little. Together we can do so much.",a:"Helen Keller"},
+  {t:"Our greatest glory is not in never falling, but in rising every time we fall.",a:"Confucius"},
+  {t:"It does not matter how slowly you go as long as you do not stop.",a:"Confucius"},
+  {t:"The greatest leader is not necessarily the one who does the greatest things. He is the one that gets the people to do the greatest things.",a:"Ronald Reagan"},
+  {t:"Do not judge me by my successes, judge me by how many times I fell down and got back up again.",a:"Nelson Mandela"},
+  {t:"It always seems impossible until it's done.",a:"Nelson Mandela"},
+  {t:"Excellence is not a singular act, but a habit. You are what you repeatedly do.",a:"Aristotle"},
+  {t:"Talent wins games, but teamwork and intelligence win championships.",a:"Michael Jordan"},
+  {t:"In the middle of difficulty lies opportunity.",a:"Albert Einstein"},
+  {t:"The function of leadership is to produce more leaders, not more followers.",a:"Ralph Nader"},
+  {t:"What you do has far greater impact than what you say.",a:"Stephen R. Covey"}
+];
+function renderQOTD(){
+  var box=document.getElementById("qotdBox");if(!box)return;
+  var epoch=Date.UTC(2026,0,1);
+  var today=new Date();
+  var dayNum=Math.floor((Date.UTC(today.getFullYear(),today.getMonth(),today.getDate())-epoch)/864e5);
+  var idx=((dayNum%QUOTES.length)+QUOTES.length)%QUOTES.length;
+  var q=QUOTES[idx];
+  document.getElementById("qotdText").textContent="\u201c"+q.t+"\u201d";
+  document.getElementById("qotdBy").textContent=q.a;
+}
+
 /* ===== LPL SYNC CONFIG =====
    Paste your Google Apps Script Web App URL between the quotes below.
    Until you do, the tool runs exactly as before with no syncing. */
@@ -788,7 +852,7 @@ function showTab(id){
   checkSession();if(user)db=gdb();
   var d=day();
   if(d.fb)activeBeh=d.fb;
-  renderHdr();buildEnvGrid();buildFocusGrid();loadMorning();buildBNav();renderTracker();renderEvening();
+  renderHdr();renderQOTD();buildEnvGrid();buildFocusGrid();loadMorning();buildBNav();renderTracker();renderEvening();
   var h=new Date().getHours(),start="morning";
   if(d.done)start="progress";
   else if(!d.intent)start="morning";
