@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership Pressure Gauge — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F3EC;--paper-2:#FBF9F3;--card:#FFFFFF;
+    --ink:#1B2A30;--ink-2:#445158;--muted:#7C8A90;--faint:#A7B1B4;
+    --line:#E8E2D6;--line-2:#DCD5C6;
+    --pine:#1A5E48;--pine-2:#16513E;--pine-soft:#E5EFE9;
+    --clay:#C0602B;--clay-soft:#FAEBDF;--gold:#B0863A;--gold-soft:#F6EEDD;
+    --slate:#5C7378;--slate-soft:#E7ECEB;
+    --shadow:0 1px 2px rgba(27,42,48,.04),0 8px 24px -12px rgba(27,42,48,.12);
+    --shadow-lg:0 2px 4px rgba(27,42,48,.05),0 24px 48px -20px rgba(27,42,48,.22);
+    --display:'Fraunces',Georgia,serif;--body:'Hanken Grotesk',sans-serif;--mono:'IBM Plex Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+
+  /* ===================== ACCESS GATE (pg-) ===================== */
+  /* View switching with attribute selectors — no specificity fights, no .app-el cascade trap */
+  .pg-gate,.pg-paywall,.pg-dash{display:none}
+  #pg-root[data-view="login"]   .pg-gate{display:flex}
+  #pg-root[data-view="paywall"] .pg-paywall{display:flex}
+  #pg-root[data-view="dash"]    .pg-dash{display:block}
+
+  .pg-screen{min-height:100vh;align-items:center;justify-content:center;padding:24px}
+  .pg-cardwrap{max-width:460px;width:100%}
+  .pg-mark{display:flex;align-items:center;gap:11px;justify-content:center;margin-bottom:22px}
+  .pg-mk{width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,var(--pine),var(--pine-2));display:grid;place-items:center;box-shadow:0 6px 16px -6px var(--pine)}
+  .pg-mk span{width:14px;height:14px;border:2.5px solid #fff;border-radius:50%;border-right-color:transparent;transform:rotate(-45deg)}
+  .pg-mk-t b{font-family:var(--display);font-weight:600;font-size:16px;display:block;line-height:1.1}
+  .pg-mk-t small{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+
+  .pg-card{background:var(--paper-2);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-lg);padding:32px}
+  .pg-card .gkick{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine);margin-bottom:9px}
+  .pg-card h2{font-family:var(--display);font-weight:600;font-size:25px;letter-spacing:-.02em;line-height:1.12;margin-bottom:8px}
+  .pg-card .gsub{color:var(--ink-2);font-size:13.5px;line-height:1.55;margin-bottom:22px}
+  .pg-fld{margin-bottom:14px}
+  .pg-fld label{font-size:11.5px;font-weight:600;display:block;margin-bottom:7px;color:var(--ink)}
+  .pg-fld input{width:100%;border:1px solid var(--line-2);border-radius:12px;padding:13px 15px;font-family:var(--mono);font-size:15px;letter-spacing:.06em;background:#fff;color:var(--ink);outline:none}
+  .pg-fld input:focus{border-color:var(--pine)}
+  .pg-btn{font-family:var(--body);font-weight:600;font-size:14px;padding:14px 18px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.16s;width:100%}
+  .pg-btn.p{background:var(--pine);color:#fff}.pg-btn.p:hover{background:var(--pine-2)}
+  .pg-btn.gold{background:var(--gold);color:#fff}.pg-btn.gold:hover{filter:brightness(.96)}
+  .pg-div{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--faint);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .pg-div::before,.pg-div::after{content:"";flex:1;height:1px;background:var(--line)}
+  .pg-paidtoggle{display:none}
+  .pg-paidtoggle.on{display:block}
+  .pg-link{background:none;border:none;font-family:var(--body);font-size:13px;color:var(--pine);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .pg-fine{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.03em;line-height:1.5;margin-top:20px;text-align:center}
+
+  /* ===================== DASHBOARD CHROME ===================== */
+  .pg-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 30px;position:sticky;top:0;background:rgba(246,243,236,.85);backdrop-filter:blur(10px);z-index:30;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .pg-bar .brand{display:flex;align-items:center;gap:11px}
+  .pg-bar .brand .mk{width:34px;height:34px;border-radius:10px;background:linear-gradient(150deg,var(--pine),var(--pine-2));display:grid;place-items:center;box-shadow:0 6px 16px -6px var(--pine)}
+  .pg-bar .brand .mk span{width:13px;height:13px;border:2.5px solid #fff;border-radius:50%;border-right-color:transparent;transform:rotate(-45deg)}
+  .pg-bar .brand b{font-family:var(--display);font-weight:600;font-size:15px;display:block;line-height:1.1}
+  .pg-bar .brand small{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .pg-bar-r{display:flex;align-items:center;gap:12px}
+  .pg-badge{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:8px 12px;border-radius:10px;border:1px solid var(--line-2);background:#fff;color:var(--ink-2)}
+  .pg-badge .pgdot{width:7px;height:7px;border-radius:50%;background:var(--pine)}
+  .pg-badge.warn{border-color:var(--clay);color:var(--clay)}.pg-badge.warn .pgdot{background:var(--clay)}
+  .pg-badge.paid{border-color:var(--gold);color:var(--gold)}.pg-badge.paid .pgdot{background:var(--gold)}
+  .pg-lock{font-family:var(--body);font-weight:600;font-size:12.5px;background:#fff;border:1px solid var(--line-2);border-radius:10px;padding:8px 13px;cursor:pointer;color:var(--ink-2);transition:.15s}
+  .pg-lock:hover{border-color:var(--pine);color:var(--pine)}
+
+  /* expiry strip when days are low */
+  .pg-strip{display:none;background:var(--clay-soft);border-bottom:1px solid var(--line-2);padding:11px 30px;font-size:13px;color:var(--clay);font-weight:600;text-align:center}
+  .pg-strip.on{display:block}
+
+  /* ===================== MINDSET STATE MATRIX (msm-) ===================== */
+  .msm{max-width:1180px;margin:0 auto;padding:34px}
+  .msm-head{margin-bottom:24px}
+  .msm-kick{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine);margin-bottom:10px}
+  .msm-head h2{font-family:var(--display);font-weight:600;font-size:28px;letter-spacing:-.02em;line-height:1.12}
+  .msm-head p{color:var(--ink-2);font-size:14px;margin-top:9px;max-width:640px}
+
+  .msm-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:26px;align-items:start;margin-bottom:24px}
+  .msm-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+  .msm-frame{display:grid;grid-template-columns:30px 1fr 30px;grid-template-rows:26px 1fr 26px;gap:6px;align-items:center;justify-items:center}
+  .msm-axis{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .msm-ax-top{grid-column:2;grid-row:1}
+  .msm-ax-bot{grid-column:2;grid-row:3}
+  .msm-ax-left{grid-column:1;grid-row:2;writing-mode:vertical-rl;transform:rotate(180deg)}
+  .msm-ax-right{grid-column:3;grid-row:2;writing-mode:vertical-rl;color:var(--pine);font-weight:600}
+  .msm-square{grid-column:2;grid-row:2;position:relative;width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;cursor:crosshair;border:1px solid var(--line-2);background:var(--paper-2);touch-action:none;user-select:none;box-shadow:inset 0 1px 2px rgba(27,42,48,.05)}
+  .msm-quads{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+  .msm-q{position:relative;transition:background .35s ease, box-shadow .35s ease}
+  .msm-q .msm-qlab{position:absolute;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:-.01em;opacity:.55;transition:opacity .3s,transform .3s}
+  .msm-q .msm-qsub{position:absolute;font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;opacity:.45}
+  .msm-q.fric{background:rgba(192,96,43,.07)}
+  .msm-q.chrg{background:rgba(176,134,58,.08)}
+  .msm-q.drai{background:rgba(92,115,120,.07)}
+  .msm-q.grnd{background:rgba(26,94,72,.07)}
+  .msm-q.fric .msm-qlab{top:12px;left:12px;color:var(--clay)}
+  .msm-q.fric .msm-qsub{top:32px;left:12px;color:var(--clay)}
+  .msm-q.chrg .msm-qlab{top:12px;right:12px;color:var(--gold)}
+  .msm-q.chrg .msm-qsub{top:32px;right:12px;color:var(--gold)}
+  .msm-q.drai .msm-qlab{bottom:30px;left:12px;color:var(--slate)}
+  .msm-q.drai .msm-qsub{bottom:14px;left:12px;color:var(--slate)}
+  .msm-q.grnd .msm-qlab{bottom:30px;right:12px;color:var(--pine)}
+  .msm-q.grnd .msm-qsub{bottom:14px;right:12px;color:var(--pine)}
+  .msm-q.active{box-shadow:inset 0 0 0 2px currentColor}
+  .msm-q.fric.active{background:rgba(192,96,43,.15);color:var(--clay)}
+  .msm-q.chrg.active{background:rgba(176,134,58,.17);color:var(--gold)}
+  .msm-q.drai.active{background:rgba(92,115,120,.15);color:var(--slate)}
+  .msm-q.grnd.active{background:rgba(26,94,72,.15);color:var(--pine)}
+  .msm-q.active .msm-qlab{opacity:1;transform:scale(1.04)}
+  .msm-field{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply}
+  .msm-cross{position:absolute;inset:0;pointer-events:none}
+  .msm-cross::before,.msm-cross::after{content:"";position:absolute;background:var(--line-2)}
+  .msm-cross::before{left:50%;top:6%;bottom:6%;width:1px;transform:translateX(-.5px)}
+  .msm-cross::after{top:50%;left:6%;right:6%;height:1px;transform:translateY(-.5px)}
+  .msm-glow{position:absolute;width:140px;height:140px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s}
+  .msm-glow.on{opacity:1;animation:msm-pulse 3.2s ease-in-out infinite}
+  @keyframes msm-pulse{0%,100%{transform:translate(-50%,-50%) scale(.82)}50%{transform:translate(-50%,-50%) scale(1.08)}}
+  .msm-dot{position:absolute;width:20px;height:20px;border-radius:50%;border:3px solid #fff;transform:translate(-50%,-50%) scale(0);pointer-events:none;box-shadow:0 4px 14px -3px rgba(27,42,48,.45);transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+  .msm-dot.on{transform:translate(-50%,-50%) scale(1)}
+  .msm-hint{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--faint);text-align:center;margin-top:14px}
+
+  .msm-read{background:linear-gradient(180deg,#fff,var(--paper-2));border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+  .msm-read .rh{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .msm-state{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .msm-chip{width:34px;height:34px;border-radius:10px;flex:0 0 auto;box-shadow:var(--shadow)}
+  .msm-state b{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.01em;line-height:1}
+  .msm-state small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .msm-coach{font-size:13px;color:var(--ink-2);line-height:1.5;margin:14px 0;min-height:62px}
+  .msm-meters{display:flex;gap:10px;margin-bottom:16px}
+  .msm-meter{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+  .msm-meter .ml{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .msm-meter .mv{font-family:var(--display);font-weight:600;font-size:20px;margin-top:2px}
+  .msm-bar{height:5px;border-radius:5px;background:var(--line);margin-top:7px;overflow:hidden}
+  .msm-bar i{display:block;height:100%;width:0;border-radius:5px;transition:width .35s ease}
+  .msm-note label{font-size:11px;font-weight:600;display:block;margin-bottom:7px;color:var(--ink)}
+  .msm-note textarea{width:100%;border:1px solid var(--line-2);border-radius:11px;padding:10px 12px;font-family:var(--body);font-size:13px;background:#fff;color:var(--ink);outline:none;resize:vertical;min-height:52px}
+  .msm-note textarea:focus{border-color:var(--pine)}
+  .msm-btn{font-family:var(--body);font-weight:600;font-size:13px;padding:12px 18px;border-radius:11px;cursor:pointer;border:1px solid transparent;transition:.16s}
+  .msm-btn.p{background:var(--pine);color:#fff;width:100%;margin-top:12px}
+  .msm-btn.p:hover{background:var(--pine-2)}
+  .msm-btn.p:disabled{background:var(--line-2);color:var(--muted);cursor:not-allowed}
+  .msm-btn.g{background:#fff;color:var(--ink);border-color:var(--line-2)}
+  .msm-btn.g:hover{border-color:var(--pine);color:var(--pine)}
+
+  .msm-lang{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);margin-bottom:24px}
+  .msm-lang .lh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+  .msm-lang h3{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.01em}
+  .msm-lang .lh span{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .msm-lang>p{font-size:13px;color:var(--ink-2);max-width:620px;margin-bottom:16px;line-height:1.5}
+  .msm-langrow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .msm-langrow input{flex:1;min-width:200px;border:1px solid var(--line-2);border-radius:11px;padding:12px 14px;font-family:var(--body);font-size:14px;background:#fff;outline:none}
+  .msm-langrow input:focus{border-color:var(--pine)}
+  .msm-reframe{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .msm-rf{border-radius:12px;padding:14px 16px;border:1px solid var(--line)}
+  .msm-rf.was{background:var(--clay-soft)}
+  .msm-rf.now{background:var(--pine-soft)}
+  .msm-rf .rfl{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  .msm-rf.was .rfl{color:var(--clay)}
+  .msm-rf.now .rfl{color:var(--pine)}
+  .msm-rf .rft{font-family:var(--display);font-weight:500;font-size:15px;line-height:1.35}
+  .msm-rf.was .rft{color:var(--ink-2);text-decoration:line-through;text-decoration-color:rgba(192,96,43,.4)}
+
+  .msm-practice{background:linear-gradient(160deg,#fff,var(--paper-2));border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow);margin-bottom:24px}
+  .msm-practice .ph{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--pine);margin-bottom:6px}
+  .msm-practice h3{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.01em;margin-bottom:4px}
+  .msm-practice .plead{font-family:var(--display);font-weight:500;font-size:15px;color:var(--ink-2);margin-bottom:20px}
+  .msm-steps{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  .msm-step{border-left:2px solid var(--pine);padding-left:16px}
+  .msm-step .sn{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .msm-step b{font-family:var(--display);font-weight:600;font-size:16px;display:block;margin-bottom:8px}
+  .msm-step p{font-size:13px;color:var(--ink-2);line-height:1.55}
+  .msm-step p+p{margin-top:8px}
+  .msm-labels{background:var(--gold-soft);border-radius:12px;padding:16px 18px}
+  .msm-labels .lt{font-size:13px;color:var(--ink-2);line-height:1.6}
+  .msm-labels .lt b{color:var(--gold)}
+  .msm-swap{display:block;font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:8px}
+  .msm-swap s{color:var(--muted)}
+  .msm-swap em{font-style:normal;color:var(--pine);font-weight:600}
+
+  .msm-dash{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+  .msm-dash .dh{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+  .msm-dash h3{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.01em}
+  .msm-dash .dmonth{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .msm-dash .dcite{font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-bottom:20px}
+  .msm-dashgrid{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+  .msm-mini{position:relative;width:100%;aspect-ratio:1/1;border:1px solid var(--line-2);border-radius:12px;background:var(--paper-2);overflow:hidden}
+  .msm-mini .mq{position:absolute;width:50%;height:50%}
+  .msm-mini .mq.fric{top:0;left:0;background:rgba(192,96,43,.06)}
+  .msm-mini .mq.chrg{top:0;right:0;background:rgba(176,134,58,.07)}
+  .msm-mini .mq.drai{bottom:0;left:0;background:rgba(92,115,120,.06)}
+  .msm-mini .mq.grnd{bottom:0;right:0;background:rgba(26,94,72,.06)}
+  .msm-mini .mcross::before,.msm-mini .mcross::after{content:"";position:absolute;background:var(--line-2)}
+  .msm-mini .mcross::before{left:50%;top:0;bottom:0;width:1px}
+  .msm-mini .mcross::after{top:50%;left:0;right:0;height:1px}
+  .msm-mdot{position:absolute;width:11px;height:11px;border-radius:50%;border:2px solid #fff;transform:translate(-50%,-50%);box-shadow:0 2px 5px -1px rgba(27,42,48,.4)}
+  .msm-counts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .msm-count{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+  .msm-count .cdot{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+  .msm-count .cl{font-size:11px;color:var(--ink-2)}
+  .msm-count .cl b{display:block;font-size:12.5px;color:var(--ink);font-weight:600}
+  .msm-pattern{font-size:13.5px;color:var(--ink-2);line-height:1.55;background:var(--pine-soft);border-radius:12px;padding:15px 17px}
+  .msm-pattern b{color:var(--pine-2)}
+  .msm-dashfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
+  .msm-empty{font-size:13px;color:var(--muted);line-height:1.5;background:var(--paper);border:1px dashed var(--line-2);border-radius:12px;padding:18px}
+  .msm-clear{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--faint);background:none;border:none;cursor:pointer}
+  .msm-clear:hover{color:var(--clay)}
+
+  .msm-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:12px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.3s;z-index:70;box-shadow:var(--shadow-lg)}
+  .msm-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.msm-toast b{color:#9FD9C0}
+
+  /* demo controls — remove before launch */
+  .pg-demo{max-width:1180px;margin:0 auto 40px;padding:0 34px}
+  .pg-demo-in{background:var(--ink);color:#cfd8da;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+  .pg-demo-in b{color:#fff}
+  .pg-demo-in button{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:8px;padding:7px 11px;cursor:pointer}
+  .pg-demo-in button:hover{background:rgba(255,255,255,.16)}
+
+  @media(max-width:880px){
+    .msm{padding:20px}.pg-demo{padding:0 20px}
+    .msm-grid,.msm-reframe,.msm-steps,.msm-dashgrid{grid-template-columns:1fr}
+    .msm-mini{max-width:240px;margin:0 auto}
+    .pg-bar{padding:14px 18px}
+  }
+  @media(prefers-reduced-motion:reduce){.msm-glow.on{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="pg-root" data-view="login">
+
+  <!-- ===================== LOGIN ===================== -->
+  <div class="pg-gate pg-screen">
+    <div class="pg-cardwrap">
+      <div class="pg-mark">
+        <div class="pg-mk"><span></span></div>
+        <div class="pg-mk-t"><b>Leadership Pressure Gauge</b><small>Beta enhancements</small></div>
+      </div>
+      <div class="pg-card">
+        <div class="gkick">Unlock the enhancements</div>
+        <h2>New tools. New login.</h2>
+        <p class="gsub">The Mindset State Matrix and the weekly self check-in are part of the beta. Enter your pilot access code to switch them on. You get 60 days to put them to work.</p>
+        <div class="pg-fld">
+          <label for="pg-code">Pilot access code</label>
+          <input id="pg-code" type="text" placeholder="LPL1610" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')pgSubmitCode()">
+        </div>
+        <button class="pg-btn p" onclick="pgSubmitCode()">Unlock the beta</button>
+
+        <div class="pg-div">or</div>
+        <div style="text-align:center">
+          <button class="pg-link" onclick="pgTogglePaid()">Already paid for access? Enter your password</button>
+        </div>
+        <div class="pg-paidtoggle" id="pg-paidtoggle" style="margin-top:16px">
+          <div class="pg-fld">
+            <label for="pg-pass-login">Paid access password</label>
+            <input id="pg-pass-login" type="password" placeholder="Your access password" autocomplete="off" onkeydown="if(event.key==='Enter')pgSubmitPaid('login')">
+          </div>
+          <button class="pg-btn gold" onclick="pgSubmitPaid('login')">Enter with full access</button>
+        </div>
+
+        <div class="pg-fine">Beta access runs 60 days from your first unlock.<br>After that, full access continues with a paid password.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PAYWALL ===================== -->
+  <div class="pg-paywall pg-screen">
+    <div class="pg-cardwrap">
+      <div class="pg-mark">
+        <div class="pg-mk"><span></span></div>
+        <div class="pg-mk-t"><b>Leadership Pressure Gauge</b><small>Beta complete</small></div>
+      </div>
+      <div class="pg-card">
+        <div class="gkick">Your 60 days are up</div>
+        <h2>You ran the reps. Now keep them.</h2>
+        <p class="gsub">The beta did its job. You named your states, plotted your weeks, and watched the pattern show up. The tools do not disappear. They move behind paid access. Enter the password tied to your subscription to pick up right where you left off.</p>
+        <div class="pg-fld">
+          <label for="pg-pass-wall">Paid access password</label>
+          <input id="pg-pass-wall" type="password" placeholder="Your access password" autocomplete="off" onkeydown="if(event.key==='Enter')pgSubmitPaid('wall')">
+        </div>
+        <button class="pg-btn gold" onclick="pgSubmitPaid('wall')">Continue with full access</button>
+        <div class="pg-fine">Do not have a password yet? Reach your coach to set up paid access,<br>then come back here and pick up your history.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div class="pg-dash">
+    <div class="pg-bar">
+      <div class="brand"><div class="mk"><span></span></div><div><b>Leadership Pressure Gauge</b><small>Dashboard · Enhancements</small></div></div>
+      <div class="pg-bar-r">
+        <div class="pg-badge" id="pg-badge"><span class="pgdot"></span><span id="pg-badge-t">Beta</span></div>
+        <button class="pg-lock" onclick="pgLock()">Lock</button>
+      </div>
+    </div>
+    <div class="pg-strip" id="pg-strip"></div>
+
+    <!-- The Mindset State Matrix -->
+    <section class="msm" id="msm">
+      <div class="msm-head">
+        <div class="msm-kick">Score the reps · weekly self check-in</div>
+        <h2>Mindset State Matrix</h2>
+        <p>Pressure does not ask how you feel. It just shows up. This is where you name your state, plot it, and decide what comes next. Drop your marker on the week. Then score it.</p>
+      </div>
+
+      <div class="msm-grid">
+        <div class="msm-card">
+          <div class="msm-frame">
+            <div class="msm-axis msm-ax-top">High Intensity</div>
+            <div class="msm-axis msm-ax-left">Unmotivated</div>
+            <div class="msm-square" id="msm-square" role="application" aria-label="Mindset State Matrix. Click to plot your state.">
+              <div class="msm-quads">
+                <div class="msm-q fric" data-q="friction"><span class="msm-qlab">Friction</span><span class="msm-qsub">reactive heat</span></div>
+                <div class="msm-q chrg" data-q="charged"><span class="msm-qlab">Charged</span><span class="msm-qsub">aimed energy</span></div>
+                <div class="msm-q drai" data-q="drained"><span class="msm-qlab">Drained</span><span class="msm-qsub">running low</span></div>
+                <div class="msm-q grnd" data-q="grounded"><span class="msm-qlab">Grounded</span><span class="msm-qsub">steady &amp; present</span></div>
+              </div>
+              <canvas class="msm-field" id="msm-field"></canvas>
+              <div class="msm-cross"></div>
+              <div class="msm-glow" id="msm-glow"></div>
+              <div class="msm-dot" id="msm-dot"></div>
+            </div>
+            <div class="msm-axis msm-ax-right">
+              <svg width="9" height="13" viewBox="0 0 9 13" fill="none"><path d="M5 0L0 7h3l-1 6 5-7H4l1-6z" fill="#1A5E48"/></svg>
+              Positive
+            </div>
+            <div class="msm-axis msm-ax-bot">Low Intensity</div>
+          </div>
+          <div class="msm-hint" id="msm-hint">tap or drag anywhere inside the box to plot your state</div>
+        </div>
+
+        <div class="msm-read">
+          <div class="rh">Your state, right now</div>
+          <div class="msm-state">
+            <div class="msm-chip" id="msm-chip" style="background:var(--line-2)"></div>
+            <div><b id="msm-name">Not plotted yet</b><small id="msm-tag">drop your marker to read it</small></div>
+          </div>
+          <div class="msm-coach" id="msm-coach">Most leaders run the whole week without ever asking how they showed up. You are about to do the opposite. Name it. Plot it. Decide.</div>
+          <div class="msm-meters">
+            <div class="msm-meter"><div class="ml">Intensity</div><div class="mv" id="msm-int">—</div><div class="msm-bar"><i id="msm-int-bar" style="background:var(--gold)"></i></div></div>
+            <div class="msm-meter"><div class="ml">Charge</div><div class="mv" id="msm-val">—</div><div class="msm-bar"><i id="msm-val-bar" style="background:var(--pine)"></i></div></div>
+          </div>
+          <div class="msm-note">
+            <label for="msm-week-note">One honest line about this week (optional)</label>
+            <textarea id="msm-week-note" placeholder="What put you here? Keep it to a sentence."></textarea>
+          </div>
+          <button class="msm-btn p" id="msm-score" disabled onclick="msmScoreWeek()">Score this week</button>
+        </div>
+      </div>
+
+      <div class="msm-lang">
+        <div class="lh"><h3>Name it</h3><span>the label you use is the label you become</span></div>
+        <p>Say the feeling out loud and watch what it does. "I am anxious" fuses the feeling to who you are. "I am noticing feelings of anxiety" lets it pass through. Same moment. Different grip. Type what you are carrying. I will hand it back lighter.</p>
+        <div class="msm-langrow">
+          <input id="msm-feel" type="text" placeholder="I'm stressed.  /  anxious  /  overwhelmed" onkeydown="if(event.key==='Enter')msmReframe()">
+          <button class="msm-btn g" onclick="msmReframe()">Reframe it</button>
+        </div>
+        <div class="msm-reframe" id="msm-reframe" style="display:none">
+          <div class="msm-rf was"><div class="rfl">Fused to you</div><div class="rft" id="msm-rf-was"></div></div>
+          <div class="msm-rf now"><div class="rfl">Passing through you</div><div class="rft" id="msm-rf-now"></div></div>
+        </div>
+      </div>
+
+      <div class="msm-practice">
+        <div class="ph">The practice</div>
+        <h3>The Self Check-in</h3>
+        <div class="plead">Name what you feel. Locate it. Decide what comes next.</div>
+        <div class="msm-steps">
+          <div class="msm-step">
+            <div class="sn">Step 1</div>
+            <b>Name it and plot it</b>
+            <p>Ask yourself the hard, simple questions. What am I feeling right now? How intense is it? Is it working in my favor, or limiting my behavior?</p>
+            <p>Find the spot on the matrix that tells the truth. Drop your marker there. The honest plot beats the flattering one.</p>
+          </div>
+          <div class="msm-step">
+            <div class="sn">Step 2</div>
+            <b>Is this serving me, or the people I lead?</b>
+            <p>Sit with that. Then ask the next one. What small shift would help me feel more empowered and move forward? Who, or what, could support that shift?</p>
+            <p>You do not need a new life. You need the next small move.</p>
+          </div>
+        </div>
+        <div class="msm-labels">
+          <div class="lt"><b>And mind the labels.</b> The words you choose decide whether a feeling owns you or moves through you.
+          <span class="msm-swap">Instead of <s>"I'm anxious"</s> try <em>"I'm noticing feelings of anxiety."</em></span>
+          <span class="msm-swap">Instead of <s>"I'm stressed"</s> try <em>"I'm feeling tension."</em></span>
+          That small shift turns the feeling into a temporary experience. Not something fused with who you are.</div>
+        </div>
+      </div>
+
+      <div class="msm-dash">
+        <div class="dh"><h3>This month, plotted</h3><div class="dmonth" id="msm-monthlabel"></div></div>
+        <div class="dcite">Every scored week rolls up here, then forward to your monthly dashboard</div>
+        <div id="msm-dash-body"></div>
+      </div>
+    </section>
+
+    <!-- DEMO CONTROLS — delete this whole block before launch -->
+    <div class="pg-demo">
+      <div class="pg-demo-in">
+        <b>Demo controls</b><span>(remove before launch)</span>
+        <button onclick="pgDemo('reset')">Reset access</button>
+        <button onclick="pgDemo('day58')">Jump to day 58</button>
+        <button onclick="pgDemo('expire')">Expire beta</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="msm-toast" id="msm-toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =====================================================================
+     ACCESS GATE  (prototype — invited-beta convenience, NOT security)
+     Swap the three checks marked >>> SUPABASE <<< for a real auth call
+     before any paid access goes live. Client-side gates can be bypassed.
+  ===================================================================== */
+  var BETA_CODE = "LPL1610";          // your pilot code
+  var BETA_DAYS = 60;
+  var DAY = 86400000;
+  var ACCESS_KEY = "lpl_pg_access";
+
+  // Demo placeholder only. The real paid check must verify a subscription
+  // server-side (Supabase auth + RLS). Never trust a password in the browser.
+  var PAID_PASSWORD_DEMO = "LPL-FLOOR-2026";
+
+  var root = document.getElementById("pg-root");
+
+  function loadAccess(){
+    try{ var r = window.localStorage.getItem(ACCESS_KEY); return r ? JSON.parse(r) : null; }
+    catch(e){ return window.__pgAccess || null; }
+  }
+  function saveAccess(rec){
+    window.__pgAccess = rec;
+    try{ window.localStorage.setItem(ACCESS_KEY, JSON.stringify(rec)); }catch(e){}
+  }
+  function clearAccess(){
+    window.__pgAccess = null;
+    try{ window.localStorage.removeItem(ACCESS_KEY); }catch(e){}
+  }
+
+  function daysLeft(rec){
+    var used = Math.floor((Date.now() - rec.unlockTs) / DAY);
+    return BETA_DAYS - used;
+  }
+
+  function route(){
+    var rec = loadAccess();
+    if(!rec){ setView("login"); return; }
+    if(rec.tier === "paid"){ setView("dash"); paintBadge(rec); return; }
+    // beta
+    var left = daysLeft(rec);
+    if(left > 0){ setView("dash"); paintBadge(rec); }
+    else { setView("paywall"); }
+  }
+
+  var matrixReady = false;
+  function setView(v){
+    root.setAttribute("data-view", v);
+    if(v === "dash"){
+      if(!matrixReady){ initMatrix(); matrixReady = true; }
+      // square must be visible before the field canvas measures itself
+      requestAnimationFrame(function(){ resizeField(); renderMonthly(); });
+    }
+  }
+
+  function paintBadge(rec){
+    var badge = document.getElementById("pg-badge");
+    var t = document.getElementById("pg-badge-t");
+    var strip = document.getElementById("pg-strip");
+    badge.className = "pg-badge";
+    strip.className = "pg-strip";
+    if(rec.tier === "paid"){
+      badge.classList.add("paid");
+      t.textContent = "Full access";
+      return;
+    }
+    var left = daysLeft(rec);
+    t.textContent = "Beta · " + left + " day" + (left===1?"":"s") + " left";
+    if(left <= 7){
+      badge.classList.add("warn");
+      strip.classList.add("on");
+      strip.textContent = "Beta access ends in " + left + " day" + (left===1?"":"s") + ". After that, full access continues with your paid password.";
+    }
+  }
+
+  window.pgTogglePaid = function(){
+    document.getElementById("pg-paidtoggle").classList.toggle("on");
+  };
+
+  window.pgSubmitCode = function(){
+    var v = (document.getElementById("pg-code").value || "").trim().toUpperCase();
+    // >>> SUPABASE <<< replace with: verify the code/seat server-side, return a session
+    if(v === BETA_CODE){
+      var existing = loadAccess();
+      // keep the original unlock date if they have one; otherwise start the clock now
+      var unlockTs = (existing && existing.tier === "beta" && existing.unlockTs) ? existing.unlockTs : Date.now();
+      saveAccess({ tier:"beta", unlockTs:unlockTs, code:v });
+      route();
+      toast("Beta unlocked. 60 days. Make them count.");
+    } else {
+      toast("That code did not match. Check it and try again.");
+    }
+  };
+
+  window.pgSubmitPaid = function(where){
+    var id = where === "wall" ? "pg-pass-wall" : "pg-pass-login";
+    var v = (document.getElementById(id).value || "").trim();
+    // >>> SUPABASE <<< replace with: verify an active paid subscription server-side
+    if(v === PAID_PASSWORD_DEMO){
+      saveAccess({ tier:"paid", unlockTs:Date.now() });
+      route();
+      toast("Full access on. Welcome back.");
+    } else {
+      toast("That password did not match an active account.");
+    }
+  };
+
+  window.pgLock = function(){
+    setView("login");
+    document.getElementById("pg-paidtoggle").classList.remove("on");
+    var c = document.getElementById("pg-code"); if(c) c.value = "";
+  };
+
+  // demo-only helpers
+  window.pgDemo = function(action){
+    if(action === "reset"){ clearAccess(); route(); toast("Access reset."); return; }
+    var rec = loadAccess() || { tier:"beta", unlockTs:Date.now() };
+    if(action === "day58"){ rec.tier="beta"; rec.unlockTs = Date.now() - 58*DAY; saveAccess(rec); route(); toast("Set to day 58. Watch the badge."); }
+    if(action === "expire"){ rec.tier="beta"; rec.unlockTs = Date.now() - (BETA_DAYS+1)*DAY; saveAccess(rec); route(); }
+  };
+
+  /* =====================================================================
+     MINDSET STATE MATRIX
+  ===================================================================== */
+  var Q = {
+    charged:{name:"Charged", tag:"High intensity · positive", color:"#B0863A", read:"Energy up, pointed the right way. This is your sharp edge. Spend it on the work that matters most, then protect it. Charged is fuel. It is not a place to live."},
+    friction:{name:"Friction", tag:"High intensity · unmotivated", color:"#C0602B", read:"High energy, wrong direction. This is reactive heat. Name it before you act on it. One breath turns a reaction into a decision."},
+    drained:{name:"Drained", tag:"Low intensity · unmotivated", color:"#5C7378", read:"The tank is low. The spark is lower. Do not lead big from here. Recover first. A depleted leader builds a depleted team."},
+    grounded:{name:"Grounded", tag:"Low intensity · positive", color:"#1A5E48", read:"Calm. Steady. Present. This is where your best decisions live. Most leaders chase charged. The strong ones build from grounded."}
+  };
+  function quadFor(intensity, valence){
+    if(intensity >= 50 && valence >= 50) return "charged";
+    if(intensity >= 50 && valence < 50)  return "friction";
+    if(intensity < 50  && valence < 50)  return "drained";
+    return "grounded";
+  }
+
+  var READ_KEY = "lpl_msm_readings";
+  var memReadings = [];
+  function loadReadings(){
+    try{ var r = window.localStorage.getItem(READ_KEY); return r ? JSON.parse(r) : []; }
+    catch(e){ return memReadings.slice(); }
+  }
+  function saveReadings(list){
+    memReadings = list;
+    try{ window.localStorage.setItem(READ_KEY, JSON.stringify(list)); }catch(e){}
+    // >>> SUPABASE <<< also push list[list.length-1] through your edge function:
+    //   pushReadingToBackend(list[list.length - 1]);
+  }
+
+  var sq, dot, glow, hint, chip, elName, elTag, elCoach, elInt, elVal, intBar, valBar, scoreBtn, quadEls, current = null;
+  var cv, ctx, fdots = [], fieldTarget = null, reduceMotion = false, raf = null;
+
+  function initMatrix(){
+    sq = document.getElementById("msm-square");
+    dot = document.getElementById("msm-dot");
+    glow = document.getElementById("msm-glow");
+    hint = document.getElementById("msm-hint");
+    chip = document.getElementById("msm-chip");
+    elName = document.getElementById("msm-name");
+    elTag = document.getElementById("msm-tag");
+    elCoach = document.getElementById("msm-coach");
+    elInt = document.getElementById("msm-int");
+    elVal = document.getElementById("msm-val");
+    intBar = document.getElementById("msm-int-bar");
+    valBar = document.getElementById("msm-val-bar");
+    scoreBtn = document.getElementById("msm-score");
+    quadEls = {};
+    Array.prototype.forEach.call(sq.querySelectorAll(".msm-q"), function(q){ quadEls[q.getAttribute("data-q")] = q; });
+
+    sq.addEventListener("mousedown", down);
+    window.addEventListener("mousemove", moveH);
+    window.addEventListener("mouseup", up);
+    sq.addEventListener("touchstart", down, {passive:false});
+    sq.addEventListener("touchmove", moveH, {passive:false});
+    sq.addEventListener("touchend", up);
+
+    cv = document.getElementById("msm-field");
+    ctx = cv.getContext("2d");
+    reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.addEventListener("resize", function(){ fdots = []; resizeField(); if(reduceMotion) tickOnce(); });
+    startField();
+  }
+
+  function plot(clientX, clientY){
+    var r = sq.getBoundingClientRect();
+    var x = Math.min(Math.max(clientX - r.left, 0), r.width);
+    var y = Math.min(Math.max(clientY - r.top, 0), r.height);
+    var valence = Math.round((x / r.width) * 100);
+    var intensity = Math.round((1 - y / r.height) * 100);
+    var quad = quadFor(intensity, valence);
+    current = {intensity:intensity, valence:valence, quad:quad};
+    var q = Q[quad];
+    dot.style.left = x+"px"; dot.style.top = y+"px"; dot.style.background = q.color; dot.classList.add("on");
+    glow.style.left = x+"px"; glow.style.top = y+"px";
+    glow.style.background = "radial-gradient(circle, "+hexA(q.color,.45)+" 0%, "+hexA(q.color,0)+" 70%)";
+    glow.classList.add("on");
+    Object.keys(quadEls).forEach(function(k){ quadEls[k].classList.toggle("active", k===quad); });
+    chip.style.background = q.color;
+    elName.textContent = q.name; elTag.textContent = q.tag; elCoach.textContent = q.read;
+    elInt.textContent = intensity; intBar.style.width = intensity+"%"; intBar.style.background = q.color;
+    elVal.textContent = valence; valBar.style.width = valence+"%"; valBar.style.background = q.color;
+    scoreBtn.disabled = false;
+    hint.textContent = "drag the marker to fine-tune, then score the week";
+    fieldTarget = {x:x, y:y, color:q.color};
+  }
+
+  var dragging = false;
+  function down(e){ dragging = true; var p = pt(e); plot(p.x, p.y); }
+  function moveH(e){ if(!dragging) return; var p = pt(e); plot(p.x, p.y); if(e.cancelable) e.preventDefault(); }
+  function up(){ dragging = false; }
+  function pt(e){ if(e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY}; return {x:e.clientX, y:e.clientY}; }
+
+  function resizeField(){
+    if(!cv) return;
+    var r = sq.getBoundingClientRect();
+    cv.width = Math.max(2, r.width); cv.height = Math.max(2, r.height);
+    if(fdots.length === 0){
+      for(var i=0;i<54;i++){
+        fdots.push({ x:Math.random()*cv.width, y:Math.random()*cv.height, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18, rad:Math.random()*1.6+.7 });
+      }
+    }
+  }
+  function tick(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(var i=0;i<fdots.length;i++){
+      var d = fdots[i];
+      if(fieldTarget){
+        var dx = fieldTarget.x-d.x, dy = fieldTarget.y-d.y, dist = Math.sqrt(dx*dx+dy*dy)||1;
+        d.vx += (dx/dist)*.004; d.vy += (dy/dist)*.004;
+      }
+      d.vx *= .985; d.vy *= .985; d.x += d.vx; d.y += d.vy;
+      if(d.x<0)d.x=cv.width; if(d.x>cv.width)d.x=0; if(d.y<0)d.y=cv.height; if(d.y>cv.height)d.y=0;
+      ctx.fillStyle = hexA(fieldTarget ? fieldTarget.color : "#7C8A90", .22);
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.rad,0,Math.PI*2); ctx.fill();
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function tickOnce(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(var i=0;i<fdots.length;i++){ var d=fdots[i]; ctx.fillStyle=hexA("#7C8A90",.18); ctx.beginPath(); ctx.arc(d.x,d.y,d.rad,0,Math.PI*2); ctx.fill(); }
+  }
+  function startField(){ resizeField(); if(reduceMotion){ tickOnce(); return; } if(!raf) raf = requestAnimationFrame(tick); }
+
+  function hexA(hex, a){ var h=hex.replace("#",""); var n=parseInt(h,16); return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")"; }
+  function monthKey(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
+  function monthName(d){ return d.toLocaleDateString(undefined,{month:"long", year:"numeric"}); }
+  function escapeHtml(s){ return s.replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+  window.msmScoreWeek = function(){
+    if(!current) return;
+    var noteEl = document.getElementById("msm-week-note");
+    var now = new Date();
+    var reading = { id:Date.now(), ts:now.getTime(), month:monthKey(now), date:now.toLocaleDateString(undefined,{month:"short", day:"numeric"}), intensity:current.intensity, valence:current.valence, quad:current.quad, note:(noteEl.value||"").trim() };
+    var list = loadReadings(); list.push(reading); saveReadings(list);
+    noteEl.value = "";
+    renderMonthly();
+    toast("Week scored. It rolled to your dashboard.");
+  };
+
+  function renderMonthly(){
+    var body = document.getElementById("msm-dash-body");
+    if(!body) return;
+    var now = new Date();
+    document.getElementById("msm-monthlabel").textContent = monthName(now);
+    var list = loadReadings().filter(function(r){ return r.month === monthKey(now); });
+    if(list.length === 0){
+      body.innerHTML = '<div class="msm-empty">No weeks scored this month yet. Plot your state above, then hit <b>Score this week</b>. The pattern shows up over four or five reps, not one.</div>';
+      return;
+    }
+    var counts = {charged:0, friction:0, drained:0, grounded:0};
+    list.forEach(function(r){ counts[r.quad]++; });
+    var dotsHtml = list.map(function(r){
+      return '<div class="msm-mdot" title="'+r.date+' · '+Q[r.quad].name+(r.note?(" — "+escapeHtml(r.note)):"")+'" style="left:'+r.valence+'%;top:'+(100-r.intensity)+'%;background:'+Q[r.quad].color+'"></div>';
+    }).join("");
+    var dom = "grounded", domN = -1;
+    Object.keys(counts).forEach(function(k){ if(counts[k] > domN){ domN = counts[k]; dom = k; } });
+    var countHtml = ["charged","friction","grounded","drained"].map(function(k){
+      return '<div class="msm-count"><span class="cdot" style="background:'+Q[k].color+'"></span><div class="cl"><b>'+Q[k].name+'</b>'+counts[k]+' of '+list.length+' weeks</div></div>';
+    }).join("");
+    body.innerHTML =
+      '<div class="msm-dashgrid"><div class="msm-mini"><div class="mq fric"></div><div class="mq chrg"></div><div class="mq drai"></div><div class="mq grnd"></div><div class="mcross"></div>'+dotsHtml+'</div>'
+      + '<div><div class="msm-counts">'+countHtml+'</div><div class="msm-pattern">'+patternRead(dom, list.length)+'</div></div></div>'
+      + '<div class="msm-dashfoot"><span class="dmonth">'+list.length+' week'+(list.length===1?"":"s")+' scored</span><button class="msm-clear" onclick="msmClearMonth()">clear this month</button></div>';
+  }
+  function patternRead(dom, total){
+    if(total < 2) return "One rep down. <b>Keep scoring.</b> A single week is a snapshot. A month is the truth.";
+    return {
+      charged:"Most weeks landed in <b>Charged</b>. Big energy, aimed the right way. Just make sure it is fuel and not a fire you are living inside of.",
+      friction:"Most weeks landed in <b>Friction</b>. That is not a bad week. That is a pattern. High energy pointed the wrong way is the thing to coach this month.",
+      drained:"Most weeks landed in <b>Drained</b>. The tank keeps running low. Recovery is not a reward here. It is the work.",
+      grounded:"Most weeks landed in <b>Grounded</b>. Steady hands, clear head. This is the floor strong leaders build from. Hold it."
+    }[dom];
+  }
+  window.msmClearMonth = function(){
+    var mk = monthKey(new Date());
+    saveReadings(loadReadings().filter(function(r){ return r.month !== mk; }));
+    renderMonthly(); toast("This month cleared.");
+  };
+
+  var MAP = {
+    anxious:"noticing feelings of anxiety", anxiety:"noticing feelings of anxiety",
+    stressed:"feeling tension", stress:"feeling tension", tense:"feeling tension",
+    angry:"noticing feelings of anger", mad:"noticing feelings of anger", anger:"noticing feelings of anger",
+    frustrated:"noticing some frustration", frustration:"noticing some frustration",
+    overwhelmed:"feeling a lot of pressure right now", overwhelm:"feeling a lot of pressure right now",
+    exhausted:"running low on energy", tired:"running low on energy", drained:"running low on energy", burntout:"running low on energy",
+    scared:"noticing feelings of fear", afraid:"noticing feelings of fear", fear:"noticing feelings of fear",
+    nervous:"noticing some nerves", worried:"noticing some worry",
+    sad:"noticing feelings of sadness", down:"feeling low right now",
+    fine:"feeling steady", good:"feeling good right now", great:"feeling strong right now",
+    confused:"noticing some uncertainty", stuck:"noticing that I feel stuck", defeated:"noticing a heavy feeling"
+  };
+  window.msmReframe = function(){
+    var raw = (document.getElementById("msm-feel").value||"").trim();
+    if(!raw){ toast("Tell me what you are carrying first."); return; }
+    var was = raw.charAt(0).toUpperCase()+raw.slice(1); if(!/[.!?]$/.test(was)) was += ".";
+    var w = raw.toLowerCase().replace(/[.!?]+$/,"")
+      .replace(/^i\s*am\s+/,"").replace(/^i['’]?m\s+/,"").replace(/^im\s+/,"")
+      .replace(/^i\s*feel\s+/,"").replace(/^feeling\s+/,"").replace(/^so\s+/,"").replace(/^really\s+/,"").trim();
+    var key = w.replace(/[^a-z]/g,"");
+    var phrase = MAP[key] || ("noticing feelings of " + (w || "this"));
+    document.getElementById("msm-rf-was").textContent = was;
+    document.getElementById("msm-rf-now").textContent = "I'm " + phrase + ".";
+    document.getElementById("msm-reframe").style.display = "";
+  };
+
+  var tt = null;
+  function toast(m){
+    var e = document.getElementById("msm-toast");
+    e.innerHTML = m.replace(/(scored|rolled|cleared|unlocked|reset|on)/,"<b>$1</b>");
+    e.classList.add("show"); clearTimeout(tt);
+    tt = setTimeout(function(){ e.classList.remove("show"); }, 2400);
+  }
+
+  // boot
+  route();
+})();
+</script>
+</body>
+</html>
