@@ -68,6 +68,35 @@ tr.urow:hover{background:var(--surface);}
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:14px;line-height:1.7;}
 .tblwrap{overflow-x:auto;}
 @media(max-width:720px){.mgrid{grid-template-columns:repeat(2,1fr);}.crow{grid-template-columns:1fr;}.hdr{flex-direction:column;text-align:center;}}
+
+/* ===== MINDSET ===== */
+.pillq{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#eef2f9;color:var(--navy);white-space:nowrap;}
+.pillq.none{background:#f3f4f6;color:var(--light);}
+.mm-distbar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:#eef2f9;}
+.mm-distbar .mm-seg{height:100%;transition:width .4s;}
+.mm-legrow{display:flex;flex-wrap:wrap;gap:14px;margin-top:11px;}
+.mm-leg{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.mm-leg-d{width:10px;height:10px;border-radius:3px;flex:0 0 auto;}
+.mm-udetail{display:grid;grid-template-columns:180px 1fr;gap:18px;align-items:start;}
+.mm-uscatter{position:relative;width:100%;max-width:180px;aspect-ratio:1/1;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);}
+.mm-uscatter .mq{position:absolute;width:50%;height:50%;}
+.mm-uscatter .mq.fric{top:0;left:0;background:rgba(122,31,43,.05);}
+.mm-uscatter .mq.chrg{top:0;right:0;background:rgba(200,160,75,.08);}
+.mm-uscatter .mq.drai{bottom:0;left:0;background:rgba(100,116,139,.05);}
+.mm-uscatter .mq.grnd{bottom:0;right:0;background:rgba(30,58,95,.05);}
+.mm-uscatter .mc::before,.mm-uscatter .mc::after{content:"";position:absolute;background:var(--border);}
+.mm-uscatter .mc::before{left:50%;top:0;bottom:0;width:1px;}
+.mm-uscatter .mc::after{top:50%;left:0;right:0;height:1px;}
+.mm-mdot{position:absolute;width:11px;height:11px;border-radius:50%;border:2px solid #fff;transform:translate(-50%,-50%);box-shadow:0 2px 5px -1px rgba(30,58,95,.4);}
+.mm-cntrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.mm-cnt{display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:6px 11px;font-size:12px;color:var(--muted);}
+.mm-cnt b{color:var(--navy);font-size:14px;}
+.mm-cnt-d{width:10px;height:10px;border-radius:3px;flex:0 0 auto;}
+.mm-recent{display:flex;flex-direction:column;gap:7px;}
+.mm-rd{display:flex;align-items:center;gap:10px;font-size:12px;flex-wrap:wrap;}
+.mm-rd-date{font-size:11px;color:var(--muted);min-width:104px;}
+.mm-rd-note{color:var(--text);font-style:italic;}
+@media(max-width:720px){.mm-udetail{grid-template-columns:1fr;}.mm-uscatter{max-width:220px;margin:0 auto;}}
 </style>
 </head>
 <body>
@@ -103,6 +132,7 @@ tr.urow:hover{background:var(--surface);}
   <div class="nav">
     <button class="ntab on" id="nt-exec" onclick="showView('exec')">Executive Summary</button>
     <button class="ntab" id="nt-user" onclick="showView('user')">User Progress</button>
+    <button class="ntab" id="nt-pulse" onclick="showView('pulse')">Mindset Pulse</button>
   </div>
 
   <!-- EXECUTIVE SUMMARY -->
@@ -112,7 +142,7 @@ tr.urow:hover{background:var(--surface);}
       <div class="ctitle">All Users. Sorted by Last Active.</div>
       <div class="tblwrap">
         <table>
-          <thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Streak</th><th>7-Day %</th><th>Velocity</th><th>Days Logged</th><th>Last Active</th></tr></thead>
+          <thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Streak</th><th>7-Day %</th><th>Velocity</th><th>State</th><th>Days Logged</th><th>Last Active</th></tr></thead>
           <tbody id="execRows"></tbody>
         </table>
       </div>
@@ -152,8 +182,31 @@ tr.urow:hover{background:var(--surface);}
         <div class="ctitle">Session Timeline: Last 14 Days</div>
         <div id="uTimeline"></div>
       </div>
+      <div class="card">
+        <div class="ctitle">Mindset This Month</div>
+        <div id="uMindset"></div>
+      </div>
     </div>
     <div id="userEmpty" class="empty hide">Select a user to see their progress.</div>
+  </div>
+
+  <!-- MINDSET PULSE -->
+  <div id="view-pulse" class="hide fade">
+    <div class="mgrid" id="pulseStats"></div>
+    <div class="card">
+      <div class="ctitle">This Month's Distribution. Every Reading, Every Leader.</div>
+      <div id="pulseDist"></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Who To Reach. Sorted By Friction And Drain.</div>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>Name</th><th>Role</th><th>Latest State</th><th>This Month</th><th>Readings</th><th>Friction + Drain</th><th>Last Note</th></tr></thead>
+          <tbody id="pulseRows"></tbody>
+        </table>
+      </div>
+      <div id="pulseEmpty" class="empty hide">No mindset readings have synced yet.<br>They appear here once a leader plots a state and taps Score This Week.</div>
+    </div>
   </div>
 </div>
 
@@ -209,7 +262,7 @@ async function loadData(){
     if(j.error){gateErrConsole("Unauthorized. The password fingerprint in your Apps Script does not match.");return;}
     ALL=j.users||[];SIGNUPS=j.signups||[];
     document.getElementById("lastLoad").textContent="Updated "+new Date().toLocaleTimeString();
-    renderExec();buildUserSel();
+    renderExec();buildUserSel();renderPulse();
   }catch(err){
     document.getElementById("lastLoad").textContent="Could not reach backend.";
   }
@@ -283,7 +336,7 @@ function renderExec(){
     return'<tr class="urow" onclick="jumpToUser(\''+u.email.replace(/'/g,"\\'")+'\')">'+
       '<td><strong>'+esc(u.name)+'</strong></td><td>'+esc(u.role)+'</td><td>'+esc(u.email)+'</td>'+
       '<td>'+st+'</td><td>'+sev+'%</td><td><span class="pillv '+velCls+'">'+vel+'</span></td>'+
-      '<td>'+daysLogged(u.data)+'</td><td>'+fmtDate(u.lastActive)+'</td></tr>';
+      '<td>'+mmStatePill(u.data)+'</td><td>'+daysLogged(u.data)+'</td><td>'+fmtDate(u.lastActive)+'</td></tr>';
   }).join("");
   document.getElementById("execEmpty").classList.toggle("hide",ALL.length>0);
   var sg=SIGNUPS.slice().reverse().slice(0,15);
@@ -357,12 +410,111 @@ function renderUser(){
     tl+='</div>';
   }
   document.getElementById("uTimeline").innerHTML=tl||'<div class="empty">No sessions logged in the last 14 days.</div>';
+  mmRenderUser(data);
 }
 function showView(v){
   document.getElementById("view-exec").classList.toggle("hide",v!=="exec");
   document.getElementById("view-user").classList.toggle("hide",v!=="user");
+  document.getElementById("view-pulse").classList.toggle("hide",v!=="pulse");
   document.getElementById("nt-exec").classList.toggle("on",v==="exec");
   document.getElementById("nt-user").classList.toggle("on",v==="user");
+  document.getElementById("nt-pulse").classList.toggle("on",v==="pulse");
+  if(v==="pulse")renderPulse();
+}
+/* ===== MINDSET (console read layer) ===== */
+var MMQ={
+  charged:{name:"Charged",color:"#C8A04B"},
+  friction:{name:"Friction",color:"#7A1F2B"},
+  drained:{name:"Drained",color:"#64748b"},
+  grounded:{name:"Grounded",color:"#1E3A5F"}
+};
+var MMORDER=["grounded","charged","friction","drained"];
+function mmHexA(hex,a){var h=hex.replace("#","");return"rgba("+parseInt(h.substr(0,2),16)+","+parseInt(h.substr(2,2),16)+","+parseInt(h.substr(4,2),16)+","+a+")";}
+function mmMonthKey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
+function mmReadings(data){return (data&&data.mindset&&data.mindset.length)?data.mindset.slice():[];}
+function mmMonth(data){var mk=mmMonthKey();return mmReadings(data).filter(function(r){return r.month===mk;});}
+function mmLatest(data){
+  var rs=mmReadings(data);if(!rs.length)return null;
+  return rs.sort(function(a,b){return new Date(b.ts)-new Date(a.ts);})[0];
+}
+function mmCounts(rs){var c={charged:0,friction:0,drained:0,grounded:0};rs.forEach(function(r){if(c[r.quad]!=null)c[r.quad]++;});return c;}
+function mmDominant(rs){if(!rs.length)return null;var c=mmCounts(rs),top=null,mx=-1;MMORDER.forEach(function(q){if(c[q]>mx){mx=c[q];top=q;}});return top;}
+function mmFlag(data){var c=mmCounts(mmMonth(data));return c.friction+c.drained;}
+function mmStatePill(data){
+  var l=mmLatest(data);
+  if(!l)return'<span class="pillq none">No reading</span>';
+  var m=MMQ[l.quad]||MMQ.grounded;
+  return'<span class="pillq" style="background:'+mmHexA(m.color,.12)+';color:'+m.color+';">'+m.name+'</span>';
+}
+
+function renderPulse(){
+  var agg={charged:0,friction:0,drained:0,grounded:0},totalReadings=0,flagged=0,withData=0;
+  ALL.forEach(function(u){
+    var mo=mmMonth(u.data);
+    if(mmReadings(u.data).length)withData++;
+    totalReadings+=mo.length;
+    var c=mmCounts(mo);["charged","friction","drained","grounded"].forEach(function(q){agg[q]+=c[q];});
+    var dom=mmDominant(mo);
+    if(dom==="friction"||dom==="drained")flagged++;
+  });
+  var tot=agg.charged+agg.friction+agg.drained+agg.grounded;
+  var gPct=tot?Math.round((agg.grounded+agg.charged)/tot*100):0;
+  document.getElementById("pulseStats").innerHTML=
+    '<div class="mcrd"><div class="mval">'+withData+'</div><div class="mlbl">Leaders Checking In</div></div>'+
+    '<div class="mcrd"><div class="mval">'+totalReadings+'</div><div class="mlbl">Readings This Month</div></div>'+
+    '<div class="mcrd"><div class="mval">'+gPct+'%</div><div class="mlbl">Grounded or Charged</div></div>'+
+    '<div class="mcrd"><div class="mval" style="color:'+(flagged?"#7A1F2B":"#1E3A5F")+'">'+flagged+'</div><div class="mlbl">Need a Check-In</div></div>';
+  document.getElementById("pulseDist").innerHTML=mmDistBar(agg,tot);
+  var roster=ALL.filter(function(u){return mmReadings(u.data).length>0;}).sort(function(a,b){return mmFlag(b.data)-mmFlag(a.data);});
+  if(roster.length===0){
+    document.getElementById("pulseRows").innerHTML="";
+    document.getElementById("pulseEmpty").classList.remove("hide");
+    return;
+  }
+  document.getElementById("pulseEmpty").classList.add("hide");
+  document.getElementById("pulseRows").innerHTML=roster.map(function(u){
+    var mo=mmMonth(u.data),dom=mmDominant(mo),domM=dom?MMQ[dom]:null,flag=mmFlag(u.data),l=mmLatest(u.data);
+    return'<tr class="urow" onclick="jumpToUser(\''+u.email.replace(/'/g,"\\'")+'\')">'+
+      '<td><strong>'+esc(u.name)+'</strong></td>'+
+      '<td>'+esc(u.role)+'</td>'+
+      '<td>'+mmStatePill(u.data)+'</td>'+
+      '<td>'+(domM?'<span class="pillq" style="background:'+mmHexA(domM.color,.12)+';color:'+domM.color+'">'+domM.name+'</span>':'&mdash;')+'</td>'+
+      '<td>'+mo.length+'</td>'+
+      '<td'+(flag>=3?' style="color:#7A1F2B;font-weight:700"':'')+'>'+flag+'</td>'+
+      '<td>'+(l&&l.note?esc(l.note):'<span style="color:var(--light)">&mdash;</span>')+'</td>'+
+    '</tr>';
+  }).join("");
+}
+function mmDistBar(agg,tot){
+  if(!tot)return'<div class="empty" style="padding:1.25rem">No readings logged this month yet.</div>';
+  var seg=MMORDER.map(function(q){
+    if(!agg[q])return"";
+    var pct=Math.round(agg[q]/tot*100);
+    return'<div class="mm-seg" style="width:'+pct+'%;background:'+MMQ[q].color+'" title="'+MMQ[q].name+' '+pct+'%"></div>';
+  }).join("");
+  var leg=MMORDER.map(function(q){
+    return'<span class="mm-leg"><span class="mm-leg-d" style="background:'+MMQ[q].color+'"></span>'+MMQ[q].name+' '+agg[q]+'</span>';
+  }).join("");
+  return'<div class="mm-distbar">'+seg+'</div><div class="mm-legrow">'+leg+'</div>';
+}
+function mmRenderUser(data){
+  var host=document.getElementById("uMindset");if(!host)return;
+  var mo=mmMonth(data);
+  if(mo.length===0){host.innerHTML='<div class="empty">No mindset readings logged this month.</div>';return;}
+  var c=mmCounts(mo);
+  var dots=mo.map(function(r){var col=MMQ[r.quad]?MMQ[r.quad].color:"#1E3A5F";return'<div class="mm-mdot" style="left:'+r.valence+'%;top:'+(100-r.intensity)+'%;background:'+col+'"></div>';}).join("");
+  var counts=MMORDER.map(function(q){return'<div class="mm-cnt"><span class="mm-cnt-d" style="background:'+MMQ[q].color+'"></span><b>'+c[q]+'</b> '+MMQ[q].name+'</div>';}).join("");
+  var recent=mo.slice().sort(function(a,b){return new Date(b.ts)-new Date(a.ts);}).slice(0,8).map(function(r){
+    var m=MMQ[r.quad]||MMQ.grounded;
+    return'<div class="mm-rd"><span class="mm-rd-date">'+fmtDate(r.ts)+'</span>'+
+      '<span class="pillq" style="background:'+mmHexA(m.color,.12)+';color:'+m.color+'">'+m.name+'</span>'+
+      (r.note?'<span class="mm-rd-note">'+esc(r.note)+'</span>':'')+'</div>';
+  }).join("");
+  host.innerHTML=
+    '<div class="mm-udetail">'+
+      '<div class="mm-uscatter"><div class="mq fric"></div><div class="mq chrg"></div><div class="mq drai"></div><div class="mq grnd"></div><div class="mc"></div>'+dots+'</div>'+
+      '<div><div class="mm-cntrow">'+counts+'</div><div class="mm-recent">'+recent+'</div></div>'+
+    '</div>';
 }
 (function init(){
   if(sessionStorage.getItem("lplKey")===KEY_HASH)enterConsole();
