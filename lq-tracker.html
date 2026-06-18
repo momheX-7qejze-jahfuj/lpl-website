@@ -156,6 +156,122 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   .banner{flex-direction:column;text-align:center;}
   .banner-btns{justify-content:center;}
 }
+/* ===== MINDSET STATE MATRIX ===== */
+.mm-lead{font-size:13px;color:var(--muted);line-height:1.6;max-width:640px;margin-top:6px;}
+.mm-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+.mm-frame{display:grid;grid-template-columns:24px 1fr 24px;grid-template-rows:22px 1fr 22px;gap:6px;align-items:center;justify-items:center;}
+.mm-axis{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.mm-ax-top{grid-column:2;grid-row:1;}
+.mm-ax-bot{grid-column:2;grid-row:3;}
+.mm-ax-left{grid-column:1;grid-row:2;writing-mode:vertical-rl;transform:rotate(180deg);}
+.mm-ax-right{grid-column:3;grid-row:2;writing-mode:vertical-rl;color:var(--navy);}
+.mm-square{grid-column:2;grid-row:2;position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;cursor:crosshair;border:1.5px solid var(--border);background:var(--surface);touch-action:none;user-select:none;}
+.mm-quads{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;}
+.mm-q{position:relative;transition:background .35s,box-shadow .35s;}
+.mm-q .mm-qlab{position:absolute;font-size:13px;font-weight:700;opacity:.5;transition:opacity .3s,transform .3s;}
+.mm-q .mm-qsub{position:absolute;font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.45;}
+.mm-q.fric{background:rgba(122,31,43,.06);}
+.mm-q.chrg{background:rgba(200,160,75,.10);}
+.mm-q.drai{background:rgba(100,116,139,.07);}
+.mm-q.grnd{background:rgba(30,58,95,.06);}
+.mm-q.fric .mm-qlab{top:10px;left:11px;color:var(--maroon);}
+.mm-q.fric .mm-qsub{top:29px;left:11px;color:var(--maroon);}
+.mm-q.chrg .mm-qlab{top:10px;right:11px;color:var(--gold2);}
+.mm-q.chrg .mm-qsub{top:29px;right:11px;color:var(--gold2);}
+.mm-q.drai .mm-qlab{bottom:28px;left:11px;color:#64748b;}
+.mm-q.drai .mm-qsub{bottom:12px;left:11px;color:#64748b;}
+.mm-q.grnd .mm-qlab{bottom:28px;right:11px;color:var(--navy);}
+.mm-q.grnd .mm-qsub{bottom:12px;right:11px;color:var(--navy);}
+.mm-q.active{box-shadow:inset 0 0 0 2px currentColor;}
+.mm-q.fric.active{background:rgba(122,31,43,.13);color:var(--maroon);}
+.mm-q.chrg.active{background:rgba(200,160,75,.20);color:var(--gold2);}
+.mm-q.drai.active{background:rgba(100,116,139,.15);color:#64748b;}
+.mm-q.grnd.active{background:rgba(30,58,95,.13);color:var(--navy);}
+.mm-q.active .mm-qlab{opacity:1;transform:scale(1.04);}
+.mm-field{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;}
+.mm-cross{position:absolute;inset:0;pointer-events:none;}
+.mm-cross::before,.mm-cross::after{content:"";position:absolute;background:var(--border);}
+.mm-cross::before{left:50%;top:6%;bottom:6%;width:1px;}
+.mm-cross::after{top:50%;left:6%;right:6%;height:1px;}
+.mm-glow{position:absolute;width:130px;height:130px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s;}
+.mm-glow.on{opacity:1;animation:mm-pulse 3.2s ease-in-out infinite;}
+@keyframes mm-pulse{0%,100%{transform:translate(-50%,-50%) scale(.82);}50%{transform:translate(-50%,-50%) scale(1.08);}}
+.mm-dot{position:absolute;width:18px;height:18px;border-radius:50%;border:3px solid #fff;transform:translate(-50%,-50%) scale(0);pointer-events:none;box-shadow:0 4px 14px -3px rgba(30,58,95,.45);transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
+.mm-dot.on{transform:translate(-50%,-50%) scale(1);}
+.mm-hint{font-size:10px;color:var(--light);text-align:center;margin-top:12px;}
+.mm-state{display:flex;align-items:center;gap:11px;margin-bottom:4px;}
+.mm-chip{width:32px;height:32px;border-radius:8px;flex:0 0 auto;background:var(--border);}
+.mm-name{font-size:20px;font-weight:700;color:var(--navy);line-height:1;}
+.mm-tag{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+.mm-coach{font-size:13px;color:var(--text);line-height:1.55;margin:12px 0;min-height:58px;}
+.mm-meters{display:flex;gap:8px;margin-bottom:12px;}
+.mm-meter{flex:1;background:var(--surface);border-radius:8px;padding:9px 11px;}
+.mm-meter .l{font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+.mm-meter .v{font-size:19px;font-weight:700;color:var(--navy);margin-top:1px;}
+.mm-mbar{height:5px;border-radius:5px;background:#e5e7eb;margin-top:6px;overflow:hidden;}
+.mm-mbar i{display:block;height:100%;width:0;border-radius:5px;transition:width .35s;}
+.mm-save{padding:11px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:12px;}
+.mm-save:hover{background:var(--maroon2);}
+.mm-save:disabled{background:var(--border);color:var(--light);cursor:not-allowed;}
+.mm-lang-row{display:flex;gap:8px;flex-wrap:wrap;}
+.mm-lang-row input{flex:1;min-width:200px;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;color:var(--text);}
+.mm-lang-row input:focus{border-color:var(--navy);}
+.mm-lang-btn{padding:11px 18px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
+.mm-lang-btn:hover{background:var(--navy2);}
+.mm-reframe{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mm-rf{border-radius:8px;padding:13px 15px;border:1.5px solid var(--border);}
+.mm-rf.was{background:#f9f0f2;border-color:#e8c9cf;}
+.mm-rf.now{background:#eef5ef;border-color:#bfe0c8;}
+.mm-rf .l{font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+.mm-rf.was .l{color:var(--maroon);}
+.mm-rf.now .l{color:var(--green);}
+.mm-rf .t{font-size:14px;font-weight:600;line-height:1.35;color:var(--navy);}
+.mm-rf.was .t{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(122,31,43,.4);}
+.mm-steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;}
+.mm-step{border-left:4px solid var(--navy);background:linear-gradient(135deg,#eef2f9,#f7f8fc);border-radius:0 8px 8px 0;padding:12px 16px;}
+.mm-step .n{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);margin-bottom:5px;}
+.mm-step b{font-size:15px;font-weight:700;color:var(--navy);display:block;margin-bottom:7px;}
+.mm-step p{font-size:13px;color:var(--text);line-height:1.55;}
+.mm-step p+p{margin-top:7px;}
+.mm-labels{background:linear-gradient(135deg,#fbf8f1,#f7f1e3);border:1px solid #ecdfbf;border-left:5px solid var(--gold);border-radius:8px;padding:14px 17px;}
+.mm-labels .t{font-size:13px;color:var(--text);line-height:1.6;}
+.mm-labels .t b{color:var(--gold2);}
+.mm-swap{display:block;margin-top:7px;}
+.mm-swap s{color:var(--light);}
+.mm-swap em{font-style:normal;color:var(--navy);font-weight:700;}
+.mm-dash-grid{display:grid;grid-template-columns:190px 1fr;gap:20px;align-items:start;}
+.mm-mini{position:relative;width:100%;aspect-ratio:1/1;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);overflow:hidden;}
+.mm-mini .mq{position:absolute;width:50%;height:50%;}
+.mm-mini .mq.fric{top:0;left:0;background:rgba(122,31,43,.05);}
+.mm-mini .mq.chrg{top:0;right:0;background:rgba(200,160,75,.08);}
+.mm-mini .mq.drai{bottom:0;left:0;background:rgba(100,116,139,.05);}
+.mm-mini .mq.grnd{bottom:0;right:0;background:rgba(30,58,95,.05);}
+.mm-mini .mc::before,.mm-mini .mc::after{content:"";position:absolute;background:var(--border);}
+.mm-mini .mc::before{left:50%;top:0;bottom:0;width:1px;}
+.mm-mini .mc::after{top:50%;left:0;right:0;height:1px;}
+.mm-mdot{position:absolute;width:11px;height:11px;border-radius:50%;border:2px solid #fff;transform:translate(-50%,-50%);box-shadow:0 2px 5px -1px rgba(30,58,95,.4);}
+.mm-counts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.mm-count{display:flex;align-items:center;gap:9px;background:var(--surface);border-radius:8px;padding:9px 11px;}
+.mm-count .d{width:11px;height:11px;border-radius:3px;flex:0 0 auto;}
+.mm-count .x{font-size:11px;color:var(--muted);}
+.mm-count .x b{display:block;font-size:12.5px;color:var(--navy);}
+.mm-pattern{font-size:13px;color:var(--text);line-height:1.55;background:linear-gradient(135deg,#eef2f9,#f7f8fc);border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:13px 15px;}
+.mm-pattern b{color:var(--maroon);}
+.mm-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.mm-foot .c{font-size:11px;color:var(--muted);}
+.mm-clear{font-size:10px;color:var(--light);background:none;border:none;cursor:pointer;}
+.mm-clear:hover{color:var(--maroon);}
+.mm-empty{font-size:13px;color:var(--muted);line-height:1.5;background:var(--surface);border:1.5px dashed var(--border);border-radius:8px;padding:16px;}
+@media(max-width:640px){
+  .nav{flex-wrap:wrap;}
+  .ntab{flex:1 1 30%;}
+  .mm-row{grid-template-columns:1fr;}
+  .mm-reframe{grid-template-columns:1fr;}
+  .mm-steps{grid-template-columns:1fr;}
+  .mm-dash-grid{grid-template-columns:1fr;}
+  .mm-mini{max-width:220px;margin:0 auto;}
+}
+@media(prefers-reduced-motion:reduce){.mm-glow.on{animation:none;}}
 </style>
 </head>
 <body>
@@ -189,6 +305,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <button class="ntab" id="nt-tracker" onclick="showTab('tracker')">Habit Tracker</button>
   <button class="ntab" id="nt-evening" onclick="showTab('evening')">Evening Reflection</button>
   <button class="ntab" id="nt-progress" onclick="showTab('progress')">My Progress</button>
+  <button class="ntab" id="nt-mindset" onclick="showTab('mindset')">Mindset</button>
 </div>
 
 <!-- MORNING -->
@@ -324,6 +441,102 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div id="insightTxt" style="font-size:14px;color:var(--navy);line-height:1.75;"></div>
     </div>
   </div>
+</div>
+
+<!-- MINDSET STATE MATRIX -->
+<div id="tab-mindset" class="hide fade">
+
+  <div class="card">
+    <div class="ctitle">The Mindset State Matrix</div>
+    <p class="mm-lead">Leadership starts before the floor does. It starts with reading yourself. Name where you are. Plot it honestly. Then ask if it serves the people you lead. You cannot regulate what you will not name.</p>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Step 1 &middot; Name it and plot it</div>
+    <div class="mm-row">
+      <div>
+        <div class="mm-frame">
+          <div class="mm-axis mm-ax-top">High Intensity</div>
+          <div class="mm-axis mm-ax-left">Unmotivated</div>
+          <div class="mm-square" id="mm-square">
+            <div class="mm-quads">
+              <div class="mm-q fric"><span class="mm-qlab">Friction</span><span class="mm-qsub">Reactive</span></div>
+              <div class="mm-q chrg"><span class="mm-qlab">Charged</span><span class="mm-qsub">Energized</span></div>
+              <div class="mm-q drai"><span class="mm-qlab">Drained</span><span class="mm-qsub">Depleted</span></div>
+              <div class="mm-q grnd"><span class="mm-qlab">Grounded</span><span class="mm-qsub">Centered</span></div>
+            </div>
+            <canvas class="mm-field" id="mm-field"></canvas>
+            <div class="mm-cross"></div>
+            <div class="mm-glow" id="mm-glow"></div>
+            <div class="mm-dot" id="mm-dot"></div>
+          </div>
+          <div class="mm-axis mm-ax-right"><svg width="9" height="12" viewBox="0 0 9 12" fill="none" style="flex:0 0 auto;"><path d="M5 0L0 6.5h3.2L3 12l6-7H5.4L5 0z" fill="#1E3A5F"/></svg>Positive</div>
+          <div class="mm-axis mm-ax-bot">Low Intensity</div>
+        </div>
+        <div class="mm-hint">Tap or drag anywhere in the square. Pick where you are, not where you wish you were.</div>
+      </div>
+
+      <div>
+        <div class="mm-state">
+          <div class="mm-chip" id="mm-chip"></div>
+          <div>
+            <div class="mm-name" id="mm-name">Read yourself first</div>
+            <div class="mm-tag" id="mm-tag">Self-awareness before authority</div>
+          </div>
+        </div>
+        <div class="mm-coach" id="mm-coach">Every strong decision starts in the same place. Knowing where you actually are. Plot your state and your coach reads it back to you.</div>
+        <div class="mm-meters">
+          <div class="mm-meter"><div class="l">Intensity</div><div class="v" id="mm-int">--</div><div class="mm-mbar"><i id="mm-int-bar"></i></div></div>
+          <div class="mm-meter"><div class="l">Charge</div><div class="v" id="mm-val">--</div><div class="mm-mbar"><i id="mm-val-bar"></i></div></div>
+        </div>
+        <textarea class="tarea" id="mm-note" rows="2" placeholder="One line. What's driving this right now? (optional)"></textarea>
+        <button class="mm-save" id="mm-score" onclick="mmScore()" disabled>Score This Week</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">Name it to tame it &middot; Reframe the language</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">The words you put on yourself become the state you lead from. "I am" fuses you to the feeling. "I'm noticing" gives you room to choose. Say it how you normally would. Watch it shift.</p>
+    <div class="mm-lang-row">
+      <input type="text" id="mm-feel" placeholder="e.g. I'm anxious" onkeydown="if(event.key==='Enter')mmReframe()"/>
+      <button class="mm-lang-btn" onclick="mmReframe()">Reframe It &rarr;</button>
+    </div>
+    <div class="mm-reframe hide" id="mm-reframe">
+      <div class="mm-rf was"><div class="l">What you said</div><div class="t" id="mm-rf-was"></div></div>
+      <div class="mm-rf now"><div class="l">What a leader says</div><div class="t" id="mm-rf-now"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle">The Self Check-In</div>
+    <div class="mm-steps">
+      <div class="mm-step">
+        <div class="n">Step 1</div>
+        <b>Name it and plot it</b>
+        <p>Use the square above. Honest beats flattering. The point is not to look good. It is to see clearly.</p>
+      </div>
+      <div class="mm-step">
+        <div class="n">Step 2</div>
+        <b>Ask the only question that matters</b>
+        <p>Is this state serving me and the people I lead?</p>
+        <p>If yes, protect it. If no, name one small shift, and one person who helps you make it.</p>
+      </div>
+    </div>
+    <div class="mm-labels">
+      <div class="t"><b>The language swap that changes the room.</b>
+        <span class="mm-swap"><s>"I'm stressed"</s> &rarr; <em>"I'm feeling tension"</em></span>
+        <span class="mm-swap"><s>"I'm overwhelmed"</s> &rarr; <em>"I'm carrying a lot right now"</em></span>
+        <span class="mm-swap"><s>"I'm fine"</s> &rarr; <em>the truth</em></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle" id="mm-month-title">This Month's Pattern</div>
+    <div id="mm-dash-body"></div>
+  </div>
+
 </div>
 
 <!-- FOOTER -->
@@ -594,8 +807,8 @@ function dayHits(){
 }
 function updateJourney(){
   var d=day();
-  var states={morning:!!d.intent,tracker:dayHits()>0,evening:!!(d.ref&&d.done),progress:false};
-  ["morning","tracker","evening","progress"].forEach(function(id){
+  var states={morning:!!d.intent,tracker:dayHits()>0,evening:!!(d.ref&&d.done),progress:false,mindset:mmHasThisWeek()};
+  ["morning","tracker","evening","progress","mindset"].forEach(function(id){
     var el=document.getElementById("nt-"+id);if(!el)return;
     var base=el.textContent.replace(/^\u2713\s*/,"");
     el.innerHTML=(states[id]?'<span class="tck">&#10003;</span>':"")+base;
@@ -840,13 +1053,213 @@ function renderInsight(vel){
 function showTab(id){
   document.querySelectorAll('[id^="tab-"]').forEach(function(t){t.classList.add("hide");});
   document.getElementById("tab-"+id).classList.remove("hide");
-  ["morning","tracker","evening","progress"].forEach(function(t){
+  ["morning","tracker","evening","progress","mindset"].forEach(function(t){
     document.getElementById("nt-"+t).classList.toggle("on",t===id);
   });
   if(id==="tracker")renderTracker();
   if(id==="evening"){renderEvening();if(day().done){fillDayDone();document.getElementById("dayDone").classList.remove("hide");}}
   if(id==="progress")renderProgress();
+  if(id==="mindset")renderMindset();
   updateJourney();
+}
+/* ===== MINDSET STATE MATRIX ===== */
+var MMQ={
+  charged:{name:"Charged",tag:"High intensity \u00b7 pointed right",cls:"chrg",color:"#C8A04B",
+    read:"Energy up, pointed the right way. This is your sharp edge. Spend it on the work that matters most, then protect it. Charged is fuel. It is not a place to live."},
+  friction:{name:"Friction",tag:"High intensity \u00b7 wrong direction",cls:"fric",color:"#7A1F2B",
+    read:"High energy, wrong direction. This is reactive heat. Name it before you act on it. One breath turns a reaction into a decision."},
+  drained:{name:"Drained",tag:"Low energy \u00b7 lower spark",cls:"drai",color:"#64748b",
+    read:"The tank is low. The spark is lower. Do not lead big from here. Recover first. A depleted leader builds a depleted team."},
+  grounded:{name:"Grounded",tag:"Calm \u00b7 steady \u00b7 present",cls:"grnd",color:"#1E3A5F",
+    read:"Calm. Steady. Present. This is where your best decisions live. Most leaders chase charged. The strong ones build from grounded."}
+};
+function mmQuad(i,v){
+  if(i>=50&&v>=50)return"charged";
+  if(i>=50&&v<50)return"friction";
+  if(i<50&&v<50)return"drained";
+  return"grounded";
+}
+function mmList(){var u=udb();return u.mindset||(u.mindset=[]);}
+function mmMonthKey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
+function mmMonthName(d){d=d||new Date();return d.toLocaleDateString("en-US",{month:"long",year:"numeric"});}
+function mmWeekKey(d){
+  d=d||new Date();
+  var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  var dow=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-dow);
+  var ys=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  var wk=Math.ceil((((t-ys)/864e5)+1)/7);
+  return t.getUTCFullYear()+"-W"+String(wk).padStart(2,"0");
+}
+function mmHasThisWeek(){var wk=mmWeekKey();return mmList().some(function(r){return r.week===wk;});}
+function mmHexA(hex,a){var h=hex.replace("#","");return"rgba("+parseInt(h.substr(0,2),16)+","+parseInt(h.substr(2,2),16)+","+parseInt(h.substr(4,2),16)+","+a+")";}
+
+var mmS={i:null,v:null,q:null,drag:false,raf:null,parts:[],ctx:null,W:0,H:0,bound:false};
+
+function mmInit(){
+  var sq=document.getElementById("mm-square");if(!sq)return;
+  if(!mmS.bound){
+    sq.addEventListener("mousedown",function(e){mmS.drag=true;mmPt(e);});
+    window.addEventListener("mousemove",function(e){if(mmS.drag)mmPt(e);});
+    window.addEventListener("mouseup",function(){mmS.drag=false;});
+    sq.addEventListener("touchstart",function(e){mmS.drag=true;mmPt(e.touches[0]);e.preventDefault();},{passive:false});
+    sq.addEventListener("touchmove",function(e){if(mmS.drag){mmPt(e.touches[0]);e.preventDefault();}},{passive:false});
+    sq.addEventListener("touchend",function(){mmS.drag=false;});
+    mmS.ctx=document.getElementById("mm-field").getContext("2d");
+    mmS.bound=true;
+  }
+  mmResize();mmField();
+}
+function mmPt(e){
+  var sq=document.getElementById("mm-square"),r=sq.getBoundingClientRect();
+  if(!r.width)return;
+  var x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+  var y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
+  mmPlot(Math.round((1-y)*100),Math.round(x*100));
+}
+function mmPlot(i,v,silent){
+  mmS.i=i;mmS.v=v;
+  var q=mmQuad(i,v);mmS.q=q;var m=MMQ[q];
+  var dot=document.getElementById("mm-dot"),glow=document.getElementById("mm-glow");
+  dot.style.left=v+"%";dot.style.top=(100-i)+"%";dot.style.background=m.color;dot.classList.add("on");
+  glow.style.left=v+"%";glow.style.top=(100-i)+"%";
+  glow.style.background="radial-gradient(circle,"+mmHexA(m.color,.5)+" 0%,"+mmHexA(m.color,0)+" 70%)";
+  glow.classList.add("on");
+  var qs=document.querySelectorAll(".mm-q");
+  for(var z=0;z<qs.length;z++){qs[z].classList.toggle("active",qs[z].classList.contains(m.cls));}
+  document.getElementById("mm-chip").style.background=m.color;
+  var nm=document.getElementById("mm-name");nm.textContent=m.name;nm.style.color=m.color;
+  document.getElementById("mm-tag").textContent=m.tag;
+  document.getElementById("mm-coach").textContent=m.read;
+  document.getElementById("mm-int").textContent=i;
+  document.getElementById("mm-val").textContent=v;
+  var ib=document.getElementById("mm-int-bar"),vb=document.getElementById("mm-val-bar");
+  ib.style.width=i+"%";ib.style.background=m.color;vb.style.width=v+"%";vb.style.background=m.color;
+  document.getElementById("mm-score").disabled=false;
+  if(!silent)track();
+}
+function mmResize(){
+  var cv=document.getElementById("mm-field");if(!cv)return;
+  var r=document.getElementById("mm-square").getBoundingClientRect();
+  if(!r.width)return;
+  var dpr=window.devicePixelRatio||1;
+  mmS.W=r.width;mmS.H=r.height;
+  cv.width=r.width*dpr;cv.height=r.height*dpr;
+  cv.style.width=r.width+"px";cv.style.height=r.height+"px";
+  if(mmS.ctx)mmS.ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function mmField(){
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches){
+    if(mmS.ctx)mmS.ctx.clearRect(0,0,mmS.W,mmS.H);return;
+  }
+  if(mmS.parts.length===0){
+    for(var k=0;k<44;k++)mmS.parts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.001,vy:(Math.random()-.5)*.001,r:Math.random()*1.7+.5});
+  }
+  if(mmS.raf)cancelAnimationFrame(mmS.raf);
+  mmTick();
+}
+function mmTick(){
+  var ctx=mmS.ctx;if(!ctx)return;
+  var W=mmS.W,H=mmS.H;ctx.clearRect(0,0,W,H);
+  var col=mmS.q?MMQ[mmS.q].color:"#1E3A5F";
+  var has=mmS.i!=null,tx=has?mmS.v/100:.5,ty=has?1-mmS.i/100:.5;
+  for(var n=0;n<mmS.parts.length;n++){
+    var p=mmS.parts[n];
+    if(has){p.vx+=(tx-p.x)*.00004;p.vy+=(ty-p.y)*.00004;}
+    p.x+=p.vx;p.y+=p.vy;p.vx*=.986;p.vy*=.986;
+    if(p.x<0||p.x>1)p.vx*=-1;if(p.y<0||p.y>1)p.vy*=-1;
+    p.x=Math.max(0,Math.min(1,p.x));p.y=Math.max(0,Math.min(1,p.y));
+    var al=has?Math.max(.08,.5-Math.hypot(p.x-tx,p.y-ty)):.16;
+    ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,6.2832);ctx.fillStyle=mmHexA(col,al);ctx.fill();
+  }
+  mmS.raf=requestAnimationFrame(mmTick);
+}
+function mmScore(){
+  if(mmS.i==null){toast("Plot your state first. Tap the square.");return;}
+  var now=new Date();
+  var rec={id:Date.now(),ts:now.toISOString(),date:TODAY,month:mmMonthKey(now),week:mmWeekKey(now),intensity:mmS.i,valence:mmS.v,quad:mmS.q,note:document.getElementById("mm-note").value.trim()};
+  var list=mmList(),ix=-1;
+  for(var k=0;k<list.length;k++){if(list[k].date===TODAY)ix=k;}
+  if(ix>=0)list[ix]=rec;else list.push(rec);
+  sdb();track();
+  document.getElementById("mm-note").value="";
+  mmRenderMonthly();updateJourney();
+  toast("<strong>Scored.</strong> You're "+MMQ[mmS.q].name.toLowerCase()+" today. Now lead from what you know.");
+}
+function renderMindset(){
+  mmInit();
+  requestAnimationFrame(mmResize);
+  setTimeout(mmResize,140);
+  var list=mmList(),today=null;
+  for(var k=0;k<list.length;k++){if(list[k].date===TODAY)today=list[k];}
+  if(today)mmPlot(today.intensity,today.valence,true);
+  mmRenderMonthly();
+}
+function mmRenderMonthly(){
+  var t=document.getElementById("mm-month-title");if(t)t.textContent=mmMonthName()+" \u00b7 Your Pattern";
+  var mk=mmMonthKey(),list=mmList().filter(function(r){return r.month===mk;});
+  var body=document.getElementById("mm-dash-body");if(!body)return;
+  if(list.length===0){
+    body.innerHTML='<div class="mm-empty">No readings logged this month yet. Plot your state above and tap <b>Score This Week</b>. The pattern builds from there, and a pattern tells the truth a single day cannot.</div>';
+    return;
+  }
+  var c={charged:0,friction:0,drained:0,grounded:0};
+  list.forEach(function(r){c[r.quad]=(c[r.quad]||0)+1;});
+  var dots=list.map(function(r){return'<div class="mm-mdot" style="left:'+r.valence+'%;top:'+(100-r.intensity)+'%;background:'+MMQ[r.quad].color+';"></div>';}).join("");
+  body.innerHTML=
+    '<div class="mm-dash-grid">'+
+      '<div class="mm-mini"><div class="mq fric"></div><div class="mq chrg"></div><div class="mq drai"></div><div class="mq grnd"></div><div class="mc"></div>'+dots+'</div>'+
+      '<div>'+
+        '<div class="mm-counts">'+
+          mmCount("grounded",c.grounded)+mmCount("charged",c.charged)+mmCount("friction",c.friction)+mmCount("drained",c.drained)+
+        '</div>'+
+        '<div class="mm-pattern">'+mmPattern(c,list.length)+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="mm-foot"><div class="c">'+list.length+(list.length===1?" reading":" readings")+' logged this month</div><button class="mm-clear" onclick="mmClearMonth()">Clear this month</button></div>';
+}
+function mmCount(q,n){return'<div class="mm-count"><span class="d" style="background:'+MMQ[q].color+'"></span><span class="x"><b>'+n+'</b>'+MMQ[q].name+'</span></div>';}
+function mmPattern(c,total){
+  var top="grounded",max=-1;
+  ["grounded","charged","friction","drained"].forEach(function(q){if(c[q]>max){max=c[q];top=q;}});
+  var pct=Math.round(max/total*100);
+  if(top==="grounded")return"You logged <b>grounded</b> most this month. "+pct+"% of your readings. That is the home base strong leaders build from. Keep returning here. Your team feels the steadiness even when you say nothing.";
+  if(top==="charged")return"<b>Charged</b> led your month at "+pct+"%. Good fuel. Watch the burn. Charged is a sprint, not an address. Pair it with real recovery or it turns to friction.";
+  if(top==="friction")return"<b>Friction</b> showed up most this month. "+pct+"% of readings. That is reactive heat, repeated. The pattern is the message. Name what keeps lighting the fuse, and handle that, not the symptom.";
+  return"<b>Drained</b> led your month at "+pct+"%. That is not a flaw. It is a signal. A depleted leader cannot pour into a team. Recovery is not weakness. It is the work.";
+}
+function mmClearMonth(){
+  var mk=mmMonthKey(),u=udb();
+  u.mindset=(u.mindset||[]).filter(function(r){return r.month!==mk;});
+  sdb();mmRenderMonthly();updateJourney();
+  toast("This month's readings cleared.");
+}
+var MMMAP={
+  anxious:"noticing some anxiety",anxiety:"noticing some anxiety",
+  stressed:"feeling tension",stress:"feeling tension",
+  overwhelmed:"carrying a lot right now",
+  angry:"noticing frustration",mad:"noticing frustration",pissed:"noticing frustration",frustrated:"noticing frustration",frustrating:"noticing frustration",
+  scared:"noticing some fear",afraid:"noticing some fear",fearful:"noticing some fear",
+  exhausted:"running low on energy",tired:"running low on energy",
+  burnedout:"running on empty",burntout:"running on empty",
+  defeated:"feeling the weight of a hard stretch",
+  nervous:"noticing some nerves",
+  sad:"sitting with some heaviness",down:"sitting with some heaviness",
+  worried:"noticing some worry",
+  insecure:"noticing some self-doubt",doubtful:"noticing some self-doubt",
+  done:"at my limit for now",
+  fine:"still working out how I actually feel"
+};
+function mmReframe(){
+  var raw=document.getElementById("mm-feel").value.trim();
+  if(!raw){toast("Type how you'd say it first. Even one word.");return;}
+  var low=raw.toLowerCase().replace(/[^a-z\s']/g," ");
+  low=low.replace(/^\s*i\s*am\s+/,"").replace(/^\s*i'?m\s+/,"").replace(/^\s*i\s*feel\s+/,"").replace(/^\s*feeling\s+/,"");
+  low=low.replace(/^(so|really|very|super|kinda|pretty|quite|too|bit|a bit)\s+/,"").trim();
+  var key=low.replace(/\s+/g,"");
+  var phrase=MMMAP[key]||("noticing "+(low||"what's here"));
+  document.getElementById("mm-rf-was").textContent="\u201c"+raw+"\u201d";
+  document.getElementById("mm-rf-now").textContent="\u201cI'm "+phrase+".\u201d";
+  document.getElementById("mm-reframe").classList.remove("hide");
 }
 (function init(){
   checkSession();if(user)db=gdb();
