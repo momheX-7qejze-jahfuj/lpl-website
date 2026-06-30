@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Manager Archetype Assessment | The Leadership Pressure Lab</title>
+<style>
+  :root{
+    --navy:#1E3A5F;
+    --navy-deep:#152840;
+    --maroon:#7A1F2B;
+    --gold:#C8A24B;
+    --cream:#F7F4EC;
+    --ink:#1A1A1A;
+    --line:#D8D2C2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height:1.5;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:48px 24px 96px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px;
+    margin-bottom:36px;
+  }
+  .brand-name{
+    font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--navy);
+    font-weight:700;
+  }
+  .brand-sub{
+    font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-size:10px;
+    color:var(--maroon);
+  }
+
+  /* Plimsoll gauge */
+  .gauge-shell{
+    width:100%;
+    height:14px;
+    background:#fff;
+    border:1px solid var(--navy);
+    border-radius:2px;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:6px;
+  }
+  .gauge-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--navy), var(--maroon));
+    width:0%;
+    transition:width .4s ease;
+  }
+  .gauge-mark{
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:10px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#8a8474;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:40px;
+  }
+
+  h1{
+    font-size:30px;
+    line-height:1.2;
+    margin:0 0 10px;
+    color:var(--navy-deep);
+  }
+  .lede{
+    font-size:16px;
+    color:#3c3c3c;
+    margin-bottom:28px;
+  }
+  .lede strong{ color:var(--maroon); }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--navy);
+    border-radius:3px;
+    padding:30px 28px;
+    margin-bottom:24px;
+  }
+
+  .q-eyebrow{
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .q-text{
+    font-size:19px;
+    margin:0 0 22px;
+    color:var(--navy-deep);
+  }
+
+  .opt{
+    display:block;
+    width:100%;
+    text-align:left;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    font-family: Georgia, serif;
+    font-size:15.5px;
+    color:var(--ink);
+    cursor:pointer;
+    transition:.15s;
+  }
+  .opt:hover{
+    border-color:var(--navy);
+    background:#fff;
+    transform:translateX(2px);
+  }
+  .opt:active{ transform:translateX(0); }
+
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+  }
+  .ghost-btn{
+    background:none;
+    border:none;
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:12px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#8a8474;
+    cursor:pointer;
+  }
+  .ghost-btn:hover{ color:var(--maroon); }
+  .ghost-btn:disabled{ opacity:0; cursor:default; }
+
+  /* START SCREEN */
+  .start-card{
+    background:var(--navy-deep);
+    color:#fff;
+    border-radius:4px;
+    padding:44px 36px;
+    text-align:left;
+    position:relative;
+    overflow:hidden;
+  }
+  .start-card h1{ color:#fff; }
+  .start-card .lede{ color:#d9d4c4; }
+  .plimsoll{
+    position:absolute;
+    right:-30px;
+    top:-30px;
+    opacity:.12;
+    width:220px;
+    height:220px;
+  }
+  .start-points{
+    list-style:none;
+    padding:0;
+    margin:22px 0 30px;
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:13.5px;
+    color:#d9d4c4;
+  }
+  .start-points li{
+    padding:8px 0 8px 22px;
+    border-top:1px solid rgba(255,255,255,.12);
+    position:relative;
+  }
+  .start-points li:before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color:var(--gold);
+  }
+  .cta-btn{
+    background:var(--gold);
+    color:var(--navy-deep);
+    border:none;
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    font-size:13px;
+    padding:15px 30px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .cta-btn:hover{ background:#dbb564; }
+  .cta-btn.outline{
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold);
+  }
+  .cta-btn.outline:hover{ background:rgba(200,162,75,.12); }
+
+  /* RESULTS */
+  .result-tag{
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--maroon);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .result-name{
+    font-size:34px;
+    color:var(--navy-deep);
+    margin:0 0 18px;
+    line-height:1.15;
+  }
+  .result-line{
+    width:100%;
+    height:1px;
+    background:var(--line);
+    margin:24px 0;
+  }
+  .breakdown{
+    display:grid;
+    grid-template-columns:120px 1fr 36px;
+    gap:10px;
+    align-items:center;
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:12.5px;
+    margin-bottom:8px;
+  }
+  .bar-shell{
+    height:8px;
+    background:#eee;
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .bar-fill{ height:100%; }
+  .shift-card{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:18px 20px;
+    margin-bottom:12px;
+  }
+  .shift-num{
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:11px;
+    letter-spacing:.1em;
+    color:var(--gold);
+    font-weight:700;
+  }
+  .cta-block{
+    background:var(--navy-deep);
+    color:#fff;
+    border-radius:4px;
+    padding:30px 28px;
+    margin-top:32px;
+  }
+  .cta-block h3{ margin-top:0; color:#fff; font-size:20px; }
+  .cta-block p{ color:#d9d4c4; font-size:14.5px; }
+  .footer-note{
+    text-align:center;
+    font-family:'Trebuchet MS', Helvetica, Arial, sans-serif;
+    font-size:11px;
+    letter-spacing:.05em;
+    color:#8a8474;
+    margin-top:40px;
+  }
+  .hidden{ display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div>
+      <div class="brand-name">The Leadership Pressure Lab</div>
+      <div class="brand-sub">A Pressure Drop Tool</div>
+    </div>
+    <div class="brand-sub" style="color:var(--navy)">Fixed Ops Edition</div>
+  </div>
+
+  <!-- START SCREEN -->
+  <div id="screen-start">
+    <div class="start-card">
+      <svg class="plimsoll" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" stroke="#C8A24B" stroke-width="2" fill="none"/>
+        <line x1="20" y1="50" x2="80" y2="50" stroke="#C8A24B" stroke-width="2"/>
+        <line x1="30" y1="38" x2="70" y2="38" stroke="#C8A24B" stroke-width="2"/>
+        <line x1="30" y1="62" x2="70" y2="62" stroke="#C8A24B" stroke-width="2"/>
+      </svg>
+      <div class="result-tag" style="color:var(--gold)">The Manager Archetype Assessment</div>
+      <h1>How are you actually leading the floor?</h1>
+      <p class="lede">Twelve fixed ops scenarios. No right answers, just the one you'd actually pick. <strong>Five minutes.</strong> One clear read on the pattern running your leadership right now.</p>
+      <ul class="start-points">
+        <li>Built from the TORQUE Method and four leadership archetypes that show up in nearly every service drive</li>
+        <li>Answer the way you'd really act under pressure, not the textbook answer</li>
+        <li>You'll get your primary archetype, a full breakdown, and three specific shifts to move toward Integrated Leader</li>
+      </ul>
+      <button class="cta-btn" onclick="startQuiz()">Take the Assessment</button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="screen-quiz" class="hidden">
+    <div class="gauge-shell"><div class="gauge-fill" id="gaugeFill"></div></div>
+    <div class="gauge-mark"><span id="gaugeLabel">Question 1 of 12</span><span>Load Line Rising</span></div>
+
+    <div class="card">
+      <div class="q-eyebrow" id="qEyebrow">Scenario 01</div>
+      <p class="q-text" id="qText"></p>
+      <div id="optionsHolder"></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="ghost-btn" id="backBtn" onclick="goBack()">← Back</button>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-result" class="hidden">
+    <div class="result-tag" id="resTag">Your Primary Archetype</div>
+    <h1 class="result-name" id="resName"></h1>
+    <p class="lede" id="resDesc"></p>
+
+    <div class="card">
+      <div class="q-eyebrow">Where You Landed</div>
+      <div id="breakdownHolder"></div>
+    </div>
+
+    <div class="card">
+      <div class="q-eyebrow">What It's Likely Costing You</div>
+      <p id="resCost" style="font-size:15.5px; margin:0;"></p>
+    </div>
+
+    <div class="result-line"></div>
+
+    <div class="q-eyebrow" style="margin-bottom:14px;">Three Shifts Toward Integrated Leader</div>
+    <div id="shiftsHolder"></div>
+
+    <div class="cta-block">
+      <h3>Want the full diagnostic, not just the pattern?</h3>
+      <p>This assessment shows you the lean. The Fixed Ops Performance Friction Index shows you where it's bleeding gross, retention, and CSI, with a 60-day plan to fix it.</p>
+      <button class="cta-btn" onclick="window.open('https://leadershippressurelab.com','_blank')">Visit The Leadership Pressure Lab</button>
+      <button class="cta-btn outline" onclick="restartQuiz()" style="margin-left:10px;">Retake Assessment</button>
+    </div>
+
+    <p class="footer-note">© The Leadership Pressure Lab — Coach Joe Clementi. Part of the Pressure Drop monthly tool series.</p>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    eyebrow: "Scenario 01 — The Late Job",
+    text: "A tech is behind on a job and the customer is waiting. You:",
+    options: [
+      { t: "Grab a wrench and finish it yourself so the car gets out.", a: "SP" },
+      { t: "Email the tech a reminder about flat rate efficiency standards.", a: "IT" },
+      { t: "Walk over, crack a joke, tell them you believe in them, and move on.", a: "MO" },
+      { t: "Sit down after the rush and walk the tech through what slowed him down.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 02 — CSI Drops",
+    text: "CSI scores dropped this month. Your first move is:",
+    options: [
+      { t: "Pull the report and send it to the team in a memo.", a: "IT" },
+      { t: "Take over the next three customer calls yourself.", a: "SP" },
+      { t: "Hold a pep talk reminding everyone how good they are.", a: "MO" },
+      { t: "Review the scores with each advisor and ask what they're seeing on the drive.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 03 — The Missed Upsell",
+    text: "A service advisor keeps missing upsell opportunities. You:",
+    options: [
+      { t: "Stand next to them at the counter and close the sale for them.", a: "SP" },
+      { t: "Add it to next month's KPI dashboard.", a: "IT" },
+      { t: "Tell them you know they have it in them.", a: "MO" },
+      { t: "Ride along, point out the missed moment, then practice the language with them.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 04 — The Schedule Ask",
+    text: "Your top technician asks for more flexibility on his schedule. You:",
+    options: [
+      { t: "Say yes right away, you don't want to lose him.", a: "MO" },
+      { t: "Refer him to the handbook policy.", a: "IT" },
+      { t: "Tell him no, because you never got that flexibility as a tech.", a: "SP" },
+      { t: "Ask what's driving the request, then find a structure that works for both of you.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 05 — The Struggling BDC Rep",
+    text: "A new BDC rep is struggling with call volume. You:",
+    options: [
+      { t: "Take the headset and demonstrate the calls yourself for a week.", a: "SP" },
+      { t: "Send a spreadsheet showing where they rank against the team.", a: "IT" },
+      { t: "Encourage them daily and hope it clicks.", a: "MO" },
+      { t: "Diagnose whether it's a skill gap, a confidence gap, or a process gap, then coach to it.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 06 — The GM Question",
+    text: "The GM asks why fixed ops gross is down. Your answer leans on:",
+    options: [
+      { t: "The numbers in last month's dashboard.", a: "IT" },
+      { t: "A story about how busy the shop was.", a: "SP" },
+      { t: "The team's effort and attitude.", a: "MO" },
+      { t: "A clear link between specific behaviors on the floor and the number that moved.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 07 — The Comeback",
+    text: "When a comeback rolls in, your instinct is to:",
+    options: [
+      { t: "Personally diagnose and fix it before anyone else touches it.", a: "SP" },
+      { t: "Log it for the monthly quality report.", a: "IT" },
+      { t: "Reassure the tech it happens to everyone.", a: "MO" },
+      { t: "Walk the comeback with the tech to find the root cause and the fix.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 08 — A Good Day",
+    text: "Your definition of a good day in the shop is:",
+    options: [
+      { t: "Everything ran through your hands and got done right.", a: "SP" },
+      { t: "The reports came in clean.", a: "IT" },
+      { t: "Everyone seemed happy.", a: "MO" },
+      { t: "The team operated the way you coached them to, without you.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 09 — The Big Repair Order",
+    text: "A struggling advisor asks for your help closing a big repair order. You:",
+    options: [
+      { t: "Take the call and close it yourself.", a: "SP" },
+      { t: "Point them to the menu pricing guide.", a: "IT" },
+      { t: "Tell them they've got this.", a: "MO" },
+      { t: "Listen to their pitch, then coach the specific line where they lost the customer.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 10 — Your Own Growth",
+    text: "When you think about your own leadership growth, you mostly focus on:",
+    options: [
+      { t: "Staying sharp technically so you can still jump in.", a: "SP" },
+      { t: "Mastering the reporting tools and dashboards.", a: "IT" },
+      { t: "Building relationships and keeping morale high.", a: "MO" },
+      { t: "Building a rhythm of coaching that doesn't depend on you being in the room.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 11 — How They'd Describe You",
+    text: "Your team would describe you as:",
+    options: [
+      { t: "The one who can still do the job better than anyone.", a: "SP" },
+      { t: "The one who runs the numbers.", a: "IT" },
+      { t: "The one who keeps things fun.", a: "MO" },
+      { t: "The one who makes them better at the job.", a: "IL" }
+    ]
+  },
+  {
+    eyebrow: "Scenario 12 — Six Months From Now",
+    text: "If nothing about your leadership changes, six months from now your shop will most likely:",
+    options: [
+      { t: "Still depend heavily on you to hit numbers.", a: "SP" },
+      { t: "Have clean reports and a quiet disconnect from the floor.", a: "IT" },
+      { t: "Have good morale but inconsistent results.", a: "MO" },
+      { t: "Be running with rhythm whether you're there or not.", a: "IL" }
+    ]
+  }
+];
+
+const archetypes = {
+  SP: {
+    name: "The Former Star Performer",
+    desc: "You lead with your hands because that's how you earned your stripes. The problem is, every job you finish yourself is a rep your team never gets.",
+    cost: "Your shop's ceiling is your own bandwidth. The moment you're out, on vacation, in a meeting, gone, performance dips, because nobody else has been allowed to build the muscle. You're not building a team. You're extending yourself.",
+    color: "var(--maroon)"
+  },
+  IT: {
+    name: "The Ivory Tower Manager",
+    desc: "You lead from the dashboard. Reports are clean, metrics are tracked, but the floor barely knows you. Numbers tell you what happened. They never tell you why.",
+    cost: "Your team experiences you as a memo, not a leader. Behavior never changes because behavior was never coached, only measured. You'll keep getting the same results with better looking spreadsheets.",
+    color: "var(--navy)"
+  },
+  MO: {
+    name: "The Motivator",
+    desc: "You lead with energy. People like you, and that matters. But encouragement without structure is a pep talk with no playbook.",
+    cost: "Morale is high and consistency is low. Your best people perform because they're self-driven, not because of a system you built. When you're not in the room cheering, performance drifts.",
+    color: "var(--gold)"
+  },
+  IL: {
+    name: "The Integrated Leader",
+    desc: "You balance structure with connection. You coach behavior, not just numbers, and you've built a rhythm the team can run without you standing over it.",
+    cost: "Your risk isn't absence, it's drift. Without continued reinforcement, even strong systems erode. The work now is protecting the rhythm you've already built.",
+    color: "var(--navy)"
+  }
+};
+
+const shiftLibrary = {
+  SP: [
+    "Pick one task this week you'd normally take over yourself. Coach it instead, even if it's slower.",
+    "Ask a struggling team member what they think the fix is before you offer yours.",
+    "Track how many times you 'helped' by doing it yourself this week. Cut that number in half next week."
+  ],
+  IT: [
+    "Walk the floor once a day with no report in hand. Just watch and ask questions.",
+    "Turn one KPI conversation this week into a coaching conversation instead of a data review.",
+    "Learn one team member's actual obstacle, not their number, before your next 1:1."
+  ],
+  MO: [
+    "Pair every piece of encouragement this week with one specific, observable behavior to repeat.",
+    "Set one clear standard with a team member and follow up on it in 48 hours.",
+    "Replace one 'you've got this' with 'here's exactly what to do differently.'"
+  ],
+  IL: [
+    "Document the rhythm you've built so it survives your absence, not just your attention.",
+    "Find the one team member furthest from your standard and re-anchor them this week.",
+    "Teach your system to one other leader. If you can't hand it off, it isn't built yet."
+  ]
+};
+
+let current = 0;
+let answers = [];
+
+function startQuiz(){
+  document.getElementById('screen-start').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  document.getElementById('qEyebrow').textContent = q.eyebrow;
+  document.getElementById('qText').textContent = q.text;
+  const holder = document.getElementById('optionsHolder');
+  holder.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt.t;
+    btn.onclick = () => selectOption(opt.a);
+    holder.appendChild(btn);
+  });
+  document.getElementById('gaugeLabel').textContent = `Question ${current+1} of ${questions.length}`;
+  document.getElementById('gaugeFill').style.width = `${(current/questions.length)*100}%`;
+  document.getElementById('backBtn').disabled = current === 0;
+}
+
+function selectOption(code){
+  answers[current] = code;
+  current++;
+  if(current < questions.length){
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function goBack(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function restartQuiz(){
+  current = 0;
+  answers = [];
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-start').classList.remove('hidden');
+}
+
+function showResults(){
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+
+  const tally = { SP:0, IT:0, MO:0, IL:0 };
+  answers.forEach(a => tally[a]++);
+
+  const sorted = Object.entries(tally).sort((a,b) => b[1]-a[1]);
+  const topCode = sorted[0][0];
+  const top = archetypes[topCode];
+
+  document.getElementById('resName').textContent = top.name;
+  document.getElementById('resDesc').innerHTML = top.desc;
+  document.getElementById('resCost').textContent = top.cost;
+
+  const breakdownHolder = document.getElementById('breakdownHolder');
+  breakdownHolder.innerHTML = '';
+  sorted.forEach(([code, count]) => {
+    const pct = Math.round((count / questions.length) * 100);
+    const row = document.createElement('div');
+    row.className = 'breakdown';
+    row.innerHTML = `
+      <span>${archetypes[code].name.replace('The ','')}</span>
+      <div class="bar-shell"><div class="bar-fill" style="width:${pct}%; background:${archetypes[code].color}"></div></div>
+      <span>${pct}%</span>
+    `;
+    breakdownHolder.appendChild(row);
+  });
+
+  const shiftsHolder = document.getElementById('shiftsHolder');
+  shiftsHolder.innerHTML = '';
+  shiftLibrary[topCode].forEach((shift, i) => {
+    const card = document.createElement('div');
+    card.className = 'shift-card';
+    card.innerHTML = `<div class="shift-num">SHIFT ${String(i+1).padStart(2,'0')}</div><div>${shift}</div>`;
+    shiftsHolder.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
