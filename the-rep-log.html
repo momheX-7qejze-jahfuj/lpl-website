@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="The Rep Log™ — a 60-day one-rep leadership journal for fixed ops leaders. The daily companion to Built by Repetition by Joseph Clementi. The Leadership Pressure Lab™."/>
+<title>The Rep Log™ | Leadership Pressure Lab™</title>
+<style>
+:root{
+  --navy:#1E3A5F;--navy2:#2a4f7f;--maroon:#7A1F2B;--maroon2:#9e2938;
+  --white:#fff;--bg:#f0f2f7;--surface:#F7F8FC;--border:#e0e4ed;
+  --text:#1a1a2e;--muted:#6b7280;--light:#9ca3af;
+  --green:#16a34a;--green2:#15803d;--gold:#C8A04B;--gold2:#b58e3c;
+  --r:10px;--sh:0 4px 24px rgba(30,58,95,.10);
+  --ran-bg:#eef5ef;--half-bg:#f7f1e3;--miss-bg:#f9f0f2;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+
+/* ---- header ---- */
+.hdr{background:#fff;border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--sh);}
+.hl-brand{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--maroon);text-transform:uppercase;}
+.hdr-left h1{font-size:20px;font-weight:700;color:var(--navy);line-height:1.2;margin:1px 0;}
+.hl-tag{font-size:11px;color:var(--muted);}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+.ubadge{font-size:12px;color:var(--muted);white-space:nowrap;}
+.ubadge strong{color:var(--maroon);font-size:14px;}
+.b-maroon{background:var(--maroon);color:#fff;border:none;border-radius:6px;padding:8px 15px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.b-maroon:hover{background:var(--maroon2);}
+.b-maroon a,a .b-maroon{color:#fff;text-decoration:none;}
+
+/* ---- nav ---- */
+.nav{display:flex;gap:4px;margin-bottom:1rem;background:#fff;border-radius:var(--r);padding:6px;box-shadow:var(--sh);}
+.ntab{flex:1;padding:9px 4px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;}
+.ntab.on{background:var(--navy);color:#fff;}
+
+/* ---- cards ---- */
+.card{background:#fff;border-radius:var(--r);padding:1.25rem 1.5rem;box-shadow:var(--sh);margin-bottom:1rem;}
+.ctitle{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;display:flex;align-items:baseline;gap:8px;}
+.ctitle .cday{margin-left:auto;color:var(--light);font-weight:600;letter-spacing:.04em;}
+.ctitle .cn{color:var(--maroon);}
+
+/* ---- setup ---- */
+.setup-hero{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--r);padding:1.75rem 1.75rem 1.6rem;color:#fff;box-shadow:var(--sh);margin-bottom:1rem;}
+.setup-hero .kick{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#f3c98b;margin-bottom:10px;}
+.setup-hero h2{font-size:27px;font-weight:700;line-height:1.15;margin-bottom:12px;}
+.setup-hero p{font-size:14px;line-height:1.6;opacity:.9;max-width:52ch;}
+.fld{margin-bottom:.9rem;}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+.fld input,.fld textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;color:var(--text);outline:none;background:#fff;font-family:inherit;line-height:1.5;resize:none;}
+.fld input:focus,.fld textarea:focus{border-color:var(--navy);}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--light);}
+.hint{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.5;}
+.eg{background:linear-gradient(135deg,#fbf8f1,#f7f1e3);border:1px solid #ecdfbf;border-left:5px solid var(--gold);border-radius:8px;padding:14px 17px;margin-top:1rem;}
+.eg-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2);margin-bottom:9px;}
+.eg ul{margin:0;padding-left:17px;}
+.eg li{font-size:13.5px;color:var(--navy);margin-bottom:5px;line-height:1.45;}
+
+/* ---- buttons ---- */
+.btn-navy{padding:12px 20px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-navy:hover{background:var(--navy2);}
+.btn-navy:disabled{background:var(--border);color:var(--light);cursor:not-allowed;}
+.btn-maroon{padding:11px 20px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-maroon:hover{background:var(--maroon2);}
+.b-out{padding:10px 18px;background:none;color:var(--navy);border:1.5px solid var(--navy);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+.b-out:hover{background:#eef2f9;}
+.b-sm{padding:8px 15px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:none;color:var(--muted);}
+.b-sm:hover{border-color:var(--maroon);color:var(--maroon);}
+
+/* ---- the rep header + counters ---- */
+.rep-head .rep-txt{font-size:24px;font-weight:700;color:var(--navy);line-height:1.2;}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem;}
+.mcrd{background:var(--surface);border-radius:8px;padding:13px 14px;text-align:center;}
+.mval{font-size:26px;font-weight:700;color:var(--navy);line-height:1;}
+.mval.hot{color:var(--maroon);}
+.mval .of{font-size:15px;color:var(--light);font-weight:700;}
+.mlbl{font-size:10.5px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+
+/* ---- viewing banner ---- */
+.viewing{display:none;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,#eef2f9,#f7f8fc);border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:1rem;font-size:13px;color:var(--navy);box-shadow:var(--sh);}
+.viewing.show{display:flex;}
+.viewing button{font-size:11px;font-weight:700;background:none;border:1.5px solid var(--border);color:var(--navy);padding:6px 12px;border-radius:6px;cursor:pointer;white-space:nowrap;}
+.viewing button:hover{border-color:var(--navy);}
+
+/* ---- blocks ---- */
+.block{margin-bottom:1rem;}
+.block:last-child{margin-bottom:0;}
+.block label.blbl{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.iftxt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.iftxt .w{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--maroon);}
+.iftxt input{flex:1;min-width:170px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;color:var(--text);}
+.iftxt input:focus{border-color:var(--navy);}
+.nudge{border-left:4px solid var(--maroon);background:linear-gradient(135deg,#eef2f9,#f7f0f2);border-radius:0 8px 8px 0;padding:11px 15px;margin-top:9px;}
+.nudge .nt{font-size:13px;color:var(--navy);line-height:1.55;font-style:italic;}
+
+/* ---- status toggle ---- */
+.status{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.st{border:1.5px solid var(--border);border-radius:8px;padding:12px 8px;cursor:pointer;text-align:center;background:#fff;transition:.15s;}
+.st .stn{font-size:15px;font-weight:700;color:var(--navy);}
+.st .std{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.02em;}
+.st:hover{border-color:var(--navy);}
+.st.sel[data-v=ran]{background:var(--ran-bg);border-color:var(--green);}
+.st.sel[data-v=ran] .stn{color:var(--green2);} .st.sel[data-v=ran] .std{color:var(--green2);}
+.st.sel[data-v=half]{background:var(--half-bg);border-color:var(--gold);}
+.st.sel[data-v=half] .stn{color:var(--gold2);} .st.sel[data-v=half] .std{color:var(--gold2);}
+.st.sel[data-v=miss]{background:var(--miss-bg);border-color:var(--maroon);}
+.st.sel[data-v=miss] .stn{color:var(--maroon);} .st.sel[data-v=miss] .std{color:var(--maroon);}
+
+.save-row{display:flex;align-items:center;gap:14px;margin-top:1.1rem;}
+.locked{font-size:13px;color:var(--muted);font-style:italic;}
+
+/* ---- weekly review ---- */
+.review{border-left:4px solid var(--maroon);border-radius:0 var(--r) var(--r) 0;}
+.review .ctitle{color:var(--maroon);}
+.wk-runs{font-size:30px;font-weight:700;color:var(--maroon);line-height:1;}
+.wk-runs .of{font-size:15px;color:var(--light);font-weight:700;}
+.verdict{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.vbtn{border:1.5px solid var(--border);border-radius:8px;padding:11px;cursor:pointer;text-align:center;font-size:14px;font-weight:700;color:var(--navy);background:#fff;transition:.15s;}
+.vbtn:hover{border-color:var(--navy);}
+.vbtn.sel[data-v=stays]{background:var(--ran-bg);border-color:var(--green);color:var(--green2);}
+.vbtn.sel[data-v=changes]{background:var(--half-bg);border-color:var(--gold);color:var(--gold2);}
+
+/* ---- the log ---- */
+.logstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;}
+.ls b{font-size:26px;font-weight:700;line-height:1;color:var(--navy);}
+.ls[data-k=ran] b{color:var(--green2);}
+.ls[data-k=half] b{color:var(--gold2);}
+.ls[data-k=miss] b{color:var(--maroon);}
+.grid-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;}
+.grid-h .ctitle{margin-bottom:0;}
+.legend{display:flex;gap:13px;font-size:11px;color:var(--muted);}
+.legend span{display:flex;align-items:center;gap:5px;}
+.sw{width:11px;height:11px;border-radius:3px;}
+.sw.ran{background:var(--green);}.sw.half{background:var(--gold);}.sw.miss{background:var(--maroon);}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;}
+.cell{aspect-ratio:1;border:1.5px solid var(--border);border-radius:5px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--light);cursor:pointer;transition:transform .1s;}
+.cell:hover{transform:scale(1.09);border-color:var(--navy);}
+.cell[data-s=ran]{background:var(--green);border-color:var(--green);color:#fff;}
+.cell[data-s=half]{background:var(--gold);border-color:var(--gold);color:#fff;}
+.cell[data-s=miss]{background:var(--maroon);border-color:var(--maroon);color:#fff;}
+.cell.today{box-shadow:0 0 0 2px var(--navy);border-color:var(--navy);}
+.cell.future{opacity:.45;cursor:default;}
+.cell.future:hover{transform:none;border-color:var(--border);}
+
+.rev-card{border:1.5px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px;}
+.rev-card .rh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;}
+.rev-card .rh b{font-size:15px;font-weight:700;color:var(--navy);}
+.rev-verdict{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:5px;}
+.rev-verdict.stays{background:var(--ran-bg);color:var(--green2);}
+.rev-verdict.changes{background:var(--half-bg);color:var(--gold2);}
+.rev-line{font-size:13.5px;color:var(--text);margin-bottom:4px;line-height:1.5;}
+.rev-line em{font-style:normal;color:var(--maroon);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-right:8px;}
+.empty{font-size:13px;color:var(--muted);line-height:1.5;background:var(--surface);border:1.5px dashed var(--border);border-radius:8px;padding:16px;}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.tools .push{margin-left:auto;}
+
+/* ---- complete ---- */
+.done{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--r);padding:2rem 1.75rem;color:#fff;box-shadow:var(--sh);}
+.done .kick{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#f3c98b;margin-bottom:8px;}
+.done h2{font-size:28px;font-weight:700;line-height:1.12;margin-bottom:16px;}
+.done .dstats{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:16px;}
+.done .dstat .v{font-size:28px;font-weight:700;}
+.done .dstat .l{font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;}
+.done .dline{font-size:14px;line-height:1.7;opacity:.92;margin-bottom:18px;max-width:52ch;}
+.done .dline b{color:#f3c98b;}
+.done .dcta{display:flex;gap:10px;flex-wrap:wrap;}
+.done .dcta button{cursor:pointer;font-weight:700;border-radius:8px;}
+.done .dc1{background:var(--maroon);color:#fff;border:none;padding:12px 22px;font-size:14px;}
+.done .dc2{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.35);padding:12px 20px;font-size:13px;}
+
+/* ---- footer ---- */
+.foot{text-align:center;padding:2rem 1rem 0;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:1.5rem;line-height:1.7;}
+.foot strong{color:var(--maroon);}
+.foot a{color:var(--navy);text-decoration:none;font-weight:700;}
+.foot .legal{font-size:10px;color:var(--light);margin-top:6px;}
+
+/* ---- toast ---- */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--navy);color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:600;box-shadow:0 8px 30px rgba(30,58,95,.35);z-index:1200;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast strong{color:#f3c98b;}
+.hide{display:none!important;}
+.fade{animation:fi .3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:600px){
+  .hdr{flex-direction:column;gap:10px;text-align:center;}
+  .hdr-right{justify-content:center;}
+  .grid{grid-template-columns:repeat(6,1fr);}
+  .logstats{grid-template-columns:repeat(2,1fr);}
+  .rep-head .rep-txt{font-size:20px;}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hl-brand">The Leadership Pressure Lab&trade;</div>
+    <h1>The Rep Log&trade;</h1>
+    <div class="hl-tag">The 60-day companion to <em>Built by Repetition</em></div>
+  </div>
+  <div class="hdr-right" id="hdrRight"></div>
+</div>
+
+<div class="nav hide" id="nav">
+  <button class="ntab on" data-view="today">Today</button>
+  <button class="ntab" data-view="log">The Log</button>
+</div>
+
+<main id="app"></main>
+
+<div class="foot">
+  <strong>The Rep Log&trade;</strong> is an original tool developed by <strong>Joseph Clementi</strong><br>
+  &copy; 2026 The Leadership Pressure Lab&trade; &middot; All rights reserved &middot;
+  <a href="https://leadershippressurelab.com" target="_blank" rel="noopener">leadershippressurelab.com</a>
+  <div class="legal">Your entries are stored privately on this device. Original proprietary framework. No third-party intellectual property reproduced.</div>
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY="bbr_rep_log_v1";
+  var DAYS=60;
+  var CALL="https://leadershippressurelab.com/strategy-call.html";
+
+  /* ===== USAGE TRACKING =====
+     Paste your Google Analytics 4 Measurement ID between the quotes below
+     (it looks like G-XXXXXXXXXX). Until you do, nothing is sent and the tool
+     runs exactly as before. Only event names and counts are reported.
+     The rep text, reflections, and reviews NEVER leave the device. */
+  var GA_ID="";
+  function gaInit(){
+    if(!GA_ID)return;
+    var s=document.createElement("script");s.async=true;
+    s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=function(){dataLayer.push(arguments);};
+    gtag("js",new Date());gtag("config",GA_ID);
+  }
+  function track(ev,params){if(GA_ID&&window.gtag)try{gtag("event",ev,params||{});}catch(e){}}
+
+  var app=document.getElementById("app");
+  var nav=document.getElementById("nav");
+  var hdrRight=document.getElementById("hdrRight");
+  var view="today",viewDay=null;
+  var S=load();
+
+  function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return{rep:"",start:null,entries:{},reviews:{}};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function midnight(d){var x=new Date(d);x.setHours(0,0,0,0);return x;}
+  function currentDay(){if(!S.start)return 0;return Math.floor((midnight(new Date())-midnight(new Date(S.start)))/86400000);}
+  function fmtDate(i){var d=midnight(new Date(S.start));d.setDate(d.getDate()+i);return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});}
+  function esc(s){return(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function repsRun(){var n=0;for(var k in S.entries)if(S.entries[k].status==="ran")n++;return n;}
+  function countBy(v){var n=0;for(var k in S.entries)if(S.entries[k].status===v)n++;return n;}
+  function weekRuns(wk){var s=(wk-1)*7,n=0;for(var i=s;i<s+7;i++)if(S.entries[i]&&S.entries[i].status==="ran")n++;return n;}
+  function streak(){var cur=currentDay(),s=0;for(var i=Math.min(cur,DAYS-1);i>=0;i--){var e=S.entries[i];if(e&&e.status==="ran")s++;else if(e&&(e.status==="half"||e.status==="miss"))break;else if(i<cur)break;}return s;}
+  function val(id){var el=document.getElementById(id);return el?el.value.trim():"";}
+
+  var toastT=null;
+  function toast(msg,ms){var t=document.getElementById("toast");t.innerHTML=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},ms||2600);}
+
+  function renderHdr(){
+    if(!S.rep||!S.start){hdrRight.innerHTML='<a href="'+CALL+'" target="_blank" rel="noopener"><button class="b-maroon">Book Strategy Call &rarr;</button></a>';return;}
+    var cur=currentDay();
+    hdrRight.innerHTML='<div class="ubadge">Day <strong>'+Math.min(cur+1,DAYS)+'</strong> / '+DAYS+'</div>'
+      +'<a href="'+CALL+'" target="_blank" rel="noopener"><button class="b-maroon">Book Strategy Call &rarr;</button></a>';
+  }
+
+  function render(){
+    renderHdr();
+    if(!S.rep||!S.start){nav.classList.add("hide");renderSetup();return;}
+    nav.classList.remove("hide");
+    if(currentDay()>=DAYS&&view==="today"){renderDone();return;}
+    if(view==="log")renderLog();else renderToday();
+    var t=nav.querySelectorAll(".ntab");for(var i=0;i<t.length;i++)t[i].classList.toggle("on",t[i].dataset.view===view);
+  }
+
+  /* ---- setup ---- */
+  function renderSetup(){
+    app.innerHTML=
+      '<div class="setup-hero">'
+        +'<div class="kick">One rep. Sixty days.</div>'
+        +'<h2>Name the rep you will run.</h2>'
+        +'<p>Pick one behavior. The single move you keep missing under pressure. You will run it every day for sixty days, then read what it taught you. That is how leadership gets built. Not in a seminar. In the reps.</p>'
+      +'</div>'
+      +'<div class="card">'
+        +'<div class="ctitle"><span class="cn">Step 1</span> Set your rep</div>'
+        +'<div class="fld"><label for="repin">The rep</label>'
+          +'<input type="text" id="repin" maxlength="90" placeholder="Ask one question before I answer." autocomplete="off">'
+          +'<p class="hint">Make it a verb. Small enough to run before noon. Hard enough that the board will fight you on it.</p></div>'
+        +'<div class="eg"><div class="eg-lbl">If you are stuck, steal one</div><ul>'
+          +'<li>Walk the drive before I open my laptop.</li>'
+          +'<li>Ask a tech what they think before I decide.</li>'
+          +'<li>Praise the work in front of the team, correct it in private.</li>'
+          +'<li>Say the hard thing on day one, not day ten.</li>'
+        +'</ul></div>'
+        +'<div style="margin-top:1.1rem"><button class="btn-navy" id="startbtn" disabled>Start the 60 &rarr;</button></div>'
+      +'</div>';
+    var input=document.getElementById("repin"),btn=document.getElementById("startbtn");
+    input.addEventListener("input",function(){btn.disabled=input.value.trim().length<3;});
+    input.addEventListener("keydown",function(e){if(e.key==="Enter"&&!btn.disabled)btn.click();});
+    btn.addEventListener("click",function(){
+      S.rep=input.value.trim();S.start=midnight(new Date()).toISOString();view="today";viewDay=null;save();render();window.scrollTo(0,0);
+      track("rep_started");
+      toast("<strong>Rep locked.</strong> Sixty days start now. Run it today.");
+    });
+    input.focus();
+  }
+
+  /* ---- today ---- */
+  function renderToday(){
+    var cur=currentDay();
+    var day=(viewDay===null)?Math.min(cur,DAYS-1):viewDay;
+    var e=S.entries[day]||{};
+    var editable=day<=cur;
+    var isReview=((day+1)%7===0);
+    var wk=Math.floor(day/7)+1;
+
+    var html=
+      '<div class="card rep-head">'
+        +'<div class="ctitle">The rep this cycle</div>'
+        +'<div class="rep-txt">'+esc(S.rep)+'</div>'
+        +'<div class="mgrid">'
+          +'<div class="mcrd"><div class="mval hot">'+Math.min(cur+1,DAYS)+'<span class="of"> / '+DAYS+'</span></div><div class="mlbl">Day</div></div>'
+          +'<div class="mcrd"><div class="mval">'+repsRun()+'</div><div class="mlbl">Reps run</div></div>'
+          +'<div class="mcrd"><div class="mval">'+streak()+'</div><div class="mlbl">Streak</div></div>'
+        +'</div>'
+      +'</div>';
+
+    html+='<div class="viewing'+(viewDay!==null&&viewDay!==cur?' show':'')+'">'
+      +'<span>Viewing Day '+(day+1)+' &middot; '+fmtDate(day)+'</span>'
+      +'<button id="backtoday">Back to today &rarr;</button></div>';
+
+    html+='<div class="card">'
+      +'<div class="ctitle"><span class="cn">AM</span> Set the rep<span class="cday">Day '+(day+1)+' &middot; '+fmtDate(day)+'</span></div>'
+      +'<div class="block"><label class="blbl">The cue</label>'
+        +'<div class="iftxt"><span class="w">When</span>'
+          +'<input type="text" id="f_when" maxlength="70" placeholder="a tech brings me a problem" value="'+esc(e.cwhen)+'" '+(editable?'':'disabled')+'>'
+          +'<span class="w">I will</span>'
+          +'<input type="text" id="f_then" maxlength="70" placeholder="ask before I fix" value="'+esc(e.cthen)+'" '+(editable?'':'disabled')+'></div>'
+        +'<div class="nudge"><div class="nt">Name the moment in advance. If-then beats good intentions two to one.</div></div></div>'
+      +'<div class="block"><label class="blbl" for="f_press">The pressure point</label>'
+        +'<div class="iftxt"><input type="text" id="f_press" maxlength="110" placeholder="10a dispatch, when everyone wants the fast answer" value="'+esc(e.press)+'" '+(editable?'':'disabled')+'></div></div>'
+    +'</div>';
+
+    html+='<div class="card">'
+      +'<div class="ctitle"><span class="cn">PM</span> Log the rep</div>'
+      +'<div class="block"><label class="blbl">Did I run it?</label>'
+        +'<div class="status" id="status"'+(editable?'':' style="pointer-events:none;opacity:.6"')+'>'
+          +stBtn("ran","Ran it","full rep",e.status)
+          +stBtn("half","Half","started, slipped",e.status)
+          +stBtn("miss","Missed","pressure won",e.status)
+        +'</div></div>'
+      +'<div class="block"><label class="blbl" for="f_cost">What it cost me, or earned me</label>'
+        +'<div class="fld"><textarea id="f_cost" rows="2" maxlength="240" placeholder="One honest line." '+(editable?'':'disabled')+'>'+esc(e.cost)+'</textarea></div></div>'
+      +'<div class="block"><label class="blbl" for="f_read">One thing I saw in my people</label>'
+        +'<div class="fld"><textarea id="f_read" rows="2" maxlength="240" placeholder="Watch what changes when you change." '+(editable?'':'disabled')+'>'+esc(e.read)+'</textarea></div></div>'
+      +'<div class="block"><label class="blbl" for="f_tom">Tomorrow I run it here</label>'
+        +'<div class="iftxt"><input type="text" id="f_tom" maxlength="110" placeholder="The next moment you already know is coming." value="'+esc(e.tom)+'" '+(editable?'':'disabled')+'></div></div>'
+      +(editable
+        ?'<div class="save-row"><button class="btn-navy" id="savebtn">Save the day &rarr;</button></div>'
+        :'<div class="save-row"><span class="locked">This day is in the future. It is not yours to write yet.</span></div>')
+    +'</div>';
+
+    if(isReview&&editable){
+      var r=S.reviews[wk]||{};
+      html+='<div class="card review">'
+        +'<div class="ctitle"><span class="cn">Week '+wk+'</span> The week in review<span class="cday">Every 7 days</span></div>'
+        +'<div class="block"><label class="blbl">Reps run this week</label><div class="wk-runs">'+weekRuns(wk)+'<span class="of"> / 7</span></div></div>'
+        +'<div class="block"><label class="blbl" for="r_held">Where it held</label><div class="iftxt"><input type="text" id="r_held" maxlength="120" placeholder="The conditions that made it easy." value="'+esc(r.held)+'"></div></div>'
+        +'<div class="block"><label class="blbl" for="r_broke">Where it broke</label><div class="iftxt"><input type="text" id="r_broke" maxlength="120" placeholder="The conditions that beat you." value="'+esc(r.broke)+'"></div></div>'
+        +'<div class="block"><label class="blbl" for="r_pat">The pattern I am seeing</label><div class="iftxt"><input type="text" id="r_pat" maxlength="140" placeholder="Say the quiet thing out loud." value="'+esc(r.pattern)+'"></div></div>'
+        +'<div class="block"><label class="blbl">The rep for next week</label>'
+          +'<div class="verdict" id="verdict">'
+            +'<div class="vbtn'+(r.decision==="stays"?" sel":"")+'" data-v="stays">Stays</div>'
+            +'<div class="vbtn'+(r.decision==="changes"?" sel":"")+'" data-v="changes">Changes</div>'
+          +'</div></div>'
+        +'<div class="save-row"><button class="btn-maroon" id="savereview">Save the review &rarr;</button></div>'
+      +'</div>';
+    }
+
+    app.innerHTML=html;
+    wireToday(day,editable,isReview,wk);
+  }
+
+  function stBtn(v,name,dot,cur){return '<div class="st'+(cur===v?" sel":"")+'" data-v="'+v+'"><span class="stn">'+name+'</span><span class="std">'+dot+'</span></div>';}
+
+  function wireToday(day,editable,isReview,wk){
+    var back=document.getElementById("backtoday");
+    if(back)back.addEventListener("click",function(){viewDay=null;render();window.scrollTo(0,0);});
+    if(editable){
+      var sts=document.querySelectorAll("#status .st"),chosen=(S.entries[day]||{}).status||"";
+      for(var i=0;i<sts.length;i++)sts[i].addEventListener("click",function(){chosen=this.dataset.v;for(var j=0;j<sts.length;j++)sts[j].classList.toggle("sel",sts[j].dataset.v===chosen);});
+      document.getElementById("savebtn").addEventListener("click",function(){
+        var e=S.entries[day]||{};
+        e.cwhen=val("f_when");e.cthen=val("f_then");e.press=val("f_press");
+        e.status=chosen||e.status||"";e.cost=val("f_cost");e.read=val("f_read");e.tom=val("f_tom");
+        S.entries[day]=e;save();
+        track("day_logged",{status:e.status||"none",day:day+1});
+        var mv=document.querySelectorAll(".rep-head .mval");if(mv[1])mv[1].textContent=repsRun();if(mv[2])mv[2].textContent=streak();
+        toast(e.status==="ran"?"<strong>Rep logged.</strong> That is one more cell filled.":e.status==="miss"?"Logged. The miss is data, not defeat. Run it tomorrow.":"Saved. Half a rep still beats no rep.");
+      });
+    }
+    if(isReview&&editable){
+      var vs=document.querySelectorAll("#verdict .vbtn"),verdict=(S.reviews[wk]||{}).decision||"";
+      for(var k=0;k<vs.length;k++)vs[k].addEventListener("click",function(){verdict=this.dataset.v;for(var m=0;m<vs.length;m++)vs[m].classList.toggle("sel",vs[m].dataset.v===verdict);});
+      document.getElementById("savereview").addEventListener("click",function(){
+        S.reviews[wk]={held:val("r_held"),broke:val("r_broke"),pattern:val("r_pat"),decision:verdict};save();
+        track("week_reviewed",{week:wk,decision:verdict||"none"});
+        toast("<strong>Review saved.</strong> The pattern is the lesson.");
+      });
+    }
+  }
+
+  /* ---- the log ---- */
+  function renderLog(){
+    var cur=currentDay();
+    var left=Math.max(0,DAYS-Math.min(cur,DAYS));
+    var html='<div class="logstats">'
+      +lc("ran","Ran it",countBy("ran"))
+      +lc("half","Half",countBy("half"))
+      +lc("miss","Missed",countBy("miss"))
+      +lc("left","Days left",left)
+    +'</div>';
+
+    html+='<div class="card">'
+      +'<div class="grid-h"><div class="ctitle">The 60</div>'
+        +'<div class="legend"><span><i class="sw ran"></i>ran</span><span><i class="sw half"></i>half</span><span><i class="sw miss"></i>miss</span></div></div>'
+      +'<div class="grid">';
+    for(var i=0;i<DAYS;i++){
+      var e=S.entries[i],s=e&&e.status?e.status:"",cls="cell";
+      if(i===cur)cls+=" today";if(i>cur)cls+=" future";
+      html+='<div class="'+cls+'" data-day="'+i+'"'+(s?' data-s="'+s+'"':'')+' title="Day '+(i+1)+'">'+(i+1)+'</div>';
+    }
+    html+='</div></div>';
+
+    html+='<div class="card"><div class="ctitle">The reviews</div>';
+    var wks=Object.keys(S.reviews).map(Number).sort(function(a,b){return a-b;});
+    if(!wks.length)html+='<div class="empty">No reviews yet. They open on day 7, and every 7 after. That is where sixty days of writing turns into a lesson you can name.</div>';
+    else for(var w=0;w<wks.length;w++){
+      var r=S.reviews[wks[w]],vc=r.decision==="stays"?"stays":(r.decision==="changes"?"changes":"");
+      html+='<div class="rev-card"><div class="rh"><b>Week '+wks[w]+'</b>'
+        +(vc?'<span class="rev-verdict '+vc+'">'+(vc==="stays"?"Rep stays":"Rep changes")+'</span>':'')+'</div>'
+        +(r.held?'<div class="rev-line"><em>Held</em>'+esc(r.held)+'</div>':'')
+        +(r.broke?'<div class="rev-line"><em>Broke</em>'+esc(r.broke)+'</div>':'')
+        +(r.pattern?'<div class="rev-line"><em>Pattern</em>'+esc(r.pattern)+'</div>':'')
+      +'</div>';
+    }
+    html+='</div>';
+
+    html+='<div class="card"><div class="ctitle">Your log</div><div class="tools">'
+      +'<button class="b-out" id="export">Download my log</button>'
+      +'<button class="b-sm push" id="reset">Start a new 60</button>'
+    +'</div><p class="hint" style="margin-top:12px">Bring the download to your next coaching session. Sixty days of honest reps is a conversation most leaders never get to have.</p></div>';
+
+    app.innerHTML=html;
+
+    var cells=document.querySelectorAll(".cell");
+    for(var c=0;c<cells.length;c++)cells[c].addEventListener("click",function(){
+      var d=parseInt(this.dataset.day,10);if(d>cur)return;
+      viewDay=(d===cur?null:d);view="today";render();window.scrollTo(0,0);
+    });
+    document.getElementById("export").addEventListener("click",exportLog);
+    document.getElementById("reset").addEventListener("click",function(){
+      if(confirm("Start a new 60? Your current log clears from this device. Download it first if you want to keep it."))
+      {S={rep:"",start:null,entries:{},reviews:{}};viewDay=null;view="today";save();render();window.scrollTo(0,0);}
+    });
+  }
+  function lc(k,label,n){return '<div class="card mcrd" data-k="'+k+'" style="padding:1rem 1.1rem"><b class="ls">'+n+'</b><div class="mlbl">'+label+'</div></div>';}
+
+  function exportLog(){
+    var L=[];
+    L.push("THE REP LOG  |  BUILT BY REPETITION  |  THE 60-DAY RECORD");
+    L.push("The rep:  "+S.rep);
+    L.push("Started:  "+midnight(new Date(S.start)).toLocaleDateString());
+    L.push("Reps run: "+repsRun()+" / "+DAYS);
+    L.push("The Leadership Pressure Lab  |  leadershippressurelab.com");
+    L.push("".padEnd(52,"="));
+    for(var i=0;i<DAYS;i++){var e=S.entries[i];if(!e)continue;
+      L.push("");L.push("DAY "+(i+1)+"  ["+((e.status||"-").toUpperCase())+"]  "+fmtDate(i));
+      if(e.cwhen||e.cthen)L.push("  Cue:      When "+(e.cwhen||"...")+", I will "+(e.cthen||"..."));
+      if(e.press)L.push("  Pressure: "+e.press);
+      if(e.cost)L.push("  Cost/won: "+e.cost);
+      if(e.read)L.push("  The read: "+e.read);
+      if(e.tom)L.push("  Tomorrow: "+e.tom);
+    }
+    var wks=Object.keys(S.reviews).map(Number).sort(function(a,b){return a-b;});
+    if(wks.length){L.push("");L.push("".padEnd(52,"="));L.push("THE REVIEWS");}
+    for(var w=0;w<wks.length;w++){var r=S.reviews[wks[w]];
+      L.push("");L.push("Week "+wks[w]+"  ["+((r.decision||"-").toUpperCase())+"]");
+      if(r.held)L.push("  Held:    "+r.held);
+      if(r.broke)L.push("  Broke:   "+r.broke);
+      if(r.pattern)L.push("  Pattern: "+r.pattern);
+    }
+    var blob=new Blob([L.join("\n")],{type:"text/plain"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="the-rep-log.txt";
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    track("log_downloaded");
+    toast("Log downloaded.");
+  }
+
+  /* ---- complete ---- */
+  function renderDone(){
+    if(!S._done){S._done=true;save();track("cycle_complete",{reps_run:repsRun(),missed:countBy("miss")});}
+    app.innerHTML='<div class="done">'
+      +'<div class="kick">Day 60. The cycle is closed.</div>'
+      +'<h2>Sixty days. Look what you built.</h2>'
+      +'<div class="dstats">'
+        +'<div class="dstat"><div class="v">'+repsRun()+'</div><div class="l">Reps run</div></div>'
+        +'<div class="dstat"><div class="v">'+countBy("half")+'</div><div class="l">Half</div></div>'
+        +'<div class="dstat"><div class="v">'+countBy("miss")+'</div><div class="l">Missed</div></div>'
+      +'</div>'
+      +'<div class="dline">The rep was <b>'+esc(S.rep)+'</b>. Read your log before you start the next one. The pattern is the lesson, and the lesson only shows up across sixty days.</div>'
+      +'<div class="dcta"><button class="dc1" id="d_export">Download my log</button><button class="dc2" id="d_new">Name the next rep</button></div>'
+    +'</div>';
+    document.getElementById("d_export").addEventListener("click",exportLog);
+    document.getElementById("d_new").addEventListener("click",function(){
+      if(confirm("Start a new 60? Download your log first if you want to keep it."))
+      {S={rep:"",start:null,entries:{},reviews:{}};viewDay=null;view="today";save();render();window.scrollTo(0,0);}
+    });
+  }
+
+  nav.addEventListener("click",function(e){var b=e.target.closest(".ntab");if(!b)return;view=b.dataset.view;if(view==="today")viewDay=null;render();window.scrollTo(0,0);});
+  gaInit();track("tool_open",{state:(S.rep&&S.start)?"active":"new"});
+  render();
+})();
+</script>
+</body>
+</html>
