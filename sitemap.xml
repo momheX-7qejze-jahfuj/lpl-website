@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  <!-- The Leadership Pressure Lab™ | coachjoeleadership.com -->
-  <!-- © 2026 Joseph "Coach Joe" Clementi | All Rights Reserved -->
-  <url><loc>https://coachjoeleadership.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://coachjoeleadership.com/about.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://coachjoeleadership.com/system.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://coachjoeleadership.com/products.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://coachjoeleadership.com/pricing.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://coachjoeleadership.com/keynote.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://coachjoeleadership.com/pressure-test.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://coachjoeleadership.com/cohort.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://coachjoeleadership.com/monday-brief.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://coachjoeleadership.com/strategy-call.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://coachjoeleadership.com/privacy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://coachjoeleadership.com/terms.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url><loc>https://leadershippressurelab.com/</loc><lastmod>2026-08-05</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://leadershippressurelab.com/strategy-call.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://leadershippressurelab.com/about.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://leadershippressurelab.com/system.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://leadershippressurelab.com/torque.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://leadershippressurelab.com/products.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://leadershippressurelab.com/pricing.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://leadershippressurelab.com/coaching-cohort.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://leadershippressurelab.com/pressure-test.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://leadershippressurelab.com/whitepaper.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://leadershippressurelab.com/monday-brief.html</loc><lastmod>2026-08-05</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://leadershippressurelab.com/media.html</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://leadershippressurelab.com/privacy.html</loc><lastmod>2026-08-05</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://leadershippressurelab.com/terms.html</loc><lastmod>2026-08-05</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
 </urlset>
