@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monday Brief No. 001. Awe Expands Perspective. Commitment Expands Possibility.</title>
+<style>
+  :root{
+    --navy:#1E3A5F;
+    --navy-deep:#16304B;
+    --navy-tint:#EAF0F6;
+    --maroon:#7A1F2B;
+    --maroon-bright:#B8404F;
+    --gold:#C9A227;
+    --green:#3FA372;
+    --ink:#1C2A37;
+    --ink-soft:#46566A;
+    --muted:#7C8A9A;
+    --page:#F2EFE8;
+    --paper:#FFFFFF;
+    --line:#E2DDD2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--page);color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .frame{max-width:1080px;margin:0 auto;padding:28px 20px 60px;}
+
+  /* Masthead */
+  .masthead{border-top:3px solid var(--maroon);background:var(--paper);
+    border:1px solid var(--line);border-top:3px solid var(--maroon);
+    border-radius:3px;padding:26px 30px 28px;}
+  .brandbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+    padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:20px;}
+  .brandmark{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);}
+  .brandmark span{color:var(--maroon);}
+  .issue{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+  h1.title{font-size:clamp(27px,4.4vw,40px);line-height:1.12;letter-spacing:-.01em;
+    font-weight:700;color:var(--navy);margin:0;}
+  .deck{font-size:17px;color:var(--ink-soft);margin:13px 0 0;max-width:40ch;}
+  .meta{font-size:12.5px;color:var(--muted);margin:16px 0 0;letter-spacing:.02em;}
+  .meta b{color:var(--ink);font-weight:700;}
+
+  /* Layout */
+  .cols{display:grid;grid-template-columns:1fr 320px;gap:26px;margin-top:24px;align-items:start;}
+  @media(max-width:840px){.cols{grid-template-columns:1fr;}}
+
+  /* Article */
+  .article{background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:34px 38px 38px;}
+  @media(max-width:560px){.article{padding:26px 22px 30px;}}
+  .article p{font-size:16.5px;margin:0 0 18px;}
+  .article p.lead{font-size:18px;color:var(--ink);}
+  .article p.beat{font-size:18px;font-weight:700;color:var(--navy);margin:0 0 18px;}
+  h2{font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);
+    margin:34px 0 16px;padding-left:13px;border-left:3px solid var(--maroon);line-height:1.3;}
+
+  .quote{margin:24px 0;padding:4px 0 4px 22px;border-left:3px solid var(--gold);}
+  .quote p{font-size:17.5px;font-style:italic;color:var(--ink);margin:0;line-height:1.55;}
+  .quote .src{font-style:normal;font-size:13px;color:var(--muted);margin-top:10px;letter-spacing:.02em;}
+
+  .couplet{text-align:center;margin:30px 0;padding:24px 18px;background:var(--navy-tint);
+    border-radius:3px;}
+  .couplet .l{font-size:21px;font-weight:700;color:var(--navy);line-height:1.35;}
+  .couplet .pivot{font-size:16px;color:var(--maroon);font-weight:700;margin-top:14px;}
+
+  .moves{margin:6px 0 4px;padding:0;list-style:none;counter-reset:m;}
+  .moves li{position:relative;padding:0 0 20px 46px;margin:0;counter-increment:m;}
+  .moves li:before{content:counter(m,decimal-leading-zero);position:absolute;left:0;top:-2px;
+    font-size:15px;font-weight:700;color:var(--maroon);letter-spacing:.04em;}
+  .moves li:after{content:"";position:absolute;left:13px;top:24px;bottom:6px;width:1px;background:var(--line);}
+  .moves li:last-child:after{display:none;}
+  .moves .lead{font-weight:700;color:var(--navy);}
+  .moves p{font-size:16px;margin:0;}
+
+  .reflect{margin:30px 0;padding:22px 24px;background:#FBF3F4;border:1px solid #EAD3D6;border-radius:3px;}
+  .reflect .lbl{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--maroon);margin-bottom:8px;}
+  .reflect p{font-size:17px;font-style:italic;color:var(--ink);margin:0;}
+
+  .cta-block{margin:26px 0 0;padding:22px 0 0;border-top:1px solid var(--line);}
+  .cta-block p{font-size:16px;}
+  .closer{font-size:19px;font-weight:700;color:var(--navy);margin:8px 0 0;}
+
+  .subscribe{display:inline-block;margin:24px 0 6px;background:var(--navy);color:#fff;
+    text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:12px 22px;border-radius:3px;}
+  .subscribe:hover{background:var(--navy-deep);}
+
+  .sig{margin:22px 0 0;padding-top:18px;border-top:1px solid var(--line);}
+  .sig .triad{font-style:italic;font-size:16px;color:var(--ink-soft);}
+  .sig .name{font-weight:700;color:var(--navy);margin-top:4px;}
+  .tags{margin-top:18px;font-size:12.5px;color:var(--muted);letter-spacing:.02em;}
+  .tags span{color:var(--navy);}
+
+  /* Sidebar / Pressure Test */
+  .rail{position:sticky;top:20px;display:flex;flex-direction:column;gap:16px;}
+  @media(max-width:840px){.rail{position:static;}}
+  .tool{background:var(--navy);border-radius:4px;overflow:hidden;color:#EAF0F6;}
+  .tool-top{padding:18px 20px 6px;}
+  .tool .ey{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+  .tool h3{font-size:21px;font-weight:700;margin:8px 0 4px;color:#fff;line-height:1.15;}
+  .tool .sub{font-size:13px;color:#A9BDD2;margin:0;}
+  .gauge-wrap{text-align:center;padding:6px 16px 4px;}
+  .gauge{width:100%;max-width:200px;margin:0 auto;display:block;}
+  .score{font-size:34px;font-weight:700;color:var(--green);line-height:1;margin-top:2px;}
+  .score-lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-top:4px;}
+  .legend{display:flex;justify-content:center;gap:14px;padding:10px 16px 4px;flex-wrap:wrap;}
+  .legend span{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#A9BDD2;display:flex;align-items:center;gap:5px;}
+  .dot{width:9px;height:9px;border-radius:2px;display:inline-block;}
+  .how{padding:14px 20px 18px;border-top:1px solid #2C4A6B;}
+  .how .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7C92AC;font-weight:700;margin-bottom:10px;}
+  .how ol{margin:0;padding-left:18px;}
+  .how li{font-size:13px;color:#D5E0EC;margin-bottom:7px;line-height:1.45;}
+  .tool-cta{display:block;text-align:center;background:var(--maroon);color:#fff;text-decoration:none;
+    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:13px;margin:0;}
+  .tool-cta:hover{background:var(--maroon-bright);}
+  .railnote{font-size:11.5px;color:var(--muted);line-height:1.5;padding:0 4px;text-align:center;}
+
+  footer{max-width:1080px;margin:0 auto;padding:0 20px;}
+  .foot{margin-top:26px;padding:18px 0;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <div class="masthead">
+    <div class="brandbar">
+      <div class="brandmark">The Leadership <span>Pressure</span> Lab</div>
+      <div class="issue">Monday Brief · No. 001</div>
+    </div>
+    <h1 class="title">Awe Expands Perspective. Commitment Expands Possibility.</h1>
+    <p class="deck">The two forces that change what a leader can see.</p>
+    <p class="meta"><b>Coach Joe</b> &nbsp;·&nbsp; Monday, June 22, 2026 &nbsp;·&nbsp; 3 min read</p>
+  </div>
+<!-- ============================================================
+     THIS WEEK'S FEATURE BLOCK - Monday Brief hub page
+     Paste inside the <body> of monday-brief.html, after the
+     masthead. Swap the title, hook line, and link next Monday.
+     Colors match the LPL shared design system (navy/gold/cream).
+     ============================================================ -->
+
+<section style="max-width:41rem;margin:2rem auto;padding:1.75rem 1.5rem;background:#F5EDD4;border-left:4px solid #C8992B;border-radius:0 6px 6px 0;font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <p style="margin:0 0 .6rem;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#9A7420;font-weight:700;">This Week &middot; The Pressure Line</p>
+  <h2 style="margin:0 0 .5rem;font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-weight:400;font-size:1.7rem;line-height:1.2;color:#0A1F3D;">What the Room Got Wrong</h2>
+  <p style="margin:0 0 1rem;font-size:1.05rem;line-height:1.6;color:#3D3D3D;">A service manager got a standing ovation. The room clapped for the number on the screen. I had watched the eleven years underneath it, and the five decisions that built him, not one of which is a skill you can teach.</p>
+  <a href="https://leadershippressurelab.com/what-the-room-got-wrong.html" style="display:inline-block;background:#0A1F3D;color:#ffffff;text-decoration:none;font-weight:600;font-size:1rem;padding:.7rem 1.4rem;border-radius:4px;">Read the article &rarr;</a>
+</section>
+
+<!-- ============================================================
+     END FEATURE BLOCK
+     ============================================================ -->
+
+  <div class="cols">
+    <!-- ARTICLE -->
+    <article class="article">
+      <p class="lead">Stand under a sky thick with stars. Stand at the edge of a canyon that took six million years to open. Stand in the room when someone does the thing they have spent a lifetime learning to do.</p>
+      <p class="beat">Something in you goes quiet.</p>
+      <p>Psychologists call it awe.</p>
+
+      <h2>The Science of a Quiet Mind</h2>
+      <p>Dacher Keltner and Jonathan Haidt gave awe its modern definition. It is what we feel in the presence of something vast, something so far past our current understanding that the mind has to stretch to hold it. They named that stretch a need for accommodation. The map you carry suddenly feels too small for the territory.</p>
+      <p>In that moment, the noise drops. Overthinking quiets. Self-criticism softens. The grip of stress loosens. You stop standing at the center of your own story. Your problems shrink. Your perspective widens.</p>
+      <p>This is more than a good feeling. A Stanford study found that awe changes how we experience time. People who felt it believed they had more of it, and that one shift made them more patient, more generous, and more willing to help. A Berkeley study found that awe quiets the ego and produces what the researchers called a small self, the version of you that is less defended and more useful to everyone around you.</p>
+      <p>The mind reboots. Energy, creativity, and insight come back online.</p>
+      <p class="beat">There is science behind this. There is also wisdom older than the science.</p>
+
+      <h2>The Truth on the Mountain</h2>
+      <p>In 1951, the Scottish mountaineer W.H. Murray wrote a passage that has outlived his expedition:</p>
+      <div class="quote">
+        <p>&ldquo;Until one is committed, there is hesitancy, the chance to draw back. Concerning all acts of initiative (and creation), there is one elementary truth, the ignorance of which kills countless ideas and splendid plans: that the moment one definitely commits oneself, then Providence moves too.&rdquo;</p>
+        <div class="src">W.H. Murray, The Scottish Himalayan Expedition, 1951</div>
+      </div>
+      <p>Murray&rsquo;s point is simple. Commitment changes perception. Step off the edge, and you begin to see resources, relationships, and solutions that were invisible a moment before. They did not appear. You did. Commitment changed what you were able to see.</p>
+
+      <div class="couplet">
+        <div class="l">Awe expands perspective.<br>Commitment expands possibility.</div>
+        <div class="pivot">Both change the same thing. Not your circumstances. Your sight.</div>
+      </div>
+
+      <h2>Three Moves for the Week Ahead</h2>
+      <ol class="moves">
+        <li><p><span class="lead">Go looking for awe.</span> Do not wait for it to find you. Put yourself in front of something vast this week. A night sky. A piece of music. A person at the top of their craft. Awe is not a luxury for the calendar&rsquo;s good weeks. It is how a tired mind comes back online.</p></li>
+        <li><p><span class="lead">Commit before you feel ready.</span> Name the one decision you keep circling. The hire. The hard conversation. The standard you keep meaning to raise. Step toward it. Murray&rsquo;s law holds in a dealership and on a mountain. You move first. The way forward shows up second.</p></li>
+        <li><p><span class="lead">See what your own eye skips.</span> You cannot proofread your own blind spots, in your writing or in your leadership. Before you send the next message that matters, run it through the Pressure Test. Let it show you the long sentence, the buried point, the line that almost lands. Then lead from clearer ground.</p></li>
+      </ol>
+
+      <div class="reflect">
+        <div class="lbl">Reflection</div>
+        <p>Where are you standing at the edge right now, waiting to feel ready, when commitment is the only thing that will let you see the way across?</p>
+      </div>
+
+      <div class="cta-block">
+        <p>You are holding the tool. The Pressure Test on the right is built to show you what you cannot see in your own words. Run one message through it this week. Commit to being understood clearly. That is where the work starts.</p>
+        <p>The world is larger, more supportive, and more full of opportunity than you believe.</p>
+        <p class="closer">Commit first. The seeing follows.</p>
+        <a class="subscribe" href="#">Subscribe to the Monday Brief</a>
+      </div>
+
+      <div class="sig">
+        <div class="triad">See wider. Commit sooner. Lead from there.</div>
+        <div class="name">Coach Joe</div>
+      </div>
+      <div class="tags"><span>#Leadership</span> <span>#LeadershipDevelopment</span> <span>#ExperienceMoves</span> <span>#TheLeadershipPressureLab</span> <span>#Awe</span></div>
+    </article>
+
+    <!-- PRESSURE TEST RAIL -->
+    <aside class="rail">
+      <div class="tool">
+        <div class="tool-top">
+          <div class="ey">The Tool · Voice Inspection</div>
+          <h3>The Pressure Test</h3>
+          <p class="sub">See what your own eye skips.</p>
+        </div>
+        <div class="gauge-wrap">
+          <svg class="gauge" viewBox="0 0 260 150" role="img" aria-label="Voice pressure gauge reading 92">
+            <path d="M30 120 A100 100 0 0 1 50 60" fill="none" stroke="#B8404F" stroke-width="13" stroke-linecap="round"/>
+            <path d="M55 55 A100 100 0 0 1 110 27" fill="none" stroke="#C9A227" stroke-width="13"/>
+            <path d="M118 25 A100 100 0 0 1 185 38" fill="none" stroke="#5a9e7a" stroke-width="13"/>
+            <path d="M192 42 A100 100 0 0 1 230 120" fill="none" stroke="#3FA372" stroke-width="13" stroke-linecap="round"/>
+            <g transform="rotate(75.6 130 120)">
+              <line x1="130" y1="120" x2="130" y2="50" stroke="#EDE7D8" stroke-width="3.5" stroke-linecap="round"/>
+              <circle cx="130" cy="120" r="8" fill="#EDE7D8"/>
+              <circle cx="130" cy="120" r="3.5" fill="#1E3A5F"/>
+            </g>
+          </svg>
+          <div class="score">92</div>
+          <div class="score-lbl">Ship it</div>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background:#B8404F"></i>Dash</span>
+          <span><i class="dot" style="background:#C9A227"></i>Jargon</span>
+          <span><i class="dot" style="background:#3FA372"></i>Long line</span>
+        </div>
+        <div class="how">
+          <div class="lbl">How it works</div>
+          <ol>
+            <li>Paste a post, a reply, or a single paragraph.</li>
+            <li>It flags dashes, jargon, long sentences, and passive voice.</li>
+            <li>Read the gauge. Tighten. Then send.</li>
+          </ol>
+        </div>
+        <a class="tool-cta" href="#">Open the Pressure Test</a>
+      </div>
+      <p class="railnote">Built for the leaders testing it this week. One reading before you publish.</p>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <div class="foot">
+    <span>Coach Joe · Experience Moves&trade;</span>
+    <span>The Leadership Pressure Lab&trade;</span>
+  </div>
+</footer>
+</body>
+</html>
+
