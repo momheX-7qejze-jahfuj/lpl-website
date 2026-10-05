@@ -4,312 +4,455 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <base href="/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+
 <title>Pre-order What Pressure Reveals | Joseph Clementi</title>
 <meta name="description" content="What Pressure Reveals by Joseph Clementi. A field manual for fixed operations leaders. Releases October 22, 2026. Pre-order on Amazon or at Barnes &amp; Noble.">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://leadershippressurelab.com/preorder">
 
-<!-- Share card. This is what LinkedIn and text messages show when someone pastes the link. -->
+<!-- Share card. This is what LinkedIn shows when someone pastes the link. -->
 <meta property="og:type" content="book">
+<meta property="og:site_name" content="The Leadership Pressure Lab™">
 <meta property="og:title" content="What Pressure Reveals">
 <meta property="og:description" content="Pressure exposes the leader you have already built. A field manual for fixed operations leaders. Releases October 22, 2026.">
 <meta property="og:url" content="https://leadershippressurelab.com/preorder">
 <meta property="og:image" content="https://leadershippressurelab.com/images/what-pressure-reveals-share.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What Pressure Reveals">
+<meta name="twitter:description" content="Pressure exposes the leader you have already built. Releases October 22, 2026.">
+<meta name="twitter:image" content="https://leadershippressurelab.com/images/what-pressure-reveals-share.jpg">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Site styles -->
+<link rel="stylesheet" href="/css/style.css">
+
+<!-- Book schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": "What Pressure Reveals",
+  "author": { "@type": "Person", "name": "Joseph Clementi", "alternateName": "Coach Joe" },
+  "publisher": { "@type": "Organization", "name": "Leadership Pressure Lab" },
+  "isbn": "9798998215704",
+  "bookFormat": "https://schema.org/Paperback",
+  "inLanguage": "en",
+  "datePublished": "2026-10-22",
+  "image": "https://leadershippressurelab.com/images/what-pressure-reveals-cover.jpg",
+  "url": "https://leadershippressurelab.com/preorder",
+  "description": "An operating system that turns pressure into performance, retention, and a culture that holds. Written for automotive fixed operations leaders.",
+  "offers": {
+    "@type": "Offer",
+    "price": "19.95",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/PreOrder",
+    "url": "https://www.barnesandnoble.com/w/what-pressure-reveals-joseph-clementi/1151472540?ean=9798998215704"
+  }
+}
+</script>
 
 <style>
-  :root {
-    --ink:   #0D1F3C;   /* deep navy */
-    --paper: #F7F3EA;   /* warm off white */
-    --gold:  #C8902A;
-    --gold-dark: #AF7B20;
-    --muted: #5A6372;
-    --rule:  #DFD9CE;
-  }
+/* ------------------------------------------------------------------
+   Pre-order page styles.
+   Every class is prefixed wpr- and every rule is scoped under
+   .wpr-page so nothing here can collide with style.css.
+   ------------------------------------------------------------------ */
+.wpr-page {
+  --wpr-ink:   #0D1F3C;
+  --wpr-paper: #F7F3EA;
+  --wpr-gold:  #C8902A;
+  --wpr-gold-d:#AF7B20;
+  --wpr-muted: #5A6372;
+  --wpr-rule:  #DFD9CE;
 
-  * { box-sizing: border-box; }
+  background: var(--wpr-paper);
+  color: var(--wpr-ink);
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.wpr-page * { box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+.wpr-page h1,
+.wpr-page h2 {
+  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  line-height: 1.14;
+  margin: 0;
+}
 
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font: 1rem/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+.wpr-wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.wpr-sec  { padding: 76px 0; }
 
-  h1, h2, h3, .serif {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-weight: 700;
-    line-height: 1.15;
-    margin: 0;
-  }
+/* ---------- Hero ---------- */
+.wpr-hero { background: var(--wpr-ink); color: var(--wpr-paper); padding: 86px 0; }
+.wpr-hero__grid {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.wpr-hero__cover {
+  width: 100%; height: auto; display: block;
+  border-radius: 3px;
+  box-shadow: 0 22px 46px rgba(0,0,0,0.55);
+}
+.wpr-hero__date {
+  color: var(--wpr-gold);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+}
+.wpr-hero__title {
+  font-size: clamp(2.2rem, 5vw, 3.3rem);
+  margin-bottom: 18px;
+  color: var(--wpr-paper);
+}
+.wpr-hero__spine {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.3rem;
+  line-height: 1.45;
+  max-width: 28ch;
+  margin: 0 0 20px;
+  color: var(--wpr-gold);
+}
+.wpr-hero__lede { max-width: 52ch; color: rgba(247,243,234,0.86); margin: 0 0 32px; }
+.wpr-hero__fine { margin: 22px 0 0; font-size: 0.86rem; color: rgba(247,243,234,0.6); }
 
-  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+/* ---------- Buttons ---------- */
+.wpr-btns { display: flex; flex-wrap: wrap; gap: 14px; }
+.wpr-btn {
+  display: inline-block;
+  padding: 16px 32px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.wpr-btn--gold { background: var(--wpr-gold); color: var(--wpr-ink); border-color: var(--wpr-gold); }
+.wpr-btn--gold:hover, .wpr-btn--gold:focus-visible { background: var(--wpr-gold-d); border-color: var(--wpr-gold-d); }
+.wpr-btn--ghost { background: transparent; color: var(--wpr-paper); border-color: rgba(247,243,234,0.45); }
+.wpr-btn--ghost:hover, .wpr-btn--ghost:focus-visible { background: var(--wpr-paper); color: var(--wpr-ink); border-color: var(--wpr-paper); }
+.wpr-btn--dark { background: var(--wpr-ink); color: var(--wpr-paper); border-color: var(--wpr-ink); }
+.wpr-btn--dark:hover, .wpr-btn--dark:focus-visible { background: var(--wpr-gold); color: var(--wpr-ink); border-color: var(--wpr-gold); }
+.wpr-btn:focus-visible { outline: 3px solid var(--wpr-gold); outline-offset: 3px; }
+.wpr-btn--dark:focus-visible { outline-color: var(--wpr-ink); }
 
-  /* ---------- Hero ---------- */
-  .hero { background: var(--ink); color: var(--paper); padding: 84px 0; }
-  .hero__grid {
-    display: grid;
-    grid-template-columns: 310px 1fr;
-    gap: 60px;
-    align-items: center;
-  }
-  .hero__cover {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 2px;
-    box-shadow: 0 20px 44px rgba(0,0,0,0.5);
-  }
-  .hero__date {
-    color: var(--gold);
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
-    font-weight: 600;
-    margin: 0 0 16px;
-  }
-  .hero h1 { font-size: clamp(2.1rem, 5vw, 3.1rem); margin-bottom: 18px; }
-  .hero__spine {
-    font-family: Georgia, serif;
-    font-size: 1.22rem;
-    line-height: 1.5;
-    max-width: 30ch;
-    margin: 0 0 18px;
-    color: var(--gold);
-  }
-  .hero__lede { max-width: 54ch; opacity: 0.86; margin: 0 0 30px; }
+/* ---------- Two column ---------- */
+.wpr-h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: 26px; color: var(--wpr-ink); }
+.wpr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; }
+.wpr-cols p { max-width: 46ch; color: var(--wpr-muted); }
 
-  /* ---------- Buttons ---------- */
-  .btns { display: flex; flex-wrap: wrap; gap: 14px; }
-  .btn {
-    display: inline-block;
-    padding: 15px 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 3px;
-    border: 2px solid transparent;
-    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .btn--gold { background: var(--gold); color: var(--ink); border-color: var(--gold); }
-  .btn--gold:hover, .btn--gold:focus-visible { background: var(--gold-dark); border-color: var(--gold-dark); }
-  .btn--outline { background: transparent; color: var(--paper); border-color: rgba(250,248,244,0.45); }
-  .btn--outline:hover, .btn--outline:focus-visible { background: var(--paper); color: var(--ink); border-color: var(--paper); }
-  .btn--onlight { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .btn--onlight:hover, .btn--onlight:focus-visible { background: var(--gold); color: var(--ink); border-color: var(--gold); }
-  .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-  .btn--onlight:focus-visible { outline-color: var(--ink); }
+.wpr-list { list-style: none; padding: 0; margin: 0; }
+.wpr-list li { padding: 17px 0; border-top: 1px solid var(--wpr-rule); max-width: 52ch; }
+.wpr-list li:last-child { border-bottom: 1px solid var(--wpr-rule); }
+.wpr-list strong { display: block; margin-bottom: 4px; color: var(--wpr-ink); }
+.wpr-list span { color: var(--wpr-muted); }
 
-  .hero__fineprint { margin: 22px 0 0; font-size: 0.88rem; opacity: 0.6; }
+/* ---------- Endorsements ---------- */
+.wpr-praise { background: #ffffff; border-top: 1px solid var(--wpr-rule); border-bottom: 1px solid var(--wpr-rule); }
+.wpr-quote { margin: 0 0 34px; padding-left: 24px; border-left: 3px solid var(--wpr-gold); max-width: 62ch; }
+.wpr-quote p { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.16rem; line-height: 1.55; margin: 0 0 10px; color: var(--wpr-ink); }
+.wpr-quote cite { font-style: normal; font-size: 0.9rem; color: var(--wpr-muted); }
 
-  /* ---------- Sections ---------- */
-  section { padding: 72px 0; }
-  .section-title { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 28px; }
+/* ---------- Author ---------- */
+.wpr-author { display: grid; grid-template-columns: 190px 1fr; gap: 40px; align-items: start; }
+.wpr-author img { width: 100%; border-radius: 4px; display: block; }
+.wpr-author p { color: var(--wpr-muted); max-width: 56ch; }
 
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
-  .cols p { max-width: 46ch; color: var(--muted); }
+/* ---------- Closing ---------- */
+.wpr-close { text-align: center; }
+.wpr-close p { color: var(--wpr-muted); max-width: 46ch; margin: 0 auto 30px; }
+.wpr-close .wpr-btns { justify-content: center; }
 
-  ul.plain { list-style: none; padding: 0; margin: 0; }
-  ul.plain li {
-    padding: 16px 0;
-    border-top: 1px solid var(--rule);
-    max-width: 52ch;
-  }
-  ul.plain li:last-child { border-bottom: 1px solid var(--rule); }
-  ul.plain strong { display: block; margin-bottom: 4px; }
-  ul.plain span { color: var(--muted); }
+/* ---------- Mobile ---------- */
+@media (max-width: 820px) {
+  .wpr-hero { padding: 54px 0; }
+  .wpr-sec  { padding: 54px 0; }
+  .wpr-hero__grid, .wpr-cols, .wpr-author { grid-template-columns: 1fr; gap: 34px; }
+  .wpr-hero__cover { max-width: 215px; margin: 0 auto; }
+  .wpr-author img { max-width: 165px; }
+  .wpr-btns { flex-direction: column; }
+  .wpr-btn { text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wpr-page * { transition: none !important; }
+}
 
-  /* ---------- Endorsements ---------- */
-  .praise { background: #fff; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
-  blockquote {
-    margin: 0 0 36px;
-    padding-left: 22px;
-    border-left: 3px solid var(--gold);
-    max-width: 60ch;
-  }
-  blockquote p { font-family: Georgia, serif; font-size: 1.14rem; line-height: 1.6; margin: 0 0 10px; }
-  blockquote cite { font-style: normal; font-size: 0.92rem; color: var(--muted); }
-
-  /* ---------- Closing CTA ---------- */
-  .close { text-align: center; }
-  .close h2 { margin-bottom: 14px; }
-  .close p { color: var(--muted); max-width: 46ch; margin: 0 auto 28px; }
-  .close .btns { justify-content: center; }
-
-  /* ---------- Author ---------- */
-  .author { display: grid; grid-template-columns: 180px 1fr; gap: 36px; align-items: start; }
-  .author img { width: 100%; border-radius: 3px; display: block; }
-  .author p { color: var(--muted); max-width: 56ch; }
-
-  /* ---------- Mobile ---------- */
-  @media (max-width: 760px) {
-    .hero { padding: 52px 0; }
-    section { padding: 52px 0; }
-    .hero__grid, .cols, .author { grid-template-columns: 1fr; gap: 32px; }
-    .hero__cover { max-width: 220px; margin: 0 auto; }
-    .author img { max-width: 160px; }
-    .btns { flex-direction: column; }
-    .btn { text-align: center; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { transition: none !important; }
-  }
+/* ---------- Force visible ----------
+   style.css fades elements in and main.js reveals them. That reveal does not
+   reach this page, so the hero rendered at zero opacity. This pins it on.
+   Transform is only neutralized on wpr- elements so the mobile menu still
+   slides correctly. ---------------------------------------------------- */
+.nav, .nav__inner, .nav__links, .nav__link, .nav__logo { opacity: 1 !important; }
+.wpr-page, .wpr-page * { opacity: 1 !important; visibility: visible !important; animation: none !important; }
+.wpr-page [class*="wpr-"] { transform: none !important; }
 </style>
 </head>
-<body>
 
-<!-- ===================================================================
-     PASTE YOUR SITE HEADER AND NAV HERE
-     Copy it from the top of your existing index.html so this page
-     matches the rest of the site.
-     =================================================================== -->
+<body id="top">
+<a class="skip-link visually-hidden" href="#main">Skip to main content</a>
+
+<nav class="nav"><div class="nav__inner">
+  <a class="nav__logo" href="/"><div class="nav__logo-mark">LPL</div><div class="nav__logo-text">Leadership Pressure Lab&trade;<small>Automotive Leadership Development</small></div></a>
+  <ul class="nav__links">
+    <li><a class="nav__link" href="preorder/">The Book</a></li>
+    <li><a class="nav__link" href="about.html">About</a></li>
+    <li><a class="nav__link" href="system.html">The System</a></li>
+    <li><a class="nav__link" href="products.html">Products</a></li>
+    <li class="nav__has-drop">
+      <a class="nav__link nav__drop-trigger" href="#" aria-haspopup="true">Free Tools &#9662;</a>
+      <div class="nav__dropdown" role="menu">
+        <a class="nav__drop-item" href="free-tool.html" role="menuitem">&nbsp;The Gauge</a>
+        <a class="nav__drop-item" href="archetype-assessment.html" role="menuitem">&nbsp;Archetype Assessment</a>
+        <a class="nav__drop-item" href="whitepaper.html" role="menuitem">&nbsp;White Paper</a>
+        <a class="nav__drop-item" href="torque.html" role="menuitem">&nbsp;Torque Drive OS&trade;</a>
+        <a class="nav__drop-item" href="media.html" role="menuitem">&nbsp;Media &amp; Training</a>
+        <a class="nav__drop-item" href="monday-brief.html" role="menuitem">&nbsp;Monday Brief</a>
+      </div>
+    </li>
+    <li><a class="nav__link nav__cta" href="strategy-call.html">Book a Strategy Call</a></li>
+  </ul>
+  <button class="nav__hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div></nav>
+
+<div class="nav__mobile">
+  <a class="nav__link" href="preorder/">The Book</a>
+  <a class="nav__link" href="about.html">About</a>
+  <a class="nav__link" href="system.html">The PRESSURE System&trade;</a>
+  <a class="nav__link" href="products.html">Products</a>
+  <a class="nav__link" href="strategy-call.html">Book Your Free Diagnostic</a>
+  <div style="border-top:1px solid rgba(255,255,255,.1);margin:.5rem 0;padding-top:.5rem">
+    <div style="font-family:var(--font-m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:.5rem 1rem .25rem">Free Tools</div>
+    <a class="nav__link" href="free-tool.html">&nbsp;The Gauge</a>
+    <a class="nav__link" href="archetype-assessment.html">&nbsp;Archetype Assessment</a>
+    <a class="nav__link" href="whitepaper.html">&nbsp;White Paper</a>
+    <a class="nav__link" href="torque.html">&nbsp;Torque Drive OS&trade;</a>
+    <a class="nav__link" href="media.html">&nbsp;Media &amp; Training</a>
+    <a class="nav__link" href="monday-brief.html">&nbsp;Monday Brief</a>
+  </div>
+  <a class="nav__link nav__cta" href="strategy-call.html">Book Your Strategy Call &#8594;</a>
+</div>
 
 
-<header class="hero">
-  <div class="wrap hero__grid">
+<main id="main" class="wpr-page">
 
-    <img class="hero__cover"
-         src="/images/what-pressure-reveals-cover.jpg"
-         alt="Cover of What Pressure Reveals by Joseph Clementi">
+  <section class="wpr-hero">
+    <div class="wpr-wrap wpr-hero__grid">
 
-    <div>
-      <p class="hero__date">Releases October 22, 2026</p>
+      <img class="wpr-hero__cover"
+           src="/images/what-pressure-reveals-cover.jpg"
+           alt="Cover of What Pressure Reveals by Joseph Clementi">
 
-      <h1>What Pressure Reveals</h1>
+      <div>
+        <p class="wpr-hero__date">Releases October 22, 2026</p>
 
-      <p class="hero__spine">Pressure exposes the leader you have already built.</p>
+        <h1 class="wpr-hero__title">What Pressure Reveals</h1>
 
-      <p class="hero__lede">
-        Every service drive runs on pressure. Month-end. Turnover. The number on the
-        board. Most leaders manage the number, and wonder why it never holds.
-        This book hands you the system underneath it.
+        <p class="wpr-hero__spine">Pressure exposes the leader you have already built.</p>
+
+        <p class="wpr-hero__lede">
+          Every service drive runs on pressure. Month-end. Turnover. The number on the
+          board. Most leaders manage the number, and wonder why it never holds.
+          This book hands you the system underneath it.
+        </p>
+
+        <div class="wpr-btns">
+          <a class="wpr-btn wpr-btn--gold"
+             href="https://a.co/d/044Atnr6"
+             target="_blank" rel="noopener">Pre-order on Amazon</a>
+
+          <a class="wpr-btn wpr-btn--ghost"
+             href="https://www.barnesandnoble.com/w/what-pressure-reveals-joseph-clementi/1151472540?ean=9798998215704"
+             target="_blank" rel="noopener">Pre-order at Barnes &amp; Noble</a>
+        </div>
+
+        <p class="wpr-hero__fine">Paperback, $19.95. Your card is charged on release day, not today.</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="wpr-sec">
+    <div class="wpr-wrap wpr-cols">
+      <div>
+        <h2 class="wpr-h2">Who this is for</h2>
+        <p>
+          Service directors. Fixed operations managers. Shop foremen stepping into
+          their first leadership seat. Anyone responsible for a number they cannot
+          personally produce.
+        </p>
+        <p>
+          If you have ever hit the number one month and missed it the next with the
+          same people and the same process, this book is about the gap in between.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="wpr-h2">What is inside</h2>
+        <ul class="wpr-list">
+          <li>
+            <strong>The TORQUE Method</strong>
+            <span>A repeatable system for turning intent into behavior that holds under load.</span>
+          </li>
+          <li>
+            <strong>The Manager Archetypes</strong>
+            <span>Four default patterns leaders fall back on when pressure arrives. Find yours.</span>
+          </li>
+          <li>
+            <strong>The Field Deck</strong>
+            <span>Ten cards you can run with your team on a Tuesday morning. No prep required.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="wpr-sec wpr-praise">
+    <div class="wpr-wrap">
+      <h2 class="wpr-h2">What early readers are saying</h2>
+
+      <blockquote class="wpr-quote">
+        <p>This isn't a book of ideas to admire from a distance. It's something you can actually use.</p>
+        <cite>Mark Cousino, SVP and Chief Talent Officer, Kyndryl</cite>
+      </blockquote>
+
+      <blockquote class="wpr-quote">
+        <p>It challenges leaders to look closely at how they show up when the pressure is highest. That is usually when leadership matters most.</p>
+        <cite>Chad Blake, President and COO, 20+ year automotive leader</cite>
+      </blockquote>
+
+      <blockquote class="wpr-quote">
+        <p>It deserves a place on the desk of every dealer principal, general manager, and fixed operations director.</p>
+        <cite>Shon Kingrey, Fixed Operations Executive</cite>
+      </blockquote>
+    </div>
+  </section>
+
+
+  <section class="wpr-sec">
+    <div class="wpr-wrap wpr-author">
+      <img src="/images/joseph-clementi.jpg" alt="Joseph Clementi">
+      <div>
+        <h2 class="wpr-h2">About the author</h2>
+        <p>
+          Joseph Clementi has spent nearly thirty years in automotive retail leadership.
+          He writes and coaches as Coach Joe and founded The Leadership Pressure Lab,
+          where he works with fixed operations leaders on the behaviors that produce
+          results instead of the results themselves.
+        </p>
+        <p>
+          He is also the author of Built by Repetition. He lives in the Greater Sacramento area.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="wpr-sec wpr-close">
+    <div class="wpr-wrap">
+      <h2 class="wpr-h2">Pre-order now. Read it October 22.</h2>
+      <p>
+        Pre-orders tell retailers how many copies to stock. Yours moves the book further
+        than you think.
       </p>
-
-      <div class="btns">
-        <a class="btn btn--gold"
+      <div class="wpr-btns">
+        <a class="wpr-btn wpr-btn--dark"
            href="https://a.co/d/044Atnr6"
            target="_blank" rel="noopener">Pre-order on Amazon</a>
 
-        <a class="btn btn--outline"
+        <a class="wpr-btn wpr-btn--dark"
            href="https://www.barnesandnoble.com/w/what-pressure-reveals-joseph-clementi/1151472540?ean=9798998215704"
            target="_blank" rel="noopener">Pre-order at Barnes &amp; Noble</a>
       </div>
-
-      <p class="hero__fineprint">Paperback, $19.95. Your card is charged on release day, not today.</p>
     </div>
+  </section>
 
-  </div>
-</header>
+</main>
 
 
-<section>
-  <div class="wrap cols">
-    <div>
-      <h2 class="section-title">Who this is for</h2>
-      <p>
-        Service directors. Fixed operations managers. Shop foremen stepping into
-        their first leadership seat. Anyone responsible for a number they cannot
-        personally produce.
-      </p>
-      <p>
-        If you have ever hit the number one month and missed it the next with the
-        same people and the same process, this book is about the gap in between.
-      </p>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="nav__logo" href="/" style="pointer-events:none">
+          <div class="nav__logo-mark" style="background:var(--gold);color:var(--navy);width:36px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:13px">LPL</div>
+          <div class="nav__logo-text">Leadership Pressure Lab™<small>Automotive Leadership Development</small></div>
+        </a>
+        <p>The only behavior-based leadership system built for automotive retail. Transforming managers into deliberate coaches, one store at a time.</p>
+        <p style="margin-top:1rem;font-size:.78rem;color:rgba(255,255,255,.3)">© 2026 The Leadership Pressure Lab™<br>All content, frameworks, and methodologies including The P.R.E.S.S.U.R.E. System™, The Pressure Test™, Responsible Ownership™, and The Torque Drive OS™ are the exclusive intellectual property of The Leadership Pressure Lab™. All rights reserved.</p>
+      </div>
+      <div>
+        <div class="footer__heading">Navigate</div>
+        <nav class="footer__links" aria-label="Footer navigation">
+          <a href="/">Home</a>
+          <a href="preorder/">The Book</a>
+          <a href="about.html">About</a>
+          <a href="archetype-assessment.html">Archetype Assessment</a>
+          <a href="system.html">The PRESSURE System™</a>
+          <a href="products.html">Products</a>
+          <a href="free-tool.html">Free Leadership Tracker</a>
+        </nav>
+      </div>
+      <div>
+        <div class="footer__heading">Resources</div>
+        <nav class="footer__links" aria-label="Resources navigation">
+          <a href="media.html">🎬 Media &amp; Training</a>
+          <a href="monday-brief.html">The Monday Brief</a>
+          <a href="pressure-test.html">The Pressure Test™</a>
+          <a href="strategy-call.html">Book a Strategy Call</a>
+        </nav>
+      </div>
+      <div>
+        <div class="footer__heading">Connect</div>
+        <nav class="footer__links" aria-label="Connect navigation">
+          <a href="https://linkedin.com/in/joseph-clementi-92178714" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="mailto:joe@leadershippressurelab.com">Contact</a>
+          <a href="strategy-call.html">Strategy Call</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </nav>
+        <div style="margin-top:1.5rem">
+          <div class="footer__heading">Subscribe</div>
+          <form action="https://formspree.io/f/YOUR-FORM-ID" method="POST" style="display:flex;flex-direction:column;gap:.75rem">
+            <input type="email" name="email" placeholder="your@email.com" class="form-input form-input--dark" required style="font-size:.82rem;padding:.65rem .9rem">
+            <button type="submit" class="btn btn--gold btn--sm" style="justify-content:center">Get Monday Brief</button>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div>
-      <h2 class="section-title">What is inside</h2>
-      <ul class="plain">
-        <li>
-          <strong>The TORQUE Method</strong>
-          <span>A repeatable system for turning intent into behavior that holds under load.</span>
-        </li>
-        <li>
-          <strong>The Manager Archetypes</strong>
-          <span>Four default patterns leaders fall back on when pressure arrives. Find yours.</span>
-        </li>
-        <li>
-          <strong>The Field Deck</strong>
-          <span>Ten cards you can run with your team on a Tuesday morning. No prep required.</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-
-<section class="praise">
-  <div class="wrap">
-    <h2 class="section-title">What early readers are saying</h2>
-
-    <blockquote>
-      <p>This isn't a book of ideas to admire from a distance. It's something you can actually use.</p>
-      <cite>Mark Cousino, SVP and Chief Talent Officer, Kyndryl</cite>
-    </blockquote>
-
-    <blockquote>
-      <p>It challenges leaders to look closely at how they show up when the pressure is highest. That is usually when leadership matters most.</p>
-      <cite>Chad Blake, President and COO, 20+ year automotive leader</cite>
-    </blockquote>
-
-    <blockquote>
-      <p>It deserves a place on the desk of every dealer principal, general manager, and fixed operations director.</p>
-      <cite>Shon Kingrey, Fixed Operations Executive</cite>
-    </blockquote>
-  </div>
-</section>
-
-
-<section>
-  <div class="wrap author">
-    <img src="/images/joseph-clementi.jpg" alt="Joseph Clementi">
-    <div>
-      <h2 class="section-title">About the author</h2>
-      <p>
-        Joseph Clementi has spent nearly thirty years in automotive retail leadership.
-        He writes and coaches as Coach Joe and founded The Leadership Pressure Lab,
-        where he works with fixed operations leaders on the behaviors that produce
-        results instead of the results themselves.
-      </p>
-      <p>
-        He lives in the Greater Sacramento area.
-      </p>
+    <div class="footer__bottom">
+      <span>© 2026 <span>The Leadership Pressure Lab™</span> · All Rights Reserved</span>
+      <div class="footer__legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="sitemap.xml">Sitemap</a>
+      </div>
     </div>
   </div>
-</section>
+</footer>
 
+<a href="#top" class="back-top" aria-label="Back to top">↑</a>
 
-<section class="close">
-  <div class="wrap">
-    <h2 class="section-title">Pre-order now. Read it October 22.</h2>
-    <p>
-      Pre-orders tell retailers how many copies to stock. Yours moves the book further
-      than you think.
-    </p>
-    <div class="btns">
-      <a class="btn btn--onlight"
-         href="https://a.co/d/044Atnr6"
-         target="_blank" rel="noopener">Pre-order on Amazon</a>
-
-      <a class="btn btn--onlight"
-         href="https://www.barnesandnoble.com/w/what-pressure-reveals-joseph-clementi/1151472540?ean=9798998215704"
-         target="_blank" rel="noopener">Pre-order at Barnes &amp; Noble</a>
-    </div>
+<div class="cookie-banner" role="alert" aria-live="polite">
+  <p>We use cookies to improve your experience. By continuing, you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
+  <div class="cookie-banner__btns">
+    <button class="cookie-btn cookie-btn--decline">Decline</button>
+    <button class="cookie-btn cookie-btn--accept">Accept</button>
   </div>
-</section>
+</div>
 
-
-<!-- ===================================================================
-     PASTE YOUR SITE FOOTER HERE
-     Copy it from the bottom of your existing index.html.
-     =================================================================== -->
-
+<script src="js/main.js"></script>
 </body>
 </html>
