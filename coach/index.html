@@ -805,8 +805,9 @@ function render(){
   Store.selectPartner(S.pid);
   if(portal){const r=Store.role(S.pid);Store.readOnly=!['coach','admin','manager'].includes(r);Store.rosterLock=!['coach','admin'].includes(r)}
   const sel=$('#partnerSel');
-  sel.innerHTML=pids.length?pids.map(id=>`<option value="${esc(id)}"${id===S.pid?' selected':''}>${esc(Store.partners[id].name)}</option>`).join(''):'<option>No partner yet</option>';
-  sel.disabled=!pids.length;
+  const canAdd=Store.mode==='server'?Store.isCoach:!Store.readOnly;
+  sel.innerHTML=(pids.length?pids.map(id=>`<option value="${esc(id)}"${id===S.pid?' selected':''}>${esc(Store.partners[id].name)}</option>`).join(''):'<option value="">No dealership yet</option>')+(canAdd?'<option value="__new">+ Add a dealership or group…</option>':'');
+  sel.disabled=!pids.length&&!canAdd;
   const chip=$('#modeChip');
   if(portal){const r=Store.role(S.pid);chip.textContent=r?{coach:'Coach',admin:'Admin',manager:'Manager',exec:'Executive, view only'}[r]:'Signed in';chip.className='chip'}
   else if(Store.mode==='cloud'){chip.textContent=Store.readOnly?'View only':'Saved to this page';chip.className='chip'}
@@ -1370,6 +1371,7 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('change',e=>{
   const el=e.target;
+  if(el.id==='partnerSel'&&el.value==='__new'){el.value=S.pid||'';el.blur();openPartner();return}
   if(el.id==='partnerSel'){S.pid=el.value;S.team='all';S.store='all';S.personId=null;S.numTeam=null;render();return}
   if(el.dataset.mgr){const v=el.value;el.blur();assignManager(el.dataset.mgr,v,el);return}
   if(el.dataset.edlead!=null){const id=el.dataset.edlead;ED.leads=el.checked?[...new Set([...ED.leads,id])]:ED.leads.filter(x=>x!==id);return}
