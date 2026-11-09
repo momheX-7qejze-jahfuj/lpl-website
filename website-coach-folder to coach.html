@@ -1,0 +1,1491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sales Performance Enhancer</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0E1B2E;--maroon:#7A1E2C;--gold:#C8A24A;--gray:#5B6B7E;--slate:#1C2A3A;
+  --bg:#F3F5F8;--surface:#FFFFFF;--surface2:#EEF1F5;--line:#D9DFE7;--ink:#1C2A3A;--muted:#5B6B7E;--soft:#8592A3;
+  --bar:#0E1B2E;--barInk:#F3F5F8;--accent:#7A1E2C;--focus:#C8A24A;
+  --st-strong:#2E6A4E;--st-strong-bg:#E3EFE8;--st-strong-bar:#A9CDB9;
+  --st-fragile:#7D6318;--st-fragile-bg:#F6EED6;
+  --st-unseen:#4E5C6E;--st-unseen-bg:#ECEFF3;
+  --st-skill:#7A1E2C;--st-skill-bg:#F4E1E5;
+  --st-habit:#93461F;--st-habit-bg:#F7E6DA;
+  --st-system:#0E1B2E;--st-system-bg:#DCE3EE;
+  --st-nodata:#8592A3;--st-nodata-bg:transparent;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A1424;--surface:#12213A;--surface2:#182A46;--line:#26395A;--ink:#E7ECF3;--muted:#A9B5C6;--soft:#7F8DA2;
+  --bar:#060D19;--barInk:#E7ECF3;--accent:#E07A8B;--focus:#D9B65E;
+  --st-strong:#8FD1AE;--st-strong-bg:#173628;--st-strong-bar:#2F5E47;--st-fragile:#E6C771;--st-fragile-bg:#3A3015;
+  --st-unseen:#B9C4D3;--st-unseen-bg:#1D2C44;--st-skill:#F0A3B0;--st-skill-bg:#43202A;
+  --st-habit:#F2B48E;--st-habit-bg:#43291B;--st-system:#C9D6EA;--st-system-bg:#25395C;--st-nodata:#7F8DA2;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1424;--surface:#12213A;--surface2:#182A46;--line:#26395A;--ink:#E7ECF3;--muted:#A9B5C6;--soft:#7F8DA2;
+  --bar:#060D19;--barInk:#E7ECF3;--accent:#E07A8B;--focus:#D9B65E;
+  --st-strong:#8FD1AE;--st-strong-bg:#173628;--st-strong-bar:#2F5E47;--st-fragile:#E6C771;--st-fragile-bg:#3A3015;
+  --st-unseen:#B9C4D3;--st-unseen-bg:#1D2C44;--st-skill:#F0A3B0;--st-skill-bg:#43202A;
+  --st-habit:#F2B48E;--st-habit-bg:#43291B;--st-system:#C9D6EA;--st-system-bg:#25395C;--st-nodata:#7F8DA2;
+  color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bar)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0;letter-spacing:-.01em}
+h1{font-size:30px}h2{font-size:22px}h3{font-size:17px}
+p{margin:0}
+.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:12px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* top bar */
+.bar{background:var(--bar);color:var(--barInk);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.bar .wrap{display:flex;align-items:center;gap:16px;min-height:60px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.brand b{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:.005em}
+.brand span{display:block;font-size:12px;color:#AEB9C8}
+.mark{width:34px;height:34px;flex:none}
+.bar select{background:#1A2B45;border:1px solid #2D4266;color:#F3F5F8;border-radius:8px;padding:7px 30px 7px 10px;max-width:230px}
+.chip{font-size:12px;border-radius:999px;padding:4px 10px;border:1px solid #2D4266;color:#C9D3E0;white-space:nowrap}
+.chip.local{border-color:var(--gold);color:var(--gold)}
+.tabs{background:var(--surface);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+.tab{appearance:none;border:0;background:none;padding:14px 14px 12px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tab[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--ink)}
+
+main{padding:28px 0 64px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.row2 .panel+.panel{margin-top:0}
+@media (max-width:900px){.row2{grid-template-columns:1fr}}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.panel+.panel{margin-top:20px}
+.section{margin-top:32px}
+.lede{font-size:16px;color:var(--muted);max-width:68ch;margin-top:6px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--soft)}
+.btn.primary{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.navy{background:var(--navy);border-color:var(--navy);color:#fff}
+:root[data-theme="dark"] .btn.navy{background:#2A4470;border-color:#2A4470}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.navy{background:#2A4470;border-color:#2A4470}}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.small{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px}
+input[type=text],input[type=password],input[type=number],input[type=date],select.in,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+textarea{min-height:120px;font-size:13px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{appearance:none;border:0;background:none;padding:7px 12px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+
+/* moves */
+.moves{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+@media (max-width:900px){.moves{grid-template-columns:1fr}}
+.move{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;position:relative}
+.move .n{font-family:var(--serif);font-size:34px;line-height:1;color:var(--gold);font-weight:700}
+.move h3{font-size:18px}
+.move .why{color:var(--muted);font-size:14px}
+.move .act{border-top:1px solid var(--line);padding-top:10px;font-size:14px}
+.move .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
+
+/* status pill */
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.s-strong{color:var(--st-strong);background:var(--st-strong-bg)}
+.s-fragile{color:var(--st-fragile);background:var(--st-fragile-bg)}
+.s-unseen{color:var(--st-unseen);background:var(--st-unseen-bg)}
+.s-skill{color:var(--st-skill);background:var(--st-skill-bg)}
+.s-habit{color:var(--st-habit);background:var(--st-habit-bg)}
+.s-system{color:var(--st-system);background:var(--st-system-bg)}
+.s-nodata{color:var(--st-nodata);background:transparent;border:1px dashed var(--line)}
+
+/* chain (signature) */
+.chain{display:flex;align-items:stretch;gap:0;margin-top:16px}
+.link{flex:1 1 0;min-width:0;border-radius:12px;padding:12px 12px 10px;border:2px solid transparent;position:relative;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left;appearance:none;font:inherit}
+.link .ln{font-size:12px;font-weight:600;opacity:.8}
+.link .lt{font-family:var(--serif);font-weight:600;font-size:15px;line-height:1.15}
+.link .ls{font-size:12px;font-weight:700}
+.link.focus{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 30%,transparent)}
+.link.sel{outline:2px solid var(--ink);outline-offset:2px}
+.joint{flex:none;width:14px;align-self:center;height:4px;background:var(--line);border-radius:2px}
+.chain .s-nodata{border:1.5px dashed var(--line)}
+@media (max-width:760px){.chain{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.joint{display:none}}
+@media (max-width:420px){.chain{grid-template-columns:repeat(2,1fr)}}
+.focusnote{margin-top:10px;font-size:13px;color:var(--muted)}
+.focusnote b{color:var(--ink)}
+
+/* heat grid */
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:separate;border-spacing:0;width:100%}
+.heat th{font-size:12px;font-weight:600;color:var(--muted);text-align:left;padding:8px 6px;white-space:nowrap}
+.heat td{padding:3px}
+.heat td.who{padding:6px 10px 6px 0;white-space:nowrap;font-weight:600}
+.heat td.who small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.cell{display:flex;align-items:center;justify-content:center;height:40px;min-width:84px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;width:100%;appearance:none;font-family:inherit}
+.cell.focus{border-color:var(--gold)}
+.cell.s-unseen,.link.s-unseen{background:repeating-linear-gradient(135deg,var(--st-unseen-bg) 0 6px,var(--surface) 6px 12px);border-color:var(--st-unseen)}
+.cell.s-unseen.focus,.link.s-unseen.focus{border-color:var(--gold)}
+.cell.s-strong{background:var(--surface2);color:var(--st-strong);font-weight:600}
+.link.s-strong{background:var(--surface2)}
+.cell.s-nodata{border:1.5px dashed var(--line)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px}
+.legend div{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+
+/* data table */
+.dt th{font-size:12px;color:var(--muted);text-align:left;font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.dt td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+.dt tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.dt td.num,.dt th.num{text-align:right}
+.bad{color:var(--accent);font-weight:600}
+.good{color:var(--st-strong);font-weight:600}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:18px}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .k{font-size:13px;color:var(--muted);font-weight:600}
+.kpi .v{font-family:var(--serif);font-size:28px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12px;margin-top:2px}
+
+/* people */
+.people{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px}
+@media (max-width:860px){.people{grid-template-columns:1fr}}
+.plist{display:flex;flex-direction:column;gap:4px;max-height:70vh;overflow:auto}
+@media (max-width:860px){.plist{max-height:none;flex-direction:row;overflow-x:auto}.plist .grp{display:none}}
+.pbtn{appearance:none;border:1px solid transparent;background:none;text-align:left;padding:9px 10px;border-radius:10px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;align-items:center;white-space:nowrap}
+.pbtn:hover{background:var(--surface2)}
+.pbtn[aria-current="true"]{background:var(--surface);border-color:var(--line)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.dl dt{color:var(--muted)}.dl dd{margin:0}
+.plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media (max-width:900px){.plan{grid-template-columns:1fr}}
+.plan .panel{margin:0}
+.plan h3{font-size:15px;margin-bottom:6px}
+.cue{font-family:var(--serif);font-size:17px;line-height:1.35}
+.brief{white-space:pre-wrap;font-size:14px;line-height:1.6;background:var(--surface2);border-radius:10px;padding:14px;margin-top:12px}
+
+/* charts */
+.chart svg{width:100%;height:auto;display:block}
+.chart text{font-family:var(--sans);font-size:11px;fill:var(--muted)}
+.axis{stroke:var(--line)}
+.bar-u{fill:var(--navy)}
+:root[data-theme="dark"] .bar-u{fill:#5A79A8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bar-u{fill:#5A79A8}}
+.line-a{fill:none;stroke:var(--maroon);stroke-width:2.5}
+:root[data-theme="dark"] .line-a{stroke:#E07A8B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .line-a{stroke:#E07A8B}}
+.loadline{stroke:var(--gold);stroke-width:2;stroke-dasharray:6 4}
+
+/* proof */
+.proof{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.proof .side{border-radius:12px;padding:14px;background:var(--surface2)}
+.proof .side.hi{background:var(--st-strong-bg)}
+.proof .side h3{font-size:15px}
+.proof dl{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin:10px 0 0;font-size:14px}
+.proof dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* entry grid */
+.entry th{font-size:12px;color:var(--muted);font-weight:600;padding:6px 4px;text-align:left;vertical-align:bottom;min-width:84px}
+.entry td{padding:4px}
+.entry td.who{white-space:nowrap;font-weight:600;padding-right:10px}
+.entry input{width:84px;padding:6px 8px;text-align:right}
+.entry input.err{border-color:var(--accent);background:var(--st-skill-bg)}
+
+/* modal */
+dialog{border:0;border-radius:16px;padding:0;max-width:560px;width:calc(100% - 24px);background:var(--surface);color:var(--ink);box-shadow:0 30px 80px rgba(6,13,25,.45)}
+dialog::backdrop{background:rgba(6,13,25,.55)}
+.mhead{padding:18px 20px 0}
+.mbody{padding:14px 20px 20px;display:flex;flex-direction:column;gap:14px;max-height:72vh;overflow:auto}
+.mfoot{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+.choice{display:flex;flex-wrap:wrap;gap:8px}
+.choice button{appearance:none;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.choice button[aria-pressed="true"]{border-color:var(--navy);background:var(--navy);color:#fff}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-size:14px}
+.checks input{margin-top:3px;width:18px;height:18px;accent-color:var(--maroon)}
+.hint{font-size:13px;color:var(--muted);background:var(--surface2);border-radius:10px;padding:10px 12px}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.banner{background:var(--st-fragile-bg);color:var(--st-fragile);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:18px}
+.empty{text-align:center;padding:60px 20px}
+.empty h1{font-size:34px;max-width:20ch;margin:16px auto 0}
+.empty p{max-width:58ch;margin:12px auto 0;color:var(--muted);font-size:16px}
+.empty .row{justify-content:center;margin-top:24px}
+.sysitem{border-left:4px solid var(--navy);padding:4px 0 4px 12px;margin-top:12px}
+:root[data-theme="dark"] .sysitem{border-left-color:#5A79A8}
+.sysitem b{display:block}
+.sp{margin-top:14px}
+hr.rule{border:0;border-top:1px solid var(--line);margin:20px 0}
+.obsrow{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.obsrow:last-child{border-bottom:0}
+/* sign in */
+.authcard{max-width:440px;margin:40px auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px}
+.authcard h1{margin-top:12px}
+.authcard input{width:100%}
+[hidden]{display:none!important}
+/* roster */
+.steps ol{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.steps li{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px}
+.steps li.done{background:var(--surface2)}
+.steps .tick{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--navy);color:#fff;font-family:var(--serif)}
+.steps li.done .tick{background:var(--st-strong);color:#fff}
+.steps .st{flex:1;display:flex;flex-direction:column}
+.linkbtn{appearance:none;border:0;background:none;padding:0;color:var(--accent);font-weight:600;text-decoration:underline;cursor:pointer}
+.store{border-top:2px solid var(--navy);padding-top:18px}
+:root[data-theme="dark"] .store{border-top-color:#5A79A8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .store{border-top-color:#5A79A8}}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column}
+.tcard.dashed{border-style:dashed;background:transparent;align-items:flex-start}
+.mgrslot{margin-top:10px}
+.plist2{display:flex;flex-direction:column;gap:2px}
+.prow{appearance:none;border:0;background:none;text-align:left;width:100%;padding:8px 10px;border-radius:9px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+.prow .nm{display:block;font-weight:600}
+.prow .ed{font-size:12px;color:var(--soft);font-weight:600;opacity:0}
+.prow:hover,.prow:focus-visible{background:var(--surface2)}
+.prow:hover .ed,.prow:focus-visible .ed{opacity:1}
+.prow:disabled{cursor:default}
+.addline{display:flex;gap:8px;margin-top:12px}
+.addline input{flex:1}
+details summary{cursor:pointer}
+@media (hover:none){.prow .ed{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{.bar,.tabs,.noprint,.btn{display:none!important}body{background:#fff}.panel,.kpi{break-inside:avoid}}
+</style>
+</head>
+<body>
+<!-- PORTAL SETTINGS. To turn on usernames and passwords on your website, paste your two Supabase values between the quotes. Leave them empty inside Claude. -->
+<script>window.SPE_PORTAL={supabaseUrl:"https://pshvsqejzdessjymbczl.supabase.co",supabaseAnonKey:"sb_publishable_xFzVq6zk4N_YgpAXhDmSUg_XiR6ZogB"};</script>
+<header class="bar"><div class="wrap">
+  <div class="brand"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="#C8A24A" stroke-width="3"/><rect x="3" y="18.5" width="34" height="3" fill="#C8A24A"/><circle cx="20" cy="20" r="4" fill="#7A1E2C"/></svg>
+    <div><b>Sales Performance Enhancer</b><span>The Leadership Pressure Lab</span></div></div>
+  <select id="partnerSel" aria-label="Partner"></select>
+  <span id="modeChip" class="chip">Connecting</span>
+  <span id="who" class="chip" hidden></span><button id="chgPw" class="chip" data-act="chgPw" hidden style="background:none;cursor:pointer">Change password</button><button id="signOut" class="chip" data-act="signOut" hidden style="background:none;cursor:pointer">Sign out</button>
+</div></header>
+<nav class="tabs" aria-label="Views"><div class="wrap">
+  <button class="tab" data-view="week">This week</button>
+  <button class="tab" data-view="people">People</button>
+  <button class="tab" data-view="numbers">Numbers</button>
+  <button class="tab" data-view="exec">Executive</button>
+  <button class="tab" data-view="roster">Roster</button>
+  <button class="tab" data-view="settings">Settings</button>
+</div></nav>
+<main id="main"></main>
+
+<dialog id="obsDlg" aria-labelledby="obsTitle">
+  <div class="mhead"><h2 id="obsTitle">Log an observation</h2><p class="small muted">Fifteen seconds. Structured fields only, no notes.</p></div>
+  <div class="mbody" id="obsBody"></div>
+  <div class="mfoot"><button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="obsSave" disabled>Save observation</button></div>
+</dialog>
+<dialog id="partnerDlg" aria-labelledby="pdTitle">
+  <div class="mhead"><h2 id="pdTitle">Set up a partner</h2><p class="small muted">A dealer group or a single rooftop. Add stores, teams, and people next.</p></div>
+  <div class="mbody"><div><label class="f" for="pdName">Partner name</label><input type="text" id="pdName" maxlength="60" placeholder="Example: Sierra Motor Group"></div></div>
+  <div class="mfoot"><button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="pdSave">Create partner</button></div>
+</dialog>
+<dialog id="editDlg" aria-labelledby="editTitle">
+  <div class="mhead"><h2 id="editTitle">Edit</h2></div>
+  <div class="mbody" id="editBody"></div>
+  <div class="mfoot"><button class="btn ghost" id="editDelete" style="margin-right:auto" hidden>Delete</button><button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="editSave">Save changes</button></div>
+</dialog>
+<dialog id="pasteDlg" aria-labelledby="pasteTitle" style="max-width:680px">
+  <div class="mhead"><h2 id="pasteTitle">Paste a roster</h2><p class="small muted">Copy rows from Excel or Google Sheets and paste them here. Columns: name, role, store, team. A header row is optional.</p></div>
+  <div class="mbody"><textarea id="pasteIn" spellcheck="false" placeholder="Name&#9;Role&#9;Store&#9;Team&#10;Rich&#9;Dealer principal&#10;Monica&#9;General manager&#9;Valley Toyota&#10;Dana&#9;Sales manager&#9;Valley Toyota&#9;Team A&#10;Marcus&#9;Salesperson&#9;Valley Toyota&#9;Team A"></textarea>
+  <p class="hint">Roles are read for you. “Sales manager” becomes a manager and leads the team on that row. “GM,” “General sales manager,” and “Dealer principal” become executives. Everyone else is a salesperson. Names already on the roster get updated, not duplicated.</p>
+  <div id="pastePrev"></div></div>
+  <div class="mfoot"><button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="pasteGo" disabled>Import roster</button></div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+/* ===== Engine: behavior model, root-cause logic, analytics. Pure functions, no DOM. ===== */
+const BEHAVIORS = [
+  {id:'reach', verb:'reach out first', name:'Reach Out First', short:'Reach',
+   standard:'Start real two-way conversations with people who will be in the market soon: owners, service guests, and past shoppers.',
+   evidence:['Personal message, not a template','Gave them a reason to reply','Set a clear next step'],
+   drill:'Write a 20-second video message to a past customer. Name one personal detail. Ask one real question. Record it twice and keep the better take.',
+   cue:'When I finish a delivery or walk the service drive, I will start one personal conversation.',
+   metrics:['convWk','apptRate'],
+   system:'Check lead flow and protected outreach time. Is there a daily block, a list worth calling, and a message that sounds human?'},
+  {id:'open', verb:'open warm', name:'Warm Open', short:'Open',
+   standard:'Lead with the person, not the car. Learn their name, their day, and why now before any vehicle talk.',
+   evidence:['Used their name, more than once','Asked why now','Earned permission to ask questions'],
+   drill:'Three openings in three minutes with a partner. No vehicle words in the first 60 seconds.',
+   cue:'When a customer steps onto the lot, I will ask about them before I ask about a vehicle.',
+   metrics:['demoRate'],
+   system:'Check the greeting process. Who takes the up, how fast, and what happens in the first minute?'},
+  {id:'discover', verb:'discover the why', name:'Discover the Why', short:'Discover',
+   standard:'Find the reason behind the purchase. Confirm timing and two priorities, then say them back.',
+   evidence:['Confirmed their timing','Named two priorities','Played them back and got a yes'],
+   drill:'Run a three-minute discovery. Close it with: “So what matters most is this and this. Did I get that right?”',
+   cue:'Before I suggest a vehicle, I will say their two priorities back to them.',
+   metrics:['writeRate'],
+   system:'Check the discovery step. Is it taught, practiced, and expected before the walk to the lot?'},
+  {id:'relevant', verb:'make it relevant', name:'Make It Relevant', short:'Relevant',
+   standard:'Tie every feature to something they told you. Lead with the benefit, then check that it landed.',
+   evidence:['Feature tied to a stated priority','Customer touched it or drove it','Checked: “Does that matter to you?”'],
+   drill:'Pick three features. For each one, finish the line: “You told me… so this means… Does that fit?”',
+   cue:'When I show a feature, I will connect it to something they said.',
+   metrics:['gpu'],
+   system:'Check product knowledge and demo routes. Do people know the product well enough to make it personal?'},
+  {id:'ask', verb:'ask with confidence', name:'Ask With Confidence', short:'Ask',
+   standard:'Bring the manager in early as a resource. Confirm fit, surface the last question, and ask for the decision.',
+   evidence:['Manager introduced at the agreed point','Fit confirmed out loud','Asked for the decision'],
+   drill:'Rehearse the manager introduction in 30 seconds, then the decision ask. Calm voice. No apology.',
+   cue:'When fit is confirmed, I will ask for the decision instead of waiting for one.',
+   metrics:['closeRate'],
+   system:'Check the desk process. When does the manager engage, and does the handoff feel like service to the customer?'},
+  {id:'promise', verb:'keep the promise', name:'Keep the Promise', short:'Promise',
+   standard:'Every commitment gets an action, an owner, and a time. Keep it, or call before it slips.',
+   evidence:['Action, owner, and time agreed','Done on time','Called ahead when it slipped'],
+   drill:'Turn three vague follow ups into specific ones: what, who, and when. Say each one out loud.',
+   cue:'When I say I will follow up, I will name the day and the time.',
+   metrics:['showRate','fuRate','csi'],
+   system:'Check the follow-up system: confirmation calls, CRM tasks, and who owns the after-sale call.'}
+];
+const BMAP = Object.fromEntries(BEHAVIORS.map((b,i)=>[b.id,{...b,index:i}]));
+
+const FIELDS = [
+  {k:'conv',label:'Conversations started',hint:'New two-way conversations from outreach'},
+  {k:'appts',label:'Appointments set'},
+  {k:'shown',label:'Appointments shown'},
+  {k:'opps',label:'Opportunities',hint:'All floor ups, including shown appointments'},
+  {k:'demos',label:'Demos'},
+  {k:'props',label:'Proposals',hint:'Write-ups presented'},
+  {k:'sold',label:'Units sold'},
+  {k:'gross',label:'Total gross ($)',money:true},
+  {k:'csi',label:'Survey score',hint:'Average, 0 to 100. Leave blank if none came back',optional:true},
+  {k:'fuDue',label:'Follow-ups due'},
+  {k:'fuOn',label:'Follow-ups on time'}
+];
+
+const METRICS = {
+  convWk:{label:'Conversations per week',fmt:'num',num:'conv',perWeek:true,min:1},
+  apptRate:{label:'Appointment set rate',fmt:'pct',num:'appts',den:'conv',min:10},
+  demoRate:{label:'Demo rate',fmt:'pct',num:'demos',den:'opps',min:8},
+  writeRate:{label:'Write-up rate',fmt:'pct',num:'props',den:'demos',min:6},
+  gpu:{label:'Gross per unit',fmt:'money',num:'gross',den:'sold',min:4},
+  closeRate:{label:'Close rate',fmt:'pct',num:'sold',den:'props',min:6},
+  showRate:{label:'Show rate',fmt:'pct',num:'shown',den:'appts',min:6},
+  fuRate:{label:'Follow-ups on time',fmt:'pct',num:'fuOn',den:'fuDue',min:8},
+  csi:{label:'Survey score',fmt:'score',min:2}
+};
+const DEFAULT_TARGETS = {convWk:20,apptRate:.30,demoRate:.75,writeRate:.70,gpu:2500,closeRate:.45,showRate:.60,fuRate:.90,csi:92};
+
+const STATUS = {
+  strong:{label:'Strong',plain:'On target. Nothing you’ve seen says otherwise.'},
+  fragile:{label:'Fragile',plain:'The number holds, but the behavior is not owned yet.'},
+  unseen:{label:'Unseen',plain:'The number lags and nobody has watched it yet.'},
+  skill:{label:'Skill',plain:'They can’t do it yet. Teach it and drill it.'},
+  habit:{label:'Habit',plain:'They can do it. They don’t do it every time.'},
+  system:{label:'System',plain:'Most of the team misses here. Fix the process, not the person.'},
+  nodata:{label:'No data',plain:'Not enough numbers or observations yet.'}
+};
+const GAP = 0.85;          // below 85% of standard is a gap
+const OWNED = 0.60;        // independent in 60%+ of assessed observations = owned
+const MIN_OBS = 2;         // fewer than this = unseen
+const RATINGS = {ind:'Independent',prompt:'With prompting',not:'Not yet'};
+
+/* ---- roster model ---- */
+const ROLES={sales:'Salesperson',manager:'Sales manager',exec:'Executive'};
+const EXEC_TITLES=['Dealer principal','General manager','General sales manager','Sales director','Owner','Other'];
+function isSales(p){return (p.role||'sales')==='sales'}
+/* Upgrades older rosters (manager stored as text on a team) and derives display names. Pure. */
+function normalizeOrg(o){
+  if(!o)return o;
+  const n={...o,stores:(o.stores||[]).slice(),teams:(o.teams||[]).map(t=>({...t})),people:(o.people||[]).map(p=>({...p,role:p.role||'sales'}))};
+  n.teams.forEach(t=>{
+    if(!('managerId' in t)){
+      const nm=(t.manager||'').trim();
+      if(nm){let m=n.people.find(p=>p.role==='manager'&&p.name.toLowerCase()===nm.toLowerCase());
+        if(!m){m={id:'m_'+t.id,name:nm,role:'manager',active:true};n.people.push(m)}t.managerId=m.id}
+      else t.managerId=null;
+    }
+    const m=t.managerId&&n.people.find(p=>p.id===t.managerId);t.manager=m?m.name:'';
+  });
+  return n;
+}
+
+/* ---- dates ---- */
+function pad(n){return String(n).padStart(2,'0')}
+function isoDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function parseDate(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)}
+function todayISO(){return isoDate(new Date())}
+function mondayOf(s){const d=parseDate(s);const dow=(d.getDay()+6)%7;d.setDate(d.getDate()-dow);return isoDate(d)}
+function addDays(s,n){const d=parseDate(s);d.setDate(d.getDate()+n);return isoDate(d)}
+function weekList(endWk,n){const out=[];for(let i=n-1;i>=0;i--)out.push(addDays(endWk,-7*i));return out}
+function validDate(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&isoDate(parseDate(s))===s}
+
+/* ---- formatting ---- */
+function fmt(v,kind){
+  if(v==null||!isFinite(v))return 'n/a';
+  if(kind==='pct')return Math.round(v*100)+'%';
+  if(kind==='money')return '$'+Math.round(v).toLocaleString('en-US');
+  if(kind==='score')return (Math.round(v*10)/10).toString();
+  if(kind==='dec')return (Math.round(v*10)/10).toFixed(1);
+  return (Math.round(v*10)/10).toString();
+}
+
+/* ---- aggregation ---- */
+function sumWeeks(perfDoc,wks){
+  const s={weeks:0,csiSum:0,csiN:0};FIELDS.forEach(f=>{if(f.k!=='csi')s[f.k]=0});
+  const weeks=(perfDoc&&perfDoc.weeks)||{};
+  for(const w of wks){const r=weeks[w];if(!r)continue;s.weeks++;
+    FIELDS.forEach(f=>{if(f.k==='csi'){if(typeof r.csi==='number'&&isFinite(r.csi)){s.csiSum+=r.csi;s.csiN++}}else s[f.k]+=Number(r[f.k])||0});}
+  return s;
+}
+function metricValue(sum,key){
+  const m=METRICS[key];
+  if(key==='csi')return sum.csiN?{val:sum.csiSum/sum.csiN,base:sum.csiN,enough:sum.csiN>=m.min}:{val:null,base:0,enough:false};
+  if(m.perWeek)return sum.weeks?{val:sum[m.num]/sum.weeks,base:sum.weeks,enough:sum.weeks>=m.min}:{val:null,base:0,enough:false};
+  const den=sum[m.den];return den?{val:sum[m.num]/den,base:den,enough:den>=m.min}:{val:null,base:0,enough:false};
+}
+function obsItems(obsDoc){return obsDoc&&obsDoc.items?Object.entries(obsDoc.items).filter(([,o])=>o&&o.b).map(([id,o])=>({id,...o})):[]}
+function adoptionFor(items,behId,from,to){
+  const rows=items.filter(o=>(!behId||o.b===behId)&&o.d>=from&&o.d<=to&&RATINGS[o.r]);
+  const ind=rows.filter(o=>o.r==='ind').length;
+  return {n:rows.length,ind,prompt:rows.filter(o=>o.r==='prompt').length,not:rows.filter(o=>o.r==='not').length,rate:rows.length?ind/rows.length:null,last:rows.reduce((a,o)=>o.d>a?o.d:a,'')};
+}
+
+/* ---- per-person raw read ---- */
+function readPerson(person,perfDoc,obsDoc,targets,wks){
+  const sum=sumWeeks(perfDoc,wks);
+  const from=wks[0],to=addDays(wks[wks.length-1],6);
+  const items=obsItems(obsDoc);
+  const links=BEHAVIORS.map(b=>{
+    const ms=b.metrics.map(k=>{const v=metricValue(sum,k);const t=targets[k];const en=v.enough&&sum.weeks>=2;return {key:k,label:METRICS[k].label,fmt:METRICS[k].fmt,val:v.val,base:v.base,enough:en,target:t,ratio:(en&&t)?v.val/t:null}});
+    const scored=ms.filter(m=>m.ratio!=null);
+    const worst=scored.length?scored.reduce((a,m)=>m.ratio<a.ratio?m:a):null;
+    return {beh:b.id,metrics:ms,worst,ratio:worst?worst.ratio:null,adoption:adoptionFor(items,b.id,from,to)};
+  });
+  const all=adoptionFor(items,null,from,to);
+  const lastObs=items.reduce((a,o)=>o.d>a?o.d:a,'');
+  return {person,sum,links,adoption:all,lastObs,items};
+}
+
+/* ---- classify, team-aware ---- */
+function classifyTeam(reads){
+  const sys={};
+  BEHAVIORS.forEach((b,i)=>{
+    const scored=reads.map(r=>r.links[i]).filter(l=>l.ratio!=null);
+    const gaps=scored.filter(l=>l.ratio<GAP);
+    const ratios=scored.map(l=>l.ratio).sort((a,c)=>a-c);
+    const median=ratios.length?ratios[Math.floor((ratios.length-1)/2)]:null;
+    sys[b.id]=(scored.length>=3&&gaps.length/scored.length>=0.6)?{count:gaps.length,of:scored.length,median}:null;
+  });
+  reads.forEach(r=>{
+    r.links.forEach(l=>{
+      const a=l.adoption,seen=a.n>=MIN_OBS,owned=seen&&a.rate>=OWNED;
+      if(l.ratio==null){l.status=seen?(owned?'strong':'fragile'):'nodata';}
+      else if(l.ratio<GAP){
+        if(sys[l.beh])l.status='system';
+        else if(!seen)l.status='unseen';
+        else if(!owned)l.status='skill';
+        else l.status='habit';
+      } else l.status=(seen&&!owned)?'fragile':'strong';
+    });
+    const order=['unseen','skill','habit'];
+    let f=r.links.find(l=>order.includes(l.status));
+    if(!f)f=r.links.find(l=>l.status==='fragile');
+    r.focus=f?f.beh:null;
+  });
+  return sys;
+}
+
+/* ---- coaching moves ---- */
+function moveFor(r,today){
+  if(!r.focus)return null;
+  const i=BMAP[r.focus].index,l=r.links[i],b=BMAP[r.focus],name=r.person.name;
+  const w=l.worst,a=l.adoption;
+  const numLine=w?`${w.label} is ${fmt(w.val,w.fmt)} against a standard of ${fmt(w.target,w.fmt)}.`:'';
+  const stale=!r.lastObs||r.lastObs<addDays(today,-14);
+  const sev=l.ratio!=null?Math.min(0.6,Math.max(0.1,1-l.ratio)):0.12;
+  const chainW=1-i*0.05;
+  const sw={unseen:1.15,skill:1,habit:.95,fragile:.5}[l.status]||.4;
+  const score=sev*sw*chainW+(stale?0.12:0);
+  let title,why,action,time;
+  if(l.status==='unseen'){title=`Go watch ${name} ${b.verb}.`;why=`${numLine} Nobody has observed it in this window. You can’t coach what you haven’t seen.`;action='Watch two live customer interactions this week. Log each one. It takes fifteen seconds.';time='20 min this week';}
+  else if(l.status==='skill'){title=`Teach ${name} to ${b.verb}.`;why=`${numLine} Independent in ${a.ind} of ${a.n} observations. The number follows the skill.`;action=`${b.drill} Run it three times together, then watch one live.`;time='15 min, twice';}
+  else if(l.status==='habit'){title=`Hold ${name} to the standard: ${b.verb}, every time.`;why=`${numLine} Yet ${name} was independent in ${a.ind} of ${a.n} observations. It happens when you watch. Make it happen when you don’t.`;action=`Agree on the cue: “${b.cue}” Check it at the end of each shift for five days.`;time='5 min a day';}
+  else if(a.rate!=null&&a.rate<0.34){title=`Teach ${name} to ${b.verb} before the number slips.`;why=`${b.name} results hold for now, but ${name} was independent in ${a.ind} of ${a.n} observations. Talent or luck is carrying it. Neither lasts.`;action=`${b.drill} Then watch one live.`;time='15 min';}
+  else {title=`Lock in what works for ${name}.`;why=`${b.name} results hold, but ${name} was independent in ${a.ind} of ${a.n} observations. Talent is carrying it. Habits last longer.`;action='Watch once. Name the exact moment that worked so it repeats on purpose.';time='10 min';}
+  return {personId:r.person.id,name,beh:b.id,status:l.status,score,title,why,action,time};
+}
+
+/* ---- full analysis for a scope ---- */
+function analyze(org,perf,obs,opts){
+  const targets={...DEFAULT_TARGETS,...(org.targets||{})};
+  const endWk=opts.endWk,n=opts.weeks||4,wks=weekList(endWk,n),today=opts.today||todayISO();
+  const teams=(org.teams||[]).filter(t=>!opts.teamIds||opts.teamIds.includes(t.id));
+  const out={targets,wks,teams:[],reads:[],moves:[],systems:[]};
+  for(const t of teams){
+    const people=(org.people||[]).filter(p=>p.teamId===t.id&&p.active!==false&&isSales(p));
+    const reads=people.map(p=>readPerson(p,perf[p.id],obs[p.id],targets,wks));
+    const sys=classifyTeam(reads);
+    reads.forEach(r=>{r.teamId=t.id;const m=moveFor(r,today);if(m){m.teamId=t.id;out.moves.push(m)}});
+    Object.entries(sys).forEach(([bid,s])=>{if(s){const b=BMAP[bid];const m=METRICS[b.metrics[0]];out.systems.push({teamId:t.id,team:t.name,beh:bid,count:s.count,of:s.of,median:s.median,text:b.system,metricLabel:m.label})}});
+    out.teams.push({team:t,reads,sys});
+    out.reads.push(...reads);
+  }
+  out.moves.sort((a,b)=>b.score-a.score);
+  return out;
+}
+
+/* ---- rollups for executives ---- */
+function rollup(reads,targets){
+  const s={people:reads.length,weeks:0,sold:0,gross:0,csiSum:0,csiN:0,obsN:0,obsInd:0,repWeeks:0};
+  reads.forEach(r=>{s.sold+=r.sum.sold;s.gross+=r.sum.gross;s.csiSum+=r.sum.csiSum;s.csiN+=r.sum.csiN;s.repWeeks+=r.sum.weeks;s.obsN+=r.adoption.n;s.obsInd+=r.adoption.ind});
+  return {people:s.people,unitsPerRepWk:s.repWeeks?s.sold/s.repWeeks:null,gpu:s.sold?s.gross/s.sold:null,csi:s.csiN?s.csiSum/s.csiN:null,adoption:s.obsN?s.obsInd/s.obsN:null,obsN:s.obsN,sold:s.sold,gross:s.gross};
+}
+function cadence(reads,nWeeks){const n=reads.reduce((a,r)=>a+r.adoption.n,0);return reads.length?n/reads.length/nWeeks:null}
+function proof(reads){
+  const eligible=reads.filter(r=>r.adoption.n>=4&&r.sum.weeks>0);
+  const hi=eligible.filter(r=>r.adoption.rate>=0.7),lo=eligible.filter(r=>r.adoption.rate<0.7);
+  const g=arr=>({n:arr.length,...rollup(arr)});
+  return {hi:g(hi),lo:g(lo),eligible:eligible.length};
+}
+function weeklySeries(org,perf,obs,people,endWk,n){
+  const wks=weekList(endWk,n);
+  return wks.map(w=>{let sold=0,reps=0,on=0,ind=0;const to=addDays(w,6);
+    people.forEach(p=>{const r=perf[p.id]&&perf[p.id].weeks&&perf[p.id].weeks[w];if(r){sold+=Number(r.sold)||0;reps++}
+      const from=addDays(w,-21);obsItems(obs[p.id]).forEach(o=>{if(o.d>=from&&o.d<=to&&RATINGS[o.r]){on++;if(o.r==='ind')ind++}})});
+    return {wk:w,units:reps?sold/reps:null,adoption:on?ind/on:null,obs:on};});
+}
+
+/* ---- validation ---- */
+function validateWeek(row){
+  const errs=[];const clean={};
+  for(const f of FIELDS){
+    const v=row[f.k];
+    if(f.optional&&(v===''||v==null)){continue}
+    const n=Number(v);
+    if(v===''||v==null){clean[f.k]=0;continue}
+    if(!isFinite(n)){errs.push(f.label+' must be a number.');continue}
+    if(f.k==='csi'){if(n<0||n>100)errs.push('Survey score runs 0 to 100.');else clean.csi=n;continue}
+    if(f.money){if(Math.abs(n)>5e6)errs.push('Check total gross.');else clean[f.k]=Math.round(n);continue}
+    if(n<0||!Number.isInteger(n)||n>5000)errs.push(f.label+' must be a whole number.');else clean[f.k]=n;
+  }
+  if(clean.shown>clean.appts)errs.push('Appointments shown can’t exceed appointments set.');
+  if(clean.fuOn>clean.fuDue)errs.push('Follow-ups on time can’t exceed follow-ups due.');
+  return {errs,clean};
+}
+
+/* ---- sample dealership: seeded, realistic patterns ---- */
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function makeSample(endWk){
+  const R=rng(20261108),id=p=>p+Math.floor(R()*1e9).toString(36);
+  const pid='p_sample';
+  const stores=[{id:'s_1',name:'Valley Toyota'},{id:'s_2',name:'Valley Honda'}];
+  const teams=[{id:'t_1',name:'Toyota Team A',storeId:'s_1',managerId:'m_1'},{id:'t_2',name:'Toyota Team B',storeId:'s_1',managerId:'m_2'},{id:'t_3',name:'Honda Team',storeId:'s_2',managerId:'m_3'}];
+  const leaders=[{id:'m_1',name:'Dana',role:'manager',active:true},{id:'m_2',name:'Luis',role:'manager',active:true},{id:'m_3',name:'Kim',role:'manager',active:true},
+    {id:'x_1',name:'Rich',role:'exec',title:'Dealer principal',storeId:null,active:true},{id:'x_2',name:'Monica',role:'exec',title:'General manager',storeId:'s_1',active:true},{id:'x_3',name:'Carlos',role:'exec',title:'General manager',storeId:'s_2',active:true}];
+  const roster=[['Marcus','t_1'],['Priya','t_1'],['Jordan','t_1'],['Elena','t_1'],['Tyler','t_1'],
+    ['Andre','t_2'],['Sofia','t_2'],['Ben','t_2'],['Grace','t_2'],
+    ['Nate','t_3'],['Rosa','t_3'],['Devin','t_3'],['Hana','t_3'],['Omar','t_3']];
+  const people=roster.map(([name,teamId],i)=>({id:'r_'+(i+1),name,role:'sales',teamId,active:true,start:addDays(endWk,-400+i*12)}));
+  // skill per behavior (0..1); team B shares a weak promise system
+  const skill={};people.forEach(p=>{skill[p.id]=BEHAVIORS.map(()=>0.5+R()*0.45)});
+  skill.r_1[4]=0.3;    // Marcus: can't ask for the decision yet
+  skill.r_2[2]=0.35;   // Priya: discovery is the weak link
+  skill.r_3[0]=0.25;   // Jordan: reach is weak, and nobody watches
+  skill.r_10[3]=0.9;   // Nate: strong relevance, strong gross
+  skill.r_12[1]=0.3;   // Devin: cold open
+  skill.r_6[3]=0.3;    // Andre: gross leaks
+  const doNotObserve={r_3:true,r_13:true};
+  const habitGap={r_11:4}; // Rosa: independent when watched, closes below standard
+  const weakest=id=>{const k=skill[id];return k.indexOf(Math.min(...k))};
+  const perf={},obs={};
+  const wks=weekList(endWk,12);
+  people.forEach(p=>{
+    const k=skill[p.id];perf[p.id]={partnerId:pid,weeks:{}};obs[p.id]={partnerId:pid,items:{}};
+    wks.forEach((w,wi)=>{
+      const lift=wi/12*0.05;
+      const conv=Math.round(10+k[0]*18+R()*5);
+      const appts=Math.round(conv*(0.12+k[0]*0.28+lift));
+      const showBase=p.teamId==='t_2'?0.40:0.45+k[5]*0.25;
+      const shown=Math.min(appts,Math.round(appts*(showBase+R()*0.06)));
+      const opps=shown+Math.round(4+R()*4);
+      const demos=Math.min(opps,Math.round(opps*(0.45+k[1]*0.4+lift)));
+      const props=Math.min(demos,Math.round(demos*(0.4+k[2]*0.4+lift)));
+      const mk=k.reduce((x,y)=>x+y,0)/k.length;let close=0.12+k[4]*0.3+mk*0.2+lift;if(habitGap[p.id]===4)close=0.27;
+      const sold=Math.min(props,Math.max(0,Math.round(props*close+(R()-0.5)*0.9)));
+      const gpu=1300+k[3]*1500+mk*700+(R()-0.5)*500;
+      const fuDue=Math.round(8+R()*6),fuOn=Math.min(fuDue,Math.round(fuDue*(0.65+k[5]*0.32)));
+      const row={conv,appts,shown,opps,demos,props,sold,gross:Math.round(gpu*sold),fuDue,fuOn};
+      if(sold>0&&R()<0.8)row.csi=Math.round((83+k[5]*9+k[1]*5+(R()-0.5)*4)*10)/10;
+      perf[p.id].weeks[w]=row;
+      const nObs=doNotObserve[p.id]?(wi===2?1:0):Math.floor(R()*(wi>7?4:2));
+      for(let j=0;j<nObs;j++){
+        const bi=R()<0.4?weakest(p.id):Math.floor(R()*6);
+        let pr=k[bi]+lift*2;if(habitGap[p.id]===bi)pr=0.95;
+        const x=R(),r=x<pr-0.12?'ind':x<pr+0.18?'prompt':'not';
+        const ev=[0,1,2].filter(()=>R()<(r==='ind'?0.85:r==='prompt'?0.5:0.2));
+        obs[p.id].items[id('o')]={d:addDays(w,Math.floor(R()*6)),b:BEHAVIORS[bi].id,r,ev,ctx:R()<0.75?'live':'roleplay'};
+      }
+      if(p.id==='r_11'&&wi>7){obs[p.id].items[id('o')]={d:addDays(w,2),b:'ask',r:'ind',ev:[0,1,2],ctx:'live'}}
+    });
+  });
+  const org={id:pid,name:'Valley Auto Group (sample)',sample:true,stores,teams,people:[...people,...leaders],targets:{...DEFAULT_TARGETS},createdAt:todayISO()};
+  return {org,perf,obs};
+}
+
+/* ===== App: storage adapters, state, rendering ===== */
+const $=s=>document.querySelector(s);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=p=>p+'_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const cleanName=s=>String(s||'').replace(/[<>]/g,'').trim().slice(0,40);
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),2600)}
+function fmtWeek(wk){const d=parseDateLocal(wk);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
+function parseDateLocal(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)}
+
+/* ---------- storage: cloud (claude.ai db) or this device ---------- */
+const PORTAL=(window.SPE_PORTAL&&window.SPE_PORTAL.supabaseUrl&&window.SPE_PORTAL.supabaseAnonKey)?window.SPE_PORTAL:null;
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+const dbErr=e=>({code:e&&(e.code==='42501'||/row-level security|permission/i.test(e.message||''))?'invalid_argument':'unavailable',message:e&&e.message});
+const Store={mode:'loading',db:null,user:null,readOnly:false,rosterLock:false,partners:{},perf:{},obs:{},loading:false,stale:false,subs:[],pid:null,roles:{},isCoach:false,auth:null,
+  emit(){scheduleRender()},
+  /* ---- portal mode: Supabase logins + row level security ---- */
+  async initServer(){
+    this.mode='server';this.auth='loading';this.emit();
+    const m=/type=(invite|recovery)/.exec(location.hash||'');this.pendingType=m?m[1]:null;
+    try{await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js')}catch(e){this.auth='error';this.error='The sign-in service didn’t load. Check your connection and refresh.';this.emit();return}
+    this.sb=window.supabase.createClient(PORTAL.supabaseUrl,PORTAL.supabaseAnonKey,{auth:{persistSession:true,detectSessionInUrl:true,autoRefreshToken:true}});
+    this.sb.auth.onAuthStateChange((ev,session)=>{if(ev==='PASSWORD_RECOVERY')this.pendingType='recovery';setTimeout(()=>this.onSession(session),0)});
+    const {data}=await this.sb.auth.getSession();await this.onSession(data.session);
+  },
+  async onSession(session){
+    if(!session){this.session=null;this.auth='signedOut';this.partners={};this.perf={};this.obs={};this.pid=null;S.pid=null;this.emit();return}
+    const same=this.session&&this.session.user.id===session.user.id;this.session=session;this.email=(session.user.email||'').toLowerCase();
+    if(this.pendingType){this.auth='setPassword';this.emit();return}
+    if(same&&this.auth==='in')return;
+    await this.loadServer();
+  },
+  async loadServer(){
+    this.auth='loading';this.emit();const sb=this.sb;
+    const [c,p,m]=await Promise.all([sb.from('coaches').select('email'),sb.from('partners').select('id,name,org'),sb.from('members').select('partner_id,role').eq('email',this.email)]);
+    if(p.error){this.auth='error';this.error='Your account signed in, but the data didn’t load. Refresh to try again.';this.emit();return}
+    this.isCoach=!!(c.data&&c.data.length);this.roles={};(m.data||[]).forEach(r=>{this.roles[r.partner_id]=r.role});
+    const map={};(p.data||[]).forEach(r=>{map[r.id]={...(r.org||{}),id:r.id,name:r.name}});this.partners=map;this.pid=null;
+    const roles=Object.values(this.roles);if(!this.isCoach&&roles.length&&roles.every(r=>r==='exec')&&!location.hash.replace('#',''))S.view='exec';
+    this.auth='in';this.emit();
+  },
+  role(pid){if(this.mode!=='server')return null;return this.isCoach?'coach':(this.roles[pid]||null)},
+  async init(){
+    if(PORTAL)return this.initServer();
+    let db=null,user=null;
+    if(window.claude&&typeof window.claude.use==='function'){
+      try{[db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')])}catch(e){db=null}
+    }
+    if(db){this.mode='cloud';this.db=db;this.user=user;
+      try{const can=user?await user.can('data.write'):null;if(can===false)this.readOnly=true}catch(e){}
+      this.loading=true;const timer=setTimeout(()=>{this.stale=true;this.emit()},10000);
+      db.collection('partners').onSnapshot(snap=>{clearTimeout(timer);this.loading=false;this.stale=false;const m={};snap.docs.forEach(d=>{m[d.id]=d.data()});this.partners=m;this.emit()},
+        e=>{clearTimeout(timer);this.loading=false;this.error=e&&e.code;this.emit()});
+    } else {this.mode='local';this.loadLocal();this.emit()}
+  },
+  loadLocal(){try{const raw=localStorage.getItem('spe.v2');const d=raw?JSON.parse(raw):{};this.partners=d.partners||{};this._perf=d.perf||{};this._obs=d.obs||{};this.localOK=true}catch(e){this.partners={};this._perf={};this._obs={};this.localOK=false}},
+  saveLocal(){try{localStorage.setItem('spe.v2',JSON.stringify({partners:this.partners,perf:this._perf,obs:this._obs}));this.localOK=true}catch(e){this.localOK=false}},
+  selectPartner(pid){
+    if(this.pid===pid)return;this.pid=pid;this.subs.forEach(u=>{try{u()}catch(e){}});this.subs=[];this.perf={};this.obs={};
+    if(!pid){this.emit();return}
+    if(this.mode==='server'){const sb=this.sb;
+      Promise.all([sb.from('perf').select('person_id,partner_id,weeks').eq('partner_id',pid).limit(5000),sb.from('obs').select('person_id,partner_id,items').eq('partner_id',pid).limit(5000)]).then(([x,y])=>{
+        if(this.pid!==pid)return;const m1={},m2={};(x.data||[]).forEach(r=>{m1[r.person_id]={partnerId:r.partner_id,weeks:r.weeks||{}}});(y.data||[]).forEach(r=>{m2[r.person_id]={partnerId:r.partner_id,items:r.items||{}}});this.perf=m1;this.obs=m2;this.emit()});
+    } else if(this.mode==='cloud'){
+      const on=(name,key)=>this.db.collection(name).where('partnerId','==',pid).onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{m[d.id]=d.data()});this[key]=m;this.emit()},e=>{this.error=e&&e.code;this.emit()});
+      this.subs.push(on('perf','perf'),on('obs','obs'));
+    } else {
+      const pick=src=>Object.fromEntries(Object.entries(src).filter(([,v])=>v&&v.partnerId===pid));
+      this.perf=pick(this._perf);this.obs=pick(this._obs);this.emit();
+    }
+  },
+  refreshLocal(){if(this.mode!=='local')return;const pid=this.pid;this.pid=null;this.selectPartner(pid)},
+  async savePartner(org){
+    if(this.mode==='server'){const clean=JSON.parse(JSON.stringify(org));
+      if(this.partners[org.id]){const {data,error}=await this.sb.from('partners').update({name:org.name,org:clean,updated_at:new Date().toISOString()}).eq('id',org.id).select('id');if(error)throw dbErr(error);if(!data||!data.length)throw {code:'invalid_argument'}}
+      else{const {error}=await this.sb.from('partners').insert({id:org.id,name:org.name,org:clean});if(error)throw dbErr(error)}
+      this.partners[org.id]=clean;this.emit();return}
+    if(this.mode==='cloud'){await this.db.doc('partners/'+org.id).set(JSON.parse(JSON.stringify(org)))}
+    else{this.partners[org.id]=JSON.parse(JSON.stringify(org));this.saveLocal();this.emit()}
+  },
+  async saveWeek(pid,personId,wk,row){
+    const r={...row};if(!('csi' in r))r.csi=null;
+    if(this.mode==='server'){const {error}=await this.sb.rpc('set_week',{p_partner:pid,p_person:personId,p_week:wk,p_row:r});if(error)throw dbErr(error);
+      const d=this.perf[personId]||{partnerId:pid,weeks:{}};this.perf[personId]={...d,weeks:{...d.weeks,[wk]:r}};this.emit();return}
+    if(this.mode==='cloud'){const ref=this.db.doc('perf/'+personId);
+      if(this.perf[personId])await ref.update({weeks:{[wk]:r}});else await ref.set({partnerId:pid,weeks:{[wk]:r}});}
+    else{const d=this._perf[personId]||{partnerId:pid,weeks:{}};d.weeks[wk]=r;this._perf[personId]=d;this.saveLocal();this.refreshLocal()}
+  },
+  async saveObs(pid,personId,id,o){
+    if(this.mode==='server'){const {error}=await this.sb.rpc('set_obs',{p_partner:pid,p_person:personId,p_id:id,p_item:o});if(error)throw dbErr(error);
+      const d=this.obs[personId]||{partnerId:pid,items:{}};const items={...d.items};if(o===null)delete items[id];else items[id]=o;this.obs[personId]={...d,items};this.emit();return}
+    if(this.mode==='cloud'){const ref=this.db.doc('obs/'+personId);
+      if(this.obs[personId])await ref.update({items:{[id]:o}});else await ref.set({partnerId:pid,items:{[id]:o}});}
+    else{const d=this._obs[personId]||{partnerId:pid,items:{}};if(o===null)delete d.items[id];else d.items[id]=o;this._obs[personId]=d;this.saveLocal();this.refreshLocal()}
+  },
+  async putBulk(pid,org,perf,obs){
+    if(this.mode==='server'){await this.savePartner(org);
+      const p1=Object.entries(perf).map(([k,v])=>({person_id:k,partner_id:pid,weeks:v.weeks}));const p2=Object.entries(obs).map(([k,v])=>({person_id:k,partner_id:pid,items:v.items}));
+      let r=await this.sb.from('perf').upsert(p1);if(r.error)throw dbErr(r.error);r=await this.sb.from('obs').upsert(p2);if(r.error)throw dbErr(r.error);this.pid=null;this.emit();return}
+    if(this.mode==='cloud'){
+      await this.savePartner(org);
+      for(const [k,v] of Object.entries(perf))await this.db.doc('perf/'+k).set(v);
+      for(const [k,v] of Object.entries(obs))await this.db.doc('obs/'+k).set(v);
+    } else {this.partners[org.id]=org;Object.assign(this._perf,perf);Object.assign(this._obs,obs);this.saveLocal();this.emit()}
+  },
+  async deletePartner(org){
+    const ids=(org.people||[]).map(p=>p.id);
+    if(this.mode==='server'){const {error}=await this.sb.from('partners').delete().eq('id',org.id);if(error)throw dbErr(error);delete this.partners[org.id];this.pid=null;this.emit();return}
+    if(this.mode==='cloud'){
+      for(const id of ids){await this.db.doc('perf/'+id).delete();await this.db.doc('obs/'+id).delete()}
+      await this.db.doc('partners/'+org.id).delete();
+    } else {ids.forEach(id=>{delete this._perf[id];delete this._obs[id]});delete this.partners[org.id];this.saveLocal()}
+    this.pid=null;this.emit();
+  }
+};
+
+/* ---------- UI state ---------- */
+const _dow=(new Date().getDay()+6)%7;
+const S={view:'week',pid:null,team:'all',store:'all',weeks:4,endWk:mondayOf(todayISO()),personId:null,beh:null,numWk:_dow<3?addDays(mondayOf(todayISO()),-7):mondayOf(todayISO()),numTeam:null,drafts:{},briefs:{},busy:false};
+const VIEWS=['week','people','numbers','exec','roster','settings'];
+function readHash(){let h=(location.hash||'').replace('#','');if(h.includes('='))return;if(h==='setup')h='roster';if(VIEWS.includes(h))S.view=h}
+window.addEventListener('hashchange',()=>{readHash();render()});
+
+let renderQueued=false;
+function scheduleRender(){if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;render()})}
+function typing(){const a=document.activeElement;return a&&$('#main').contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)}
+document.addEventListener('focusout',()=>{if(pendingRender)setTimeout(()=>{if(!typing()){pendingRender=false;render()}},0)});
+let pendingRender=false;
+
+let _normSrc=null,_norm=null;
+function org(){const raw=S.pid?Store.partners[S.pid]:null;if(!raw)return null;if(raw!==_normSrc){_normSrc=raw;_norm=normalizeOrg(raw)}return _norm}
+const salesOf=o=>(o.people||[]).filter(p=>p.role==='sales');
+const activeSales=o=>salesOf(o).filter(p=>p.active!==false);
+function teamsInScope(o,forExec){
+  let t=o.teams||[];
+  if(forExec){if(S.store!=='all')t=t.filter(x=>x.storeId===S.store)}
+  else if(S.team!=='all')t=t.filter(x=>x.id===S.team);
+  return t.map(x=>x.id);
+}
+function dataEndWk(){const cur=mondayOf(todayISO());let best='';Object.values(Store.perf).forEach(d=>Object.keys((d&&d.weeks)||{}).forEach(w=>{if(w<=cur&&w>best)best=w}));return best||cur}
+function analysisFor(o,teamIds,weeks,endWk){return analyze(o,Store.perf,Store.obs,{endWk:endWk||dataEndWk(),weeks:weeks||S.weeks,teamIds,today:todayISO()})}
+function pill(st){return `<span class="pill s-${st}">${esc(STATUS[st].label)}</span>`}
+function teamName(o,id){const t=(o.teams||[]).find(x=>x.id===id);return t?t.name:''}
+function storeName(o,id){const s=(o.stores||[]).find(x=>x.id===id);return s?s.name:''}
+
+/* ---------- shell render ---------- */
+function render(){
+  if(typing()){pendingRender=true;return}
+  const portal=Store.mode==='server';
+  $('.tabs').hidden=portal&&Store.auth!=='in';
+  $('#who').hidden=!(portal&&Store.session);$('#signOut').hidden=!(portal&&Store.session);$('#chgPw').hidden=!(portal&&Store.session&&Store.auth==='in');
+  if(portal&&Store.session)$('#who').textContent=Store.email;
+  if(portal&&Store.auth!=='in'){$('#partnerSel').hidden=true;$('#modeChip').hidden=true;$('#main').innerHTML=`<div class="wrap">${renderAuth()}</div>`;return}
+  $('#partnerSel').hidden=false;$('#modeChip').hidden=false;
+  const pids=Object.keys(Store.partners).sort((a,b)=>(Store.partners[a].name||'').localeCompare(Store.partners[b].name||''));
+  if(!S.pid||!Store.partners[S.pid])S.pid=pids[0]||null;
+  Store.selectPartner(S.pid);
+  if(portal){const r=Store.role(S.pid);Store.readOnly=!['coach','admin','manager'].includes(r);Store.rosterLock=!['coach','admin'].includes(r)}
+  const sel=$('#partnerSel');
+  sel.innerHTML=pids.length?pids.map(id=>`<option value="${esc(id)}"${id===S.pid?' selected':''}>${esc(Store.partners[id].name)}</option>`).join(''):'<option>No partner yet</option>';
+  sel.disabled=!pids.length;
+  const chip=$('#modeChip');
+  if(portal){const r=Store.role(S.pid);chip.textContent=r?{coach:'Coach',admin:'Admin',manager:'Manager',exec:'Executive, view only'}[r]:'Signed in';chip.className='chip'}
+  else if(Store.mode==='cloud'){chip.textContent=Store.readOnly?'View only':'Saved to this page';chip.className='chip'}
+  else if(Store.mode==='local'){chip.textContent='This device only';chip.className='chip local'}
+  else {chip.textContent='Connecting';chip.className='chip'}
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-current',b.dataset.view===S.view?'page':'false'));
+  const m=$('#main');
+  if(Store.mode==='loading'||(Store.mode==='cloud'&&Store.loading&&!Store.stale)){m.innerHTML=`<div class="wrap"><div class="empty"><h1>Loading your teams</h1><p>Reaching saved data.</p></div></div>`;return}
+  const o=org();
+  let html='';
+  if(Store.stale&&Store.mode==='cloud')html+=`<div class="banner">Saved data can’t be reached yet. What you see may be out of date.</div>`;
+  if(Store.mode==='local')html+=`<div class="banner">This copy saves on this device only. Open it inside Claude to share it with a team${Store.localOK===false?'. Browser storage is blocked here, so export before you close':''}.</div>`;
+  if(!o){m.innerHTML=`<div class="wrap">${html}${renderWelcome()}</div>`;return}
+  const v={week:renderWeek,people:renderPeople,numbers:renderNumbers,exec:renderExec,roster:renderRoster,settings:renderSettings}[S.view];
+  m.innerHTML=`<div class="wrap">${html}${v(o)}</div>`;
+}
+
+function renderWelcome(){
+  if(Store.mode==='server'&&!Store.isCoach)return `<div class="empty">${markSVG(64)}<h1>You’re signed in.</h1><p>No dealership is linked to ${esc(Store.email)} yet. Ask your coach to add this email to your team’s access list, then refresh.</p></div>`;
+  return `<div class="empty">
+  ${markSVG(64)}
+  <h1>Coach the behavior. The number follows.</h1>
+  <p>Six connection behaviors. One chain. Find the first broken link for every salesperson, learn why it broke, and know exactly where to spend coaching time this week.</p>
+  <div class="row">${Store.readOnly&&Store.mode!=='server'?'<p class="hint">You can open this page, but you don’t have Editor access to its data. Ask the owner to share it with you as an Editor.</p>':`<button class="btn primary" data-act="sample">Load a sample dealership</button><button class="btn" data-act="newPartner">Set up a partner</button>`}</div>
+  <p class="small" style="margin-top:28px">Numbers come from your CRM. No customer names, phone numbers, or notes ever go in here.</p></div>`;
+}
+function markSVG(size){return `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="#C8A24A" stroke-width="3"/><rect x="3" y="18.5" width="34" height="3" fill="#C8A24A"/><circle cx="20" cy="20" r="4" fill="#7A1E2C"/></svg>`}
+
+/* ---------- portal sign-in screens ---------- */
+function renderAuth(){
+  const msg=S.authMsg?`<p class="hint" role="status">${esc(S.authMsg)}</p>`:'';
+  if(Store.auth==='loading')return `<div class="empty"><h1>Signing you in</h1><p>Loading your dealership.</p></div>`;
+  if(Store.auth==='error')return `<div class="authcard"><h1>Something didn’t load.</h1><p class="lede">${esc(Store.error||'')}</p><div class="row sp"><button class="btn primary" data-act="reload">Refresh</button><button class="btn" data-act="signOut">Sign out</button></div></div>`;
+  if(Store.auth==='setPassword')return `<div class="authcard">${markSVG(48)}<h1>Set your password</h1><p class="lede">Signed in as ${esc(Store.email)}. Use at least 10 characters, with an uppercase letter, a lowercase letter, and a number.</p>
+    <div class="sp"><label class="f" for="pw1">New password</label><input type="password" id="pw1" autocomplete="new-password" minlength="10"></div>
+    <div class="sp"><label class="f" for="pw2">Confirm it</label><input type="password" id="pw2" autocomplete="new-password" minlength="10"></div>${msg}
+    <div class="row sp"><button class="btn primary" data-act="setPw">Save password</button>${Store.pendingType==='change'?'<button class="btn ghost" data-act="cancelPw">Cancel</button>':''}</div></div>`;
+  return `<div class="authcard">${markSVG(48)}<h1>Sign in</h1><p class="lede">Your coaching dashboard from The Leadership Pressure Lab.</p>
+    <div class="sp"><label class="f" for="liEmail">Email</label><input type="text" id="liEmail" autocomplete="username" inputmode="email" value="${esc(S.liEmail||'')}"></div>
+    <div class="sp"><label class="f" for="liPw">Password</label><input type="password" id="liPw" autocomplete="current-password"></div>${msg}
+    <div class="row sp"><button class="btn primary" data-act="signIn">Sign in</button><button class="btn ghost" data-act="forgot">Forgot password?</button></div>
+    <p class="small muted sp">Access is by invitation only. If you need a login, ask your coach.</p></div>`;
+}
+async function authAction(a){
+  const sb=Store.sb;S.authMsg='';
+  if(a==='signIn'){const email=($('#liEmail').value||'').trim().toLowerCase(),password=$('#liPw').value||'';S.liEmail=email;
+    if(!email||!password){S.authMsg='Enter your email and password.';return render()}
+    document.activeElement&&document.activeElement.blur();
+    const {error}=await sb.auth.signInWithPassword({email,password});if(error){S.authMsg='That email and password don’t match. Try again, or reset your password.';render()}return}
+  if(a==='forgot'){const email=($('#liEmail').value||'').trim().toLowerCase();S.liEmail=email;if(!email){S.authMsg='Enter your email first, then select Forgot password.';return render()}
+    await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});S.authMsg='If that email has access, a reset link is on its way. Check your inbox.';return render()}
+  if(a==='setPw'){const p1=$('#pw1').value||'',p2=$('#pw2').value||'';
+    if(p1.length<10||!/[a-z]/.test(p1)||!/[A-Z]/.test(p1)||!/[0-9]/.test(p1)){S.authMsg='Use at least 10 characters, with an uppercase letter, a lowercase letter, and a number.';return render()}if(p1!==p2){S.authMsg='The two passwords don’t match.';return render()}
+    document.activeElement&&document.activeElement.blur();
+    const {error}=await sb.auth.updateUser({password:p1});if(error){S.authMsg='That password didn’t save. Try a different one that follows the rules above.';return render()}
+    const wasChange=Store.pendingType==='change';Store.pendingType=null;history.replaceState(null,'',location.pathname);toast('Password saved.');if(wasChange){Store.auth='in';return render()}return Store.loadServer()}
+  if(a==='chgPw'){Store.pendingType='change';Store.auth='setPassword';return render()}
+  if(a==='cancelPw'){Store.pendingType=null;Store.auth='in';return render()}
+  if(a==='signOut'){await sb.auth.signOut();S.view='week';history.replaceState(null,'',location.pathname);return}
+  if(a==='reload'){location.reload()}
+}
+/* ---------- This week (manager home) ---------- */
+function scopeControls(o,opts){
+  const teams=o.teams||[];
+  const tsel=opts.exec?`<select class="in" data-bind="store" aria-label="Store" style="width:auto"><option value="all">All stores</option>${(o.stores||[]).map(s=>`<option value="${esc(s.id)}"${S.store===s.id?' selected':''}>${esc(s.name)}</option>`).join('')}</select>`
+    :`<select class="in" data-bind="team" aria-label="Team" style="width:auto"><option value="all">All teams</option>${teams.map(t=>`<option value="${esc(t.id)}"${S.team===t.id?' selected':''}>${esc(t.name)}</option>`).join('')}</select>`;
+  const seg=`<div class="seg" role="group" aria-label="Window">${[4,8,12].map(n=>`<button data-act="weeks" data-n="${n}" aria-pressed="${S.weeks===n}">${n} weeks</button>`).join('')}</div>`;
+  return `<div class="row noprint">${tsel}${seg}</div>`;
+}
+function renderWeek(o){
+  if(!(o.teams||[]).length||!activeSales(o).length)return setupNudge(o);
+  const A=analysisFor(o,teamsInScope(o));
+  const moves=A.moves.filter(m=>m.status!=='fragile'||A.moves.filter(x=>x.status!=='fragile').length<3).slice(0,3);
+  const wkLabel=fmtWeek(mondayOf(todayISO()));const thru=dataEndWk();
+  let h=`<div class="spread"><div><h1>This week</h1><p class="lede">Week of ${esc(wkLabel)}. Numbers through the week of ${esc(fmtWeek(thru))}, looking back ${S.weeks} weeks. Three coaching moves, ranked by impact. Fix the first broken link, then the next.</p></div>
+  <div class="row noprint">${Store.readOnly?'':`<button class="btn primary" data-act="obs">Log an observation</button><button class="btn" data-act="go" data-view="numbers">Enter numbers</button>`}</div></div>
+  <div class="sp">${scopeControls(o,{})}</div>`;
+  if(!moves.length)h+=`<div class="panel section"><h2>No broken links in this window.</h2><p class="lede">Keep observing. Strong numbers without fresh observations turn into surprises.</p></div>`;
+  else h+=`<div class="moves">${moves.map((m,i)=>`<article class="move"><div class="spread" style="align-items:center"><span class="n">${i+1}</span>${pill(m.status)}</div>
+    <h3>${esc(m.title)}</h3><p class="why">${esc(m.why)}</p><p class="act"><b>Do this:</b> ${esc(m.action)}</p>
+    <div class="meta"><span class="small muted">${esc(m.time)}</span><span class="row" style="gap:6px">${Store.readOnly?'':`<button class="btn small" data-act="obs" data-person="${esc(m.personId)}" data-beh="${esc(m.beh)}">Log it</button>`}<button class="btn small ghost" data-act="person" data-person="${esc(m.personId)}" data-beh="${esc(m.beh)}">Profile</button></span></div></article>`).join('')}</div>`;
+  h+=`<div class="panel section"><h2>The chain, person by person</h2><p class="small muted" style="margin-top:4px">Gold outline marks each person’s first broken link. Select any cell to see why.</p>
+    <div class="scrollx sp">${heatGrid(o,A)}</div>${legend()}</div>
+    <div class="row2 section">${systemsPanel(A)}${cadencePanel(o,A)}</div>`;
+  return h;
+}
+function heatGrid(o,A){
+  const multi=A.teams.length>1;
+  let rows='';
+  for(const t of A.teams){
+    if(multi)rows+=`<tr><td colspan="7" style="padding:14px 0 4px;font-weight:700">${esc(t.team.name)} <span class="small muted" style="font-weight:400">${esc(t.team.manager?'Manager: '+t.team.manager:'')}</span></td></tr>`;
+    if(!t.reads.length)rows+=`<tr><td colspan="7" class="small muted">No active people on this team.</td></tr>`;
+    for(const r of t.reads){
+      rows+=`<tr><td class="who">${esc(r.person.name)}<small>${r.adoption.n} obs, ${r.adoption.rate==null?'n/a':Math.round(r.adoption.rate*100)+'%'} owned</small></td>`+
+      r.links.map(l=>`<td><button class="cell s-${l.status}${r.focus===l.beh?' focus':''}" data-act="person" data-person="${esc(r.person.id)}" data-beh="${l.beh}" aria-label="${esc(r.person.name+', '+BMAP[l.beh].name+': '+STATUS[l.status].label)}">${esc(STATUS[l.status].label)}</button></td>`).join('')+`</tr>`;
+    }
+  }
+  return `<table class="heat"><thead><tr><th></th>${BEHAVIORS.map(b=>`<th title="${esc(b.name)}">${esc(b.short)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+function legend(){return `<div class="legend">${Object.entries(STATUS).map(([k,v])=>`<div><span class="pill s-${k}">${esc(v.label)}</span>${esc(v.plain)}</div>`).join('')}</div>`}
+function systemsPanel(A){
+  const items=A.systems;
+  return `<div class="panel"><h2>On leadership, not the reps</h2><p class="small muted" style="margin-top:4px">When most of a team misses the same link, look up, not down.</p>
+  ${items.length?items.map(s=>`<div class="sysitem"><b>${esc(s.team)}: ${esc(BMAP[s.beh].name)}</b><span class="small">${s.count} of ${s.of} people miss here. ${esc(s.text)}</span></div>`).join(''):`<p class="sp small">No team-wide gaps in this window.</p>`}</div>`;
+}
+function cadencePanel(o,A){
+  const wk0=mondayOf(todayISO()),wkTo=addDays(wk0,6);
+  const rows=A.teams.map(t=>{const goal=t.reads.length*2;let done=0;t.reads.forEach(r=>{done+=r.items.filter(x=>x.d>=wk0&&x.d<=wkTo).length});const pct=goal?Math.min(1,done/goal):0;
+    return `<div style="margin-top:12px"><div class="spread small"><b>${esc(t.team.manager||t.team.name)}</b><span>${done} of ${goal}</span></div><div style="height:8px;background:var(--surface2);border-radius:4px;margin-top:4px;overflow:hidden"><div style="width:${Math.round(pct*100)}%;height:100%;background:${pct>=1?'var(--st-strong)':'var(--gold)'}"></div></div></div>`}).join('');
+  return `<div class="panel"><h2>Coaching cadence</h2><p class="small muted" style="margin-top:4px">Two observations per person, every week. The leader’s number comes first.</p>${rows||'<p class="sp small">Add a team to track cadence.</p>'}</div>`;
+}
+function setupNudge(o){
+  return `<div class="empty"><h1>Build your roster first.</h1><p>The chain needs stores, teams, managers, and salespeople. It takes about five minutes, or one paste from a spreadsheet.</p><div class="row"><button class="btn primary" data-act="go" data-view="roster">Open the roster</button><button class="btn" data-act="pasteRoster">Paste a roster</button></div></div>`;
+}
+
+/* ---------- People ---------- */
+function renderPeople(o){
+  if(!activeSales(o).length)return setupNudge(o);
+  const A=analysisFor(o,(o.teams||[]).map(t=>t.id));
+  if(!S.personId||!A.reads.find(r=>r.person.id===S.personId))S.personId=A.reads[0]&&A.reads[0].person.id;
+  const r=A.reads.find(x=>x.person.id===S.personId);
+  const list=A.teams.filter(t=>t.reads.length).map(t=>`<div class="small muted grp" style="padding:10px 10px 2px;font-weight:700">${esc(t.team.name)}</div>`+t.reads.map(x=>{const f=x.focus?x.links[BMAP[x.focus].index].status:'strong';return `<button class="pbtn" data-act="person" data-person="${esc(x.person.id)}" aria-current="${x.person.id===S.personId}"><span>${esc(x.person.name)}</span>${pill(f)}</button>`}).join('')).join('');
+  if(!r)return `<p>No active people.</p>`;
+  const team=(o.teams||[]).find(t=>t.id===r.teamId)||{};
+  const beh=S.beh&&BMAP[S.beh]?S.beh:(r.focus||'reach');
+  const l=r.links[BMAP[beh].index];const b=BMAP[beh];
+  const mv=moveFor(r,todayISO());
+  const chain=`<div class="chain" role="list">${r.links.map((x,i)=>`${i?'<span class="joint" aria-hidden="true"></span>':''}<button role="listitem" class="link s-${x.status}${r.focus===x.beh?' focus':''}${x.beh===beh?' sel':''}" data-act="beh" data-beh="${x.beh}"><span class="ln">Link ${i+1}</span><span class="lt">${esc(BMAP[x.beh].name)}</span><span class="ls">${esc(STATUS[x.status].label)}</span></button>`).join('')}</div>`;
+  const fb=r.focus?BMAP[r.focus]:null;
+  const evHits=[0,1,2].map(i=>{const rows=l.adoption.n?r.items.filter(o2=>o2.b===beh&&o2.d>=A.wks[0]):[];const hit=rows.filter(o2=>(o2.ev||[]).includes(i)).length;return {t:b.evidence[i],hit,of:rows.length}});
+  const series=weeklySeries(o,Store.perf,Store.obs,[r.person],dataEndWk(),12);
+  let h=`<div class="people"><nav class="plist" aria-label="People">${list}</nav><div>
+  <div class="spread"><div><h1>${esc(r.person.name)}</h1><p class="lede">${esc(team.name||'')}${team.manager?', coached by '+esc(team.manager):''}. ${r.sum.weeks} of ${S.weeks} weeks reported. ${r.adoption.n} observations.</p></div>
+  <div class="row noprint">${scopeControls(o,{}).replace(/<select[\s\S]*?<\/select>/,'')}${Store.readOnly?'':`<button class="btn primary" data-act="obs" data-person="${esc(r.person.id)}" data-beh="${esc(beh)}">Log an observation</button>`}</div></div>
+  ${chain}
+  <p class="focusnote">${fb?`First broken link: <b>${esc(fb.name)}</b>. Fix this one first. Everything after it depends on it.`:`No broken links in this window. Keep watching so it stays that way.`}</p>
+  ${mv?`<div class="plan"><div class="panel"><h3>The cue</h3><p class="cue">“${esc(BMAP[mv.beh].cue)}”</p><p class="small muted sp">An if-then plan. Peter Gollwitzer’s research shows a specific cue makes follow-through far more likely than good intentions.</p></div>
+  <div class="panel"><h3>The three-minute drill</h3><p>${esc(BMAP[mv.beh].drill)}</p></div>
+  <div class="panel"><h3>Your move as the coach</h3><p><b>${esc(mv.title)}</b></p><p class="small sp">${esc(mv.why)}</p><p class="small muted sp">${esc(mv.time)}</p></div></div>`:''}
+  <div class="grid2 section"><div class="panel"><div class="spread"><h2>${esc(b.name)}</h2>${pill(l.status)}</div>
+    <p class="sp">${esc(b.standard)}</p><p class="small muted sp"><b>Root cause:</b> ${esc(STATUS[l.status].plain)}</p>
+    <table class="dt sp"><thead><tr><th>Number this behavior owns</th><th class="num">Actual</th><th class="num">Standard</th></tr></thead><tbody>
+    ${l.metrics.map(m=>`<tr><td>${esc(m.label)}${!m.enough?' <span class="tiny muted">(thin data)</span>':''}</td><td class="num ${m.ratio!=null&&m.ratio<0.85?'bad':''}">${fmt(m.val,m.fmt)}</td><td class="num">${fmt(m.target,m.fmt)}</td></tr>`).join('')}</tbody></table>
+    <h3 class="section" style="margin-top:20px">What you’ve seen</h3>
+    <p class="small sp">${l.adoption.n?`${l.adoption.ind} independent, ${l.adoption.prompt} with prompting, ${l.adoption.not} not yet.`:'No observations of this behavior in the window.'}</p>
+    <table class="dt sp"><tbody>${evHits.map(e=>`<tr><td>${esc(e.t)}</td><td class="num">${e.of?e.hit+' of '+e.of:'n/a'}</td></tr>`).join('')}</tbody></table>
+  </div>
+  <div><div class="panel chart"><h2>Twelve weeks</h2><p class="small muted" style="margin-top:4px">Bars: units sold. Line: share of observations done independently.</p>${comboChart(series,{unitsLabel:'Units'})}</div>
+  ${briefPanel('p:'+r.person.id,'Draft a coaching brief','Builds a root-cause brief from this person’s numbers and observations. Sends codes and numbers only.')}</div></div>
+  <div class="panel section"><h2>Observation history</h2>${obsHistory(r)}</div>
+  </div></div>`;
+  return h;
+}
+function obsHistory(r){
+  const items=r.items.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,15);
+  if(!items.length)return `<p class="sp small">Nothing logged yet. Watch one live interaction and log it in fifteen seconds.</p>`;
+  return `<div class="sp">${items.map(x=>`<div class="obsrow"><span><b>${esc(fmtWeek(x.d))}</b> ${esc(BMAP[x.b]?BMAP[x.b].name:x.b)}, ${esc(RATINGS[x.r]||'')}${x.ctx==='roleplay'?' (role play)':''}<span class="tiny muted"> ${(x.ev||[]).length} of 3 markers</span></span>${Store.readOnly?'':`<button class="btn small ghost" data-act="delObs" data-person="${esc(r.person.id)}" data-id="${esc(x.id)}" aria-label="Delete observation">Remove</button>`}</div>`).join('')}</div>`;
+}
+/* ---------- Numbers (weekly entry) ---------- */
+function renderNumbers(o){
+  if(!activeSales(o).length)return setupNudge(o);
+  const teams=o.teams||[];if(!S.numTeam||!teams.find(t=>t.id===S.numTeam)){const withSales=teams.find(t=>activeSales(o).some(p=>p.teamId===t.id));S.numTeam=(withSales||teams[0]||{}).id}
+  const people=activeSales(o).filter(p=>p.teamId===S.numTeam);
+  const wk=S.numWk;
+  const val=(p,k)=>{const d=S.drafts[wk+'|'+p.id];if(d&&k in d)return d[k];const r=Store.perf[p.id]&&Store.perf[p.id].weeks&&Store.perf[p.id].weeks[wk];return r&&r[k]!=null?r[k]:''};
+  const weeks=weekList(mondayOf(todayISO()),12).reverse();
+  let h=`<div class="spread"><div><h1>Weekly numbers</h1><p class="lede">Pull these from the CRM once a week. Two minutes per team. Counts only, never customer details.</p></div></div>
+  <div class="row sp noprint"><select class="in" data-bind="numTeam" aria-label="Team" style="width:auto">${teams.map(t=>`<option value="${esc(t.id)}"${t.id===S.numTeam?' selected':''}>${esc(t.name)}</option>`).join('')}</select>
+  <select class="in" data-bind="numWk" aria-label="Week" style="width:auto">${weeks.map(w=>`<option value="${w}"${w===wk?' selected':''}>Week of ${esc(fmtWeek(w))}</option>`).join('')}</select></div>
+  <div class="panel section"><div class="scrollx"><table class="entry"><thead><tr><th></th>${FIELDS.map(f=>`<th title="${esc(f.hint||f.label)}">${esc(f.label)}</th>`).join('')}</tr></thead><tbody>
+  ${people.map(p=>`<tr><td class="who">${esc(p.name)}</td>${FIELDS.map(f=>`<td><input type="number" inputmode="${f.money?'decimal':'numeric'}" min="0" step="${f.k==='csi'?'0.1':'1'}" data-draft="${esc(wk+'|'+p.id)}" data-k="${f.k}" value="${esc(val(p,f.k))}" aria-label="${esc(p.name+' '+f.label)}"${Store.readOnly?' disabled':''}></td>`).join('')}</tr>`).join('')||`<tr><td class="small muted">No active people on this team.</td></tr>`}
+  </tbody></table></div>
+  <div class="spread sp"><p class="small muted">Saving again replaces that week. Blank counts save as zero. Leave survey score blank when no surveys came back.</p>${Store.readOnly?'':`<button class="btn primary" data-act="saveNums">Save this week</button>`}</div></div>
+  ${Store.readOnly?'':`<div class="panel section"><h2>Import from a CRM export</h2><p class="lede">Paste a CSV with a header row. Columns: name, week, then any of ${FIELDS.map(f=>f.k).join(', ')}. Week is the Monday date, like ${esc(mondayOf(todayISO()))}. Names must match the roster.</p>
+  <textarea id="csvIn" class="sp" placeholder="name,week,conv,appts,shown,opps,demos,props,sold,gross,csi,fuDue,fuOn"></textarea>
+  <div class="row sp"><button class="btn" data-act="importCsv">Import rows</button><button class="btn ghost" data-act="csvTemplate">Fill in a template for this team</button></div></div>`}`;
+  return h;
+}
+
+/* ---------- Executive ---------- */
+function execLine(o){const ex=(o.people||[]).filter(p=>p.role==='exec'&&p.active!==false&&(S.store==='all'||!p.storeId||p.storeId===S.store));
+  return ex.length?`<p class="small muted sp">Prepared for ${ex.map(p=>esc(p.name)+(p.title?', '+esc(p.title.toLowerCase()):'')+(p.storeId?' at '+esc(storeName(o,p.storeId)):'')).join('; ')}.</p>`:''}
+function renderExec(o){
+  if(!activeSales(o).length)return setupNudge(o);
+  const ids=teamsInScope(o,true);
+  const A=analysisFor(o,ids);
+  const endW=dataEndWk(),prevEnd=addDays(endW,-7*S.weeks);
+  const P=analysisFor(o,ids,S.weeks,prevEnd);
+  const cur=rollup(A.reads),prev=rollup(P.reads);
+  const cad=cadence(A.reads,S.weeks),pcad=cadence(P.reads,S.weeks);
+  const delta=(a,b,kind,inv)=>{if(a==null||b==null)return '<span class="muted">No prior period</span>';const d=a-b;if(Math.abs(d)<1e-9)return '<span class="muted">Flat vs prior</span>';const good=inv?d<0:d>0;const txt=kind==='pct'?Math.round(Math.abs(d)*100)+' pts':kind==='money'?'$'+Math.round(Math.abs(d)).toLocaleString('en-US'):(Math.round(Math.abs(d)*10)/10);return `<span class="${good?'good':'bad'}">${d>0?'Up':'Down'} ${txt} vs prior</span>`};
+  const kp=[['Units per person, weekly',fmt(cur.unitsPerRepWk,'dec'),delta(cur.unitsPerRepWk,prev.unitsPerRepWk,'num')],
+    ['Gross per unit',fmt(cur.gpu,'money'),delta(cur.gpu,prev.gpu,'money')],
+    ['Survey score',fmt(cur.csi,'score'),delta(cur.csi,prev.csi,'num')],
+    ['Behavior ownership',fmt(cur.adoption,'pct'),delta(cur.adoption,prev.adoption,'pct')],
+    ['Coaching cadence',cad==null?'n/a':fmt(cad,'dec')+' / wk',delta(cad,pcad,'num')]];
+  const pr=proof(A.reads);
+  const people=activeSales(o).filter(p=>ids.includes(p.teamId));
+  const series=weeklySeries(o,Store.perf,Store.obs,people,endW,12);
+  // where development time goes: per link
+  const byLink=BEHAVIORS.map((b,i)=>{const ls=A.reads.map(r=>r.links[i]);const c={};ls.forEach(l=>c[l.status]=(c[l.status]||0)+1);const n=ls.reduce((a,l)=>a+l.adoption.n,0),ind=ls.reduce((a,l)=>a+l.adoption.ind,0);const focus=A.reads.filter(r=>r.focus===b.id).length;return {b,c,n,rate:n?ind/n:null,focus,total:ls.length}});
+  let h=`<div class="spread"><div><h1>Executive view</h1><p class="lede">${esc(o.name)}. Last ${S.weeks} weeks against the ${S.weeks} before. Behavior first, then the results it should move.</p>${execLine(o)}</div>
+  <div class="row noprint"><button class="btn" data-act="exportCsv">Export data</button><button class="btn" data-act="print">Print summary</button></div></div>
+  <div class="sp">${scopeControls(o,{exec:true})}</div>
+  <div class="kpis">${kp.map(k=>`<div class="kpi"><div class="k">${esc(k[0])}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('')}</div>
+  <div class="grid2 section"><div class="panel chart"><h2>Is ownership rising, and are units following?</h2><p class="small muted" style="margin-top:4px">Bars: units per person each week. Line: share of observations done independently. Gold line: 70% ownership.</p>${comboChart(series,{loadLine:0.7})}</div>
+  <div class="panel"><h2>Does the behavior pay?</h2><p class="small muted" style="margin-top:4px">People with four or more observations, split at 70% ownership. A signal, not proof. Watch it over time.</p>
+  ${pr.eligible<4?`<p class="sp small">Not enough observed people yet. ${pr.eligible} qualify. Managers need two observations per person per week to make this readable.</p>`:`<div class="proof">${['hi','lo'].map(k=>{const g=pr[k];return `<div class="side ${k==='hi'?'hi':''}"><h3>${k==='hi'?'Own the behaviors':'Still building'}</h3><p class="tiny muted">${g.n} people</p><dl><dt>Units, weekly</dt><dd>${fmt(g.unitsPerRepWk,'dec')}</dd><dt>Gross per unit</dt><dd>${fmt(g.gpu,'money')}</dd><dt>Survey score</dt><dd>${fmt(g.csi,'score')}</dd></dl></div>`}).join('')}</div>`}</div></div>
+  <div class="panel section"><h2>Where development time should go</h2><p class="small muted" style="margin-top:4px">Each link of the chain across this scope. “First broken link” counts how many people need this one fixed first.</p>
+  <div class="scrollx sp"><table class="dt"><thead><tr><th>Link</th><th class="num">First broken link for</th><th class="num">Ownership</th><th class="num">Observations</th><th>Mix</th></tr></thead><tbody>
+  ${byLink.map(x=>`<tr><td><b>${esc(x.b.name)}</b></td><td class="num">${x.focus} of ${x.total}</td><td class="num">${fmt(x.rate,'pct')}</td><td class="num">${x.n}</td><td>${mixBar(x.c,x.total)}</td></tr>`).join('')}</tbody></table></div>${legend()}</div>
+  <div class="panel section"><h2>Teams</h2><div class="scrollx sp"><table class="dt"><thead><tr><th>Team</th><th>Manager</th><th class="num">People</th><th class="num">Ownership</th><th class="num">Obs per person, weekly</th><th class="num">Units per person, weekly</th><th class="num">Gross per unit</th><th class="num">Survey</th><th>Team-wide gap</th></tr></thead><tbody>
+  ${A.teams.map(t=>{const u=rollup(t.reads);const c=cadence(t.reads,S.weeks);const sys=A.systems.filter(s=>s.teamId===t.team.id).map(s=>BMAP[s.beh].name).join(', ');return `<tr><td><b>${esc(t.team.name)}</b><div class="tiny muted">${esc(storeName(o,t.team.storeId))}</div></td><td>${esc(t.team.manager||'')}</td><td class="num">${u.people}</td><td class="num">${fmt(u.adoption,'pct')}</td><td class="num ${c!=null&&c<2?'bad':''}">${fmt(c,'dec')}</td><td class="num">${fmt(u.unitsPerRepWk,'dec')}</td><td class="num">${fmt(u.gpu,'money')}</td><td class="num">${fmt(u.csi,'score')}</td><td>${sys?`<span class="pill s-system">${esc(sys)}</span>`:'<span class="small muted">None</span>'}</td></tr>`}).join('')}
+  </tbody></table></div></div>
+  <div class="grid2 section"><div>${systemsPanel(A)}</div><div>${briefPanel('x:'+S.pid+':'+S.store,'Draft an executive brief','Summarizes root causes, leadership gaps, and the three priorities for the next 30 days. Sends codes and numbers only.')}</div></div>`;
+  return h;
+}
+function mixBar(c,total){if(!total)return '';const order=['strong','fragile','habit','skill','unseen','system','nodata'];
+  return `<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;min-width:160px;border:1px solid var(--line)" role="img" aria-label="${esc(order.filter(k=>c[k]).map(k=>c[k]+' '+STATUS[k].label).join(', '))}">${order.filter(k=>c[k]).map(k=>`<span class="s-${k}" style="width:${c[k]/total*100}%;background:var(--st-${k==='strong'?'strong-bar':k});opacity:${k==='nodata'?.25:1}"></span>`).join('')}</div>`}
+
+/* ---------- chart ---------- */
+function comboChart(series,opts){
+  const W=640,H=230,L=36,R=40,T=14,B=28,iw=W-L-R,ih=H-T-B;
+  const maxU=Math.max(1,...series.map(s=>s.units||0));const top=Math.ceil(maxU);
+  const bw=iw/series.length*0.56;
+  const x=i=>L+iw*(i+0.5)/series.length;
+  let g=`<line class="axis" x1="${L}" y1="${T+ih}" x2="${W-R}" y2="${T+ih}"/>`;
+  [0,0.5,1].forEach(f=>{const y=T+ih-ih*f;g+=`<text x="${L-6}" y="${y+4}" text-anchor="end">${Math.round(top*f*10)/10}</text><text x="${W-R+6}" y="${y+4}">${Math.round(f*100)}%</text>`});
+  series.forEach((s,i)=>{if(s.units!=null){const h=ih*(s.units/top);g+=`<rect class="bar-u" x="${x(i)-bw/2}" y="${T+ih-h}" width="${bw}" height="${h}" rx="2" opacity=".85"><title>${fmtWeek(s.wk)}: ${fmt(s.units,'dec')} units</title></rect>`}
+    if(i%2===series.length%2||series.length<7)g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${esc(fmtWeek(s.wk))}</text>`});
+  if(opts&&opts.loadLine){const y=T+ih-ih*opts.loadLine;g+=`<line class="loadline" x1="${L}" y1="${y}" x2="${W-R}" y2="${y}"/>`}
+  const pts=series.map((s,i)=>s.adoption==null?null:[x(i),T+ih-ih*s.adoption]);
+  let d='';pts.forEach(p=>{if(p)d+=(d?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)});
+  if(d)g+=`<path class="line-a" d="${d}"/>`+pts.filter(Boolean).map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--surface)" stroke="currentColor" class="line-a"/>`).join('');
+  const any=series.some(s=>s.units!=null||s.adoption!=null);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly units and behavior ownership">${g}${any?'':`<text x="${W/2}" y="${H/2}" text-anchor="middle">Numbers and observations will build this chart.</text>`}</svg>`;
+}
+
+/* ---------- AI brief ---------- */
+function briefPanel(key,label,note){
+  const b=S.briefs[key];
+  return `<div class="panel noprint" style="margin-top:20px"><h2>${esc(label.replace('Draft an ','').replace('Draft a ','').replace(/^./,c=>c.toUpperCase()))}</h2><p class="small muted" style="margin-top:4px">${esc(note)}</p>
+  ${b&&b.text?`<div class="brief" aria-live="polite">${esc(b.text)}</div>`:''}${b&&b.err?`<p class="sp small bad">${esc(b.err)}</p>`:''}
+  <div class="row sp"><button class="btn navy" data-act="brief" data-key="${esc(key)}" ${b&&b.busy?'disabled':''}>${b&&b.busy?'Writing…':(b&&b.text?'Write it again':label)}</button>${b&&b.text?`<button class="btn ghost" data-act="copyBrief" data-key="${esc(key)}">Copy</button>`:''}</div></div>`;
+}
+/* ---------- Roster ---------- */
+function personDetail(p){
+  if(p.role==='sales'){const w=Object.keys((Store.perf[p.id]&&Store.perf[p.id].weeks)||{}).length;const n=obsItems(Store.obs[p.id]).length;return w||n?`${w} ${w===1?'week':'weeks'} of numbers, ${n} ${n===1?'observation':'observations'}`:'New. No numbers yet.'}
+  if(p.role==='manager'){const t=(org().teams||[]).filter(x=>x.managerId===p.id).map(x=>x.name);return t.length?'Leads '+t.join(', '):'Not leading a team yet'}
+  return (p.title||'Executive')+(p.storeId?', '+storeName(org(),p.storeId):', all stores');
+}
+function prow(p){return `<button class="prow" data-act="editPerson" data-person="${esc(p.id)}"${Store.readOnly?' disabled':''}><span><span class="nm">${esc(p.name)}</span><span class="tiny muted">${esc(personDetail(p))}</span></span><span class="ed" aria-hidden="true">Edit</span></button>`}
+function renderRoster(o){
+  const ro=Store.readOnly||Store.rosterLock;
+  const stores=o.stores||[],teams=o.teams||[],people=o.people||[];
+  const act=p=>p.active!==false;
+  const sales=people.filter(p=>p.role==='sales'),mgrs=people.filter(p=>p.role==='manager'&&act(p)),execs=people.filter(p=>p.role==='exec'&&act(p));
+  const steps=[
+    {done:stores.length>0,t:'Add a store',d:'Each rooftop gets its own store.',btn:'<button class="btn small" data-act="addStore">Add a store</button>'},
+    {done:teams.length>0&&teams.some(t=>t.managerId),t:'Add a team and its manager',d:'A team is one manager and the salespeople they coach.',btn:stores.length?`<button class="btn small" data-act="addTeam" data-store="${esc(stores[0].id)}">Add a team</button>`:''},
+    {done:sales.some(act),t:'Add salespeople',d:'Type a name on any team card and press Enter.',btn:teams.length?'<button class="btn small" data-act="focusAdd">Add salespeople</button>':''}];
+  const allDone=steps.every(s=>s.done);
+  let h=`<div class="spread"><div><h1>Roster</h1><p class="lede">Stores, teams, managers, salespeople, and executives in one place. Select anyone to edit, move, or deactivate them.</p></div>
+  ${ro?'':`<div class="row noprint"><button class="btn" data-act="addStore">Add a store</button><button class="btn primary" data-act="pasteRoster">Paste a roster</button></div>`}</div>`;
+  if(!allDone&&!ro)h+=`<div class="panel section steps"><h2>Three steps and you’re coaching</h2><ol>${steps.map((s,i)=>`<li class="${s.done?'done':''}"><span class="tick" aria-hidden="true">${s.done?'✓':i+1}</span><span class="st"><b>${esc(s.t)}</b><span class="small muted">${esc(s.d)}</span></span>${s.done?'<span class="small good">Done</span>':s.btn}</li>`).join('')}</ol>
+    <p class="small muted sp">Have it in a spreadsheet already? <button class="linkbtn" data-act="pasteRoster">Paste the whole roster</button> and it builds stores, teams, and people in one step.</p></div>`;
+  h+=`<div class="row2 section"><div class="panel"><div class="spread"><h2>Executives</h2>${ro?'':'<button class="btn small" data-act="addPerson" data-role="exec">Add an executive</button>'}</div>
+    <p class="small muted" style="margin-top:4px">Dealer principals, GMs, and sales directors who read the Executive view.</p>
+    <div class="plist2 sp">${execs.map(prow).join('')||'<p class="small muted">No executives listed yet.</p>'}</div></div>
+    <div class="panel"><div class="spread"><h2>Managers</h2>${ro?'':'<button class="btn small" data-act="addPerson" data-role="manager">Add a manager</button>'}</div>
+    <p class="small muted" style="margin-top:4px">They observe, log, and coach. Assign each one to a team below.</p>
+    <div class="plist2 sp">${mgrs.map(prow).join('')||'<p class="small muted">No managers yet.</p>'}</div></div></div>`;
+  if(!stores.length&&(allDone||ro))h+=`<div class="panel section empty" style="padding:40px 20px"><h2>Start with a store.</h2><p>Add your first rooftop, then build its teams.</p>${ro?'':'<div class="row"><button class="btn primary" data-act="addStore">Add a store</button></div>'}</div>`;
+  for(const s of stores){
+    const st=teams.filter(t=>t.storeId===s.id);
+    h+=`<section class="store section"><div class="spread"><div><h2>${esc(s.name)}</h2><p class="small muted">${st.length} ${st.length===1?'team':'teams'}, ${sales.filter(p=>act(p)&&st.some(t=>t.id===p.teamId)).length} salespeople</p></div>
+    ${ro?'':`<div class="row"><button class="btn small ghost" data-act="editStore" data-id="${esc(s.id)}">Edit store</button><button class="btn small" data-act="addTeam" data-store="${esc(s.id)}">Add a team</button></div>`}</div>
+    <div class="tgrid sp">${st.map(t=>teamCard(o,t,mgrs,ro)).join('')||`<div class="tcard dashed"><p class="small muted">No teams in this store yet.</p>${ro?'':`<button class="btn small sp" data-act="addTeam" data-store="${esc(s.id)}">Add the first team</button>`}</div>`}</div></section>`;
+  }
+  const loose=sales.filter(p=>act(p)&&!teams.some(t=>t.id===p.teamId));
+  if(loose.length)h+=`<div class="panel section"><h2>Not on a team yet</h2><p class="small muted" style="margin-top:4px">Select a name to place them on a team. They won’t show in coaching until they are.</p><div class="plist2 sp">${loose.map(prow).join('')}</div></div>`;
+  const gone=people.filter(p=>!act(p));
+  if(gone.length)h+=`<details class="panel section"><summary><b>Former team members</b> <span class="small muted">${gone.length}. Their history stays. Select one to reactivate.</span></summary><div class="plist2 sp">${gone.map(prow).join('')}</div></details>`;
+  return h;
+}
+function teamCard(o,t,mgrs,ro){
+  const ppl=(o.people||[]).filter(p=>p.role==='sales'&&p.teamId===t.id&&p.active!==false);
+  return `<div class="tcard"><div class="spread" style="align-items:center"><h3>${esc(t.name)}</h3>${ro?'':`<button class="btn small ghost" data-act="editTeam" data-id="${esc(t.id)}">Edit team</button>`}</div>
+  <div class="mgrslot"><label class="f" for="mg_${esc(t.id)}">Manager</label><select class="in" id="mg_${esc(t.id)}" data-mgr="${esc(t.id)}"${ro?' disabled':''}><option value="">No manager yet</option>${mgrs.map(m=>`<option value="${esc(m.id)}"${t.managerId===m.id?' selected':''}>${esc(m.name)}</option>`).join('')}<option value="__new">Add a new manager…</option></select></div>
+  <div class="f" style="margin-top:12px">Salespeople <span class="muted" style="font-weight:400">${ppl.length}</span></div>
+  <div class="plist2">${ppl.map(prow).join('')||'<p class="small muted">Nobody yet.</p>'}</div>
+  ${ro?'':`<div class="addline"><input type="text" data-addsales="${esc(t.id)}" placeholder="Add a salesperson" aria-label="Add a salesperson to ${esc(t.name)}" maxlength="400"><button class="btn small" data-act="addSales" data-team="${esc(t.id)}">Add</button></div><p class="tiny muted" style="margin-top:4px">Press Enter. Paste several names separated by commas.</p>`}</div>`;
+}
+
+/* ---------- Settings ---------- */
+function renderSettings(o){
+  const ro=(Store.readOnly||Store.rosterLock)?' disabled':'';
+  const t=o.targets||DEFAULT_TARGETS;
+  const tgt=Object.entries(METRICS).map(([k,m])=>{const v=t[k]!=null?t[k]:DEFAULT_TARGETS[k];const shown=m.fmt==='pct'?Math.round(v*100):v;return `<div><label class="f" for="tg_${k}">${esc(m.label)}${m.fmt==='pct'?' (%)':m.fmt==='money'?' ($)':''}</label><input type="number" id="tg_${k}" data-target="${k}" value="${esc(shown)}"${ro}></div>`}).join('');
+  return `<h1>Settings</h1><p class="lede">The partner, the standards you coach against, and who can see the data.</p>
+  <div class="grid2 section"><div>
+  <div class="panel"><h2>Partner</h2><div class="sp"><label class="f" for="pname">Partner name</label><div class="row"><input type="text" id="pname" value="${esc(o.name)}" maxlength="60" style="flex:1"${ro}><button class="btn" data-act="renamePartner"${ro}>Save name</button></div></div>
+  ${o.sample?`<p class="hint sp">This is sample data. Delete it before you invite a real team.</p>`:''}</div>
+  <div class="panel"><h2>Standards</h2><p class="small muted" style="margin-top:4px">Set these from the store’s own last 90 days, not an industry headline. Below 85% of a standard counts as a gap.</p><div class="sp" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${tgt}</div><div class="row sp"><button class="btn primary" data-act="saveTargets"${ro}>Save standards</button></div></div>
+  </div><div>
+  ${accessPanel(o)}
+  <div class="panel"><h2>Data and access</h2>
+  <p class="sp small"><b>Where it saves:</b> ${Store.mode==='server'?'Your secure portal database. Every row is locked to its dealership. Nobody sees anything until their email is on the access list.':Store.mode==='cloud'?'This page’s private database. Only people you share the page with as Editors can read or change it.':'This browser only. Nothing leaves the device.'}</p>
+  ${Store.mode==='server'?'':'<p class="sp small"><b>Listing is not access.</b> Adding an executive or manager to the roster doesn’t let them in. Share the page with them by email as an Editor.</p>'}
+  <p class="sp small"><b>What goes in:</b> weekly counts, first names or codes, and structured observations. No customer names, contact details, deal records, or free-text notes.</p>
+  ${Store.mode==='server'?'':`<p class="sp small"><b>One partner per shared page.</b> Everyone you share this page with sees every partner in it. Keep your coaching console private. Give each dealer group its own copy.</p>
+  <p class="sp small"><b>Who sees what:</b> Editors can read and change data. Viewers, commenters, and anyone arriving by a public link see nothing.</p>`}</div>
+  ${Store.mode==='server'&&!Store.isCoach?'':`<div class="panel"><h2>More partners</h2><p class="small muted" style="margin-top:4px">Add another dealer group to your private console.</p><div class="row sp"><button class="btn" data-act="newPartner"${ro}>Add a partner</button>${Object.values(Store.partners).some(p=>p.sample)?'':`<button class="btn ghost" data-act="sample"${ro}>Load sample</button>`}</div>
+  <hr class="rule"><h3>Delete this partner</h3><p class="small muted sp">Removes the partner, its roster, numbers, and observations from this page. It can’t be undone.</p><div class="row sp"><input type="text" id="delConfirm" placeholder="Type the partner name" style="flex:1"${ro}><button class="btn" data-act="deletePartner"${ro}>Delete</button></div></div>`}
+  </div></div>`;
+}
+
+/* ---------- roster edits ---------- */
+let ED={};
+const hasData=id=>!!((Store.perf[id]&&Object.keys(Store.perf[id].weeks||{}).length)||obsItems(Store.obs[id]).length);
+function nameTaken(o,name,exceptId){const n=name.toLowerCase();return (o.people||[]).some(p=>p.id!==exceptId&&p.name.toLowerCase()===n)}
+function openEdit(kind,id,extra){
+  const o=org();if(!o)return;ED={kind,id:id||null,...(extra||{})};
+  if(kind==='person'){const p=id?(o.people||[]).find(x=>x.id===id):null;
+    ED.name=p?p.name:'';ED.role=p?p.role:(ED.role||'sales');ED.teamId=p?(p.teamId||''):(ED.teamId||'');ED.title=p&&p.title?p.title:'General manager';ED.storeId=p&&p.storeId?p.storeId:'';ED.active=p?p.active!==false:true;
+    ED.leads=(o.teams||[]).filter(t=>id&&t.managerId===id).map(t=>t.id);if(!id&&ED.role==='manager'&&ED.teamId)ED.leads=[ED.teamId];}
+  if(kind==='team'){const t=id?(o.teams||[]).find(x=>x.id===id):null;ED.name=t?t.name:'';ED.storeId=t?t.storeId:(ED.storeId||((o.stores||[])[0]||{}).id||'');ED.managerId=t?(t.managerId||''):'';}
+  if(kind==='store'){const s=id?(o.stores||[]).find(x=>x.id===id):null;ED.name=s?s.name:'';}
+  drawEdit();$('#editDlg').showModal();setTimeout(()=>{const n=$('#edName');if(n)n.focus()},40);
+}
+function drawEdit(){
+  const o=org(),k=ED.kind,isNew=!ED.id;
+  const titles={person:isNew?{sales:'Add a salesperson',manager:'Add a manager',exec:'Add an executive'}[ED.role]:'Edit '+(ED.name||'person'),team:isNew?'Add a team':'Edit team',store:isNew?'Add a store':'Edit store'};
+  $('#editTitle').textContent=titles[k];
+  const stores=o.stores||[],teams=o.teams||[];
+  const teamOpts=sel=>stores.map(s=>`<optgroup label="${esc(s.name)}">${teams.filter(t=>t.storeId===s.id).map(t=>`<option value="${esc(t.id)}"${t.id===sel?' selected':''}>${esc(t.name)}</option>`).join('')}</optgroup>`).join('');
+  let b=`<div><label class="f" for="edName">${k==='person'?'First name or code':k==='team'?'Team name':'Store name'}</label><input type="text" id="edName" maxlength="40" value="${esc(ED.name)}"></div>`;
+  let canDelete=false,delNote='';
+  if(k==='person'){
+    b+=`<div><span class="f">Role</span><div class="choice" role="group">${Object.entries(ROLES).map(([r,l])=>`<button type="button" data-ed="role" data-v="${r}" aria-pressed="${ED.role===r}">${esc(l)}</button>`).join('')}</div></div>`;
+    if(ED.role==='sales')b+=`<div><label class="f" for="edTeam">Team</label><select class="in" id="edTeam"><option value="">Not on a team yet</option>${teamOpts(ED.teamId)}</select></div><p class="hint">Salespeople are measured and coached in the chain.</p>`;
+    if(ED.role==='manager')b+=`<div class="checks"><span class="f">Leads these teams</span>${teams.length?teams.map(t=>{const other=t.managerId&&t.managerId!==ED.id?(o.people||[]).find(p=>p.id===t.managerId):null;return `<label><input type="checkbox" data-edlead="${esc(t.id)}"${ED.leads.includes(t.id)?' checked':''}><span>${esc(t.name)} <span class="tiny muted">${esc(storeName(o,t.storeId))}${other?', now led by '+esc(other.name):''}</span></span></label>`}).join(''):'<p class="small muted">Add a team first, or save now and assign later.</p>'}</div><p class="hint">Managers log observations and own the coaching cadence for their teams.</p>`;
+    if(ED.role==='exec')b+=`<div class="row" style="align-items:flex-end"><div style="flex:1;min-width:180px"><label class="f" for="edTitle">Title</label><select class="in" id="edTitle">${EXEC_TITLES.map(x=>`<option${x===ED.title?' selected':''}>${esc(x)}</option>`).join('')}</select></div><div style="flex:1;min-width:180px"><label class="f" for="edScope">Oversees</label><select class="in" id="edScope"><option value="">All stores</option>${stores.map(s=>`<option value="${esc(s.id)}"${s.id===ED.storeId?' selected':''}>${esc(s.name)}</option>`).join('')}</select></div></div><p class="hint">Listing an executive doesn’t give access. Share the page with them by email as an Editor.</p>`;
+    if(!isNew){b+=`<label class="checks"><span class="f">Status</span></label><label class="row" style="gap:10px;cursor:pointer"><input type="checkbox" id="edActive"${ED.active?' checked':''} style="width:18px;height:18px;accent-color:var(--maroon)"><span>Active on the roster. Turn this off when someone leaves. Their history stays.</span></label>`;
+      canDelete=!hasData(ED.id);delNote=canDelete?'':'Has numbers or observations, so deactivate instead of deleting.';}
+  }
+  if(k==='team'){
+    const mgrs=(o.people||[]).filter(p=>p.role==='manager'&&p.active!==false);
+    b+=`<div><label class="f" for="edStore">Store</label><select class="in" id="edStore">${stores.map(s=>`<option value="${esc(s.id)}"${s.id===ED.storeId?' selected':''}>${esc(s.name)}</option>`).join('')}</select></div>
+    <div><label class="f" for="edMgr">Manager</label><select class="in" id="edMgr"><option value="">No manager yet</option>${mgrs.map(m=>`<option value="${esc(m.id)}"${m.id===ED.managerId?' selected':''}>${esc(m.name)}</option>`).join('')}</select></div>
+    <div><label class="f" for="edNewMgr">Or add a new manager</label><input type="text" id="edNewMgr" maxlength="40" placeholder="Manager’s first name"></div>`;
+    if(!isNew){const n=(o.people||[]).filter(p=>p.role==='sales'&&p.teamId===ED.id&&p.active!==false).length;canDelete=n===0;delNote=canDelete?'':`Move its ${n} salespeople first, then delete.`}
+  }
+  if(k==='store'&&!isNew){const n=teams.filter(t=>t.storeId===ED.id).length;canDelete=n===0;delNote=canDelete?'':'Delete or move its teams first.'}
+  if(delNote)b+=`<p class="tiny muted">${esc(delNote)}</p>`;
+  $('#editBody').innerHTML=b;
+  $('#editDelete').hidden=!canDelete;
+  $('#editSave').textContent=isNew?(k==='person'?'Add':'Add '+k):'Save changes';
+}
+async function saveEdit(){
+  const o=org();const k=ED.kind;const name=cleanName(($('#edName')||{}).value);
+  if(!name){toast('Add a name.');return}
+  let next={...o,stores:o.stores.slice(),teams:o.teams.map(t=>({...t})),people:o.people.map(p=>({...p}))};
+  if(k==='store'){if(ED.id)next.stores=next.stores.map(s=>s.id===ED.id?{...s,name}:s);else next.stores.push({id:uid('s'),name})}
+  if(k==='team'){
+    const storeId=$('#edStore').value;if(!storeId){toast('Add a store first.');return}
+    let managerId=$('#edMgr').value||null;const nm=cleanName($('#edNewMgr').value);
+    if(nm){if(nameTaken(o,nm)){toast(nm+' is already on the roster. Pick them from the list.');return}const m={id:uid('m'),name:nm,role:'manager',active:true};next.people.push(m);managerId=m.id}
+    if(ED.id)next.teams=next.teams.map(t=>t.id===ED.id?{...t,name,storeId,managerId}:t);else next.teams.push({id:uid('t'),name,storeId,managerId});
+  }
+  if(k==='person'){
+    if(nameTaken(o,name,ED.id)){toast(name+' is already on the roster. Add a last initial to tell them apart.');return}
+    const role=ED.role;const rec={name,role,active:ED.id?$('#edActive').checked:true};
+    if(role==='sales'){rec.teamId=$('#edTeam').value||null;rec.title=undefined;rec.storeId=undefined}
+    if(role==='exec'){rec.title=$('#edTitle').value;rec.storeId=$('#edScope').value||null;rec.teamId=null}
+    if(role==='manager'){rec.teamId=null;rec.title=undefined;rec.storeId=undefined}
+    let pid=ED.id;
+    if(pid)next.people=next.people.map(p=>p.id===pid?JSON.parse(JSON.stringify({...p,...rec})):p);
+    else{pid=uid(role==='sales'?'r':role==='manager'?'m':'x');next.people.push(JSON.parse(JSON.stringify({id:pid,...rec,start:todayISO()})))}
+    const leads=role==='manager'&&rec.active?ED.leads:[];
+    next.teams=next.teams.map(t=>leads.includes(t.id)?{...t,managerId:pid}:(t.managerId===pid?{...t,managerId:null}:t));
+  }
+  const btn=$('#editSave');btn.disabled=true;
+  try{await Store.savePartner(stripDerived(next));$('#editDlg').close();toast(ED.id?'Saved.':name+' added.');render()}catch(e){toast(writeError(e))}finally{btn.disabled=false}
+}
+async function deleteEdit(){
+  const o=org();const k=ED.kind;
+  if(!confirm('Delete '+(ED.name||'this')+'? This can’t be undone.'))return;
+  let next={...o,stores:o.stores.slice(),teams:o.teams.map(t=>({...t})),people:o.people.map(p=>({...p}))};
+  if(k==='store')next.stores=next.stores.filter(s=>s.id!==ED.id);
+  if(k==='team'){next.teams=next.teams.filter(t=>t.id!==ED.id);next.people=next.people.map(p=>p.teamId===ED.id?{...p,teamId:null}:p)}
+  if(k==='person'){next.people=next.people.filter(p=>p.id!==ED.id);next.teams=next.teams.map(t=>t.managerId===ED.id?{...t,managerId:null}:t)}
+  try{await Store.savePartner(stripDerived(next));$('#editDlg').close();toast('Deleted.');render()}catch(e){toast(writeError(e))}
+}
+/* team.manager is a display field rebuilt on read; never store it */
+function stripDerived(o){return {...o,teams:(o.teams||[]).map(t=>{const {manager,...rest}=t;return rest})}}
+async function addSales(teamId){
+  const o=org();const input=document.querySelector(`[data-addsales="${CSS.escape(teamId)}"]`);if(!input)return;
+  const names=input.value.split(/[\n,;\t]/).map(cleanName).filter(Boolean);
+  if(!names.length){toast('Type a name first.');input.focus();return}
+  const seen=new Set();const dup=names.filter(n=>{const l=n.toLowerCase();const d=nameTaken(o,n)||seen.has(l);seen.add(l);return d});
+  if(dup.length){toast('Already on the roster: '+dup.join(', ')+'. Add a last initial to tell them apart.');return}
+  input.blur();
+  try{await Store.savePartner(stripDerived({...o,people:[...o.people,...names.map(n=>({id:uid('r'),name:n,role:'sales',teamId,active:true,start:todayISO()}))]}));
+    toast(names.length===1?names[0]+' added.':names.length+' salespeople added.');render();
+    const again=document.querySelector(`[data-addsales="${CSS.escape(teamId)}"]`);if(again)again.focus();}
+  catch(e){toast(writeError(e))}
+}
+async function assignManager(teamId,val,el){
+  const o=org();
+  if(val==='__new'){el.value=(o.teams.find(t=>t.id===teamId)||{}).managerId||'';openEdit('person',null,{role:'manager',teamId});return}
+  try{await Store.savePartner(stripDerived({...o,teams:o.teams.map(t=>t.id===teamId?{...t,managerId:val||null}:t)}));toast(val?'Manager assigned.':'Manager removed from team.');render()}catch(e){toast(writeError(e))}
+}
+
+/* ---------- paste a roster ---------- */
+function classifyRole(t){t=(t||'').toLowerCase().trim();if(!t)return 'sales';
+  if(/(dealer principal|owner|general manager|\bgm\b|general sales|\bgsm\b|director|president|\bvp\b|vice president|executive)/.test(t))return 'exec';
+  if(/(manager|mgr|desk|team lead|\bsm\b)/.test(t))return 'manager';return 'sales'}
+function execTitle(t){const l=(t||'').toLowerCase();const hit=EXEC_TITLES.find(x=>x.toLowerCase()===l);if(hit)return hit;if(/\bgm\b/.test(l))return 'General manager';if(/\bgsm\b/.test(l))return 'General sales manager';return t?t.replace(/^./,c=>c.toUpperCase()).slice(0,40):'Other'}
+function planRoster(text,o){
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length)return null;
+  const tab=lines.some(l=>l.includes('\t'));
+  const rows=tab?lines.map(l=>l.split('\t')):parseCSV(lines.join('\n'));
+  let cols=['name','role','store','team'];const h=rows[0].map(c=>c.trim().toLowerCase());
+  if(h.some(c=>/^(name|first name|person|employee)$/.test(c))){cols=h.map(c=>/team|pod/.test(c)?'team':/store|rooftop|location|dealership/.test(c)?'store':/role|position|title|job/.test(c)?'role':/name|person|employee/.test(c)?'name':null);rows.shift()}
+  const n={...o,stores:(o.stores||[]).slice(),teams:(o.teams||[]).map(t=>({...t})),people:(o.people||[]).map(p=>({...p}))};
+  const c={stores:0,teams:0,sales:0,manager:0,exec:0,updated:0},skip=[];
+  const findStore=nm=>{if(!nm){if(n.stores.length===1)return n.stores[0];if(!n.stores.length){const s={id:uid('s'),name:'Main store'};n.stores.push(s);c.stores++;return s}return null}
+    let s=n.stores.find(x=>x.name.toLowerCase()===nm.toLowerCase());if(!s){s={id:uid('s'),name:cleanName(nm)};n.stores.push(s);c.stores++}return s};
+  const findTeam=(nm,store)=>{if(!nm)return null;let t=n.teams.find(x=>x.name.toLowerCase()===nm.toLowerCase()&&(!store||x.storeId===store.id));
+    if(!t){const s=store||findStore('');if(!s)return null;t={id:uid('t'),name:cleanName(nm),storeId:s.id,managerId:null};n.teams.push(t);c.teams++}return t};
+  rows.forEach((r,i)=>{const rec={};cols.forEach((k,j)=>{if(k)rec[k]=(r[j]||'').trim()});
+    const name=cleanName(rec.name);if(!name){skip.push(`Line ${i+1}: no name`);return}
+    const role=classifyRole(rec.role);const store=rec.store?findStore(rec.store):null;
+    const team=rec.team?findTeam(rec.team,store):null;
+    let p=n.people.find(x=>x.name.toLowerCase()===name.toLowerCase());
+    if(p)c.updated++;else{p={id:uid(role==='sales'?'r':role==='manager'?'m':'x'),name,active:true,start:todayISO()};n.people.push(p);c[role]++}
+    p.role=role;p.active=true;
+    if(role==='sales'){let tm=team;if(!tm){const st=store||(n.stores.length===1?n.stores[0]:null);const ts=st?n.teams.filter(x=>x.storeId===st.id):[];if(ts.length===1)tm=ts[0]}p.teamId=tm?tm.id:(p.teamId||null);delete p.title;delete p.storeId}
+    if(role==='manager'){p.teamId=null;if(team)team.managerId=p.id}
+    if(role==='exec'){p.teamId=null;p.title=execTitle(rec.role);p.storeId=store?store.id:null}
+  });
+  return {next:n,c,skip};
+}
+function openPaste(){$('#pasteIn').value='';$('#pastePrev').innerHTML='<p class="small muted">Paste rows above to see what will be added.</p>';$('#pasteGo').disabled=true;$('#pasteDlg').showModal();setTimeout(()=>$('#pasteIn').focus(),40)}
+function previewPaste(){
+  const o=org();const plan=planRoster($('#pasteIn').value,o);
+  if(!plan){$('#pastePrev').innerHTML='<p class="small muted">Paste rows above to see what will be added.</p>';$('#pasteGo').disabled=true;return}
+  const c=plan.c,parts=[[c.stores,'store','stores'],[c.teams,'team','teams'],[c.manager,'manager','managers'],[c.sales,'salesperson','salespeople'],[c.exec,'executive','executives']].filter(x=>x[0]).map(x=>x[0]+' '+(x[0]===1?x[1]:x[2]));
+  $('#pastePrev').innerHTML=`<p class="small"><b>Ready:</b> ${parts.length?'adds '+esc(parts.join(', ')):'nothing new'}${c.updated?`, updates ${c.updated} already on the roster`:''}.</p>${plan.skip.length?`<p class="tiny bad sp">${esc(plan.skip.slice(0,4).join('. '))}</p>`:''}`;
+  $('#pasteGo').disabled=!(parts.length||c.updated);
+}
+async function importRoster(){
+  const o=org();const plan=planRoster($('#pasteIn').value,o);if(!plan)return;
+  const btn=$('#pasteGo');btn.disabled=true;
+  try{await Store.savePartner(stripDerived(plan.next));$('#pasteDlg').close();toast('Roster imported.');S.view='roster';location.hash='roster';render()}catch(e){toast(writeError(e))}finally{btn.disabled=false}
+}
+
+/* ---------- observation dialog ---------- */
+let OBS={};
+function openObs(personId,beh){
+  const o=org();if(!o)return;
+  const people=activeSales(o);if(!people.length){toast('Add salespeople in the roster first.');return}
+  let focus=beh;
+  if(!focus&&personId){const A=analysisFor(o,(o.teams||[]).map(t=>t.id));const r=A.reads.find(x=>x.person.id===personId);focus=r&&r.focus}
+  OBS={personId:personId||people[0].id,beh:focus||'open',r:null,ev:[],ctx:'live',d:todayISO()};
+  drawObs();$('#obsDlg').showModal();
+}
+function drawObs(){
+  const o=org(),b=BMAP[OBS.beh];
+  const people=activeSales(o);
+  $('#obsBody').innerHTML=`
+  <div><label class="f" for="obsPerson">Who</label><select class="in" id="obsPerson">${(o.teams||[]).map(t=>`<optgroup label="${esc(t.name)}">${people.filter(p=>p.teamId===t.id).map(p=>`<option value="${esc(p.id)}"${p.id===OBS.personId?' selected':''}>${esc(p.name)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+  <div><span class="f">Which behavior</span><div class="choice" role="group">${BEHAVIORS.map(x=>`<button type="button" data-ob="beh" data-v="${x.id}" aria-pressed="${x.id===OBS.beh}">${esc(x.name)}</button>`).join('')}</div></div>
+  <p class="hint"><b>The standard:</b> ${esc(b.standard)}</p>
+  <div><span class="f">What you saw</span><div class="choice" role="group">${Object.entries(RATINGS).map(([k,v])=>`<button type="button" data-ob="r" data-v="${k}" aria-pressed="${OBS.r===k}">${esc(v)}</button>`).join('')}</div></div>
+  <div class="checks"><span class="f">Evidence you saw</span>${b.evidence.map((e,i)=>`<label><input type="checkbox" data-ev="${i}"${OBS.ev.includes(i)?' checked':''}><span>${esc(e)}</span></label>`).join('')}</div>
+  <div class="row"><div><span class="f">Where</span><div class="choice" role="group">${[['live','Live customer'],['roleplay','Role play']].map(([k,v])=>`<button type="button" data-ob="ctx" data-v="${k}" aria-pressed="${OBS.ctx===k}">${v}</button>`).join('')}</div></div>
+  <div><label class="f" for="obsDate">When</label><input type="date" id="obsDate" value="${esc(OBS.d)}" max="${todayISO()}"></div></div>`;
+  $('#obsSave').disabled=!OBS.r;
+}
+async function saveObs(){
+  const o=org();if(!o||!OBS.r)return;
+  if(!validDate(OBS.d)||OBS.d>todayISO()){toast('Pick a date up to today.');return}
+  const item={d:OBS.d,b:OBS.beh,r:OBS.r,ev:OBS.ev.slice().sort(),ctx:OBS.ctx};
+  const btn=$('#obsSave');btn.disabled=true;
+  try{await Store.saveObs(o.id,OBS.personId,uid('o'),item);$('#obsDlg').close();toast('Observation saved.')}
+  catch(e){toast(writeError(e))}finally{btn.disabled=false}
+}
+function writeError(e){const c=e&&e.code;if(c==='quota_exceeded')return 'This page is full. Export, then archive old partners.';if(c==='invalid_argument')return 'You don’t have permission to change data on this page.';return 'Didn’t save. Check your connection and try again.'}
+
+/* ---------- partner dialog ---------- */
+function openPartner(){$('#pdName').value='';$('#partnerDlg').showModal();setTimeout(()=>$('#pdName').focus(),30)}
+async function createPartner(){
+  const name=cleanName($('#pdName').value);if(!name){toast('Name the partner.');return}
+  const o={id:uid('p'),name,stores:[],teams:[],people:[],targets:{...DEFAULT_TARGETS},createdAt:todayISO()};
+  try{await Store.savePartner(o);S.pid=o.id;S.view='roster';location.hash='roster';$('#partnerDlg').close();toast('Partner created. Build the roster next.');render()}catch(e){toast(writeError(e))}
+}
+
+/* ---------- portal access list (coach manages, client admins can view) ---------- */
+const ROLE_LABEL={admin:'Admin: roster, standards, numbers, observations',manager:'Manager: numbers and observations',exec:'Executive: views everything, changes nothing'};
+async function loadMembers(pid){S.members=S.members||{};S.members[pid]={loading:true};const {data,error}=await Store.sb.from('members').select('email,role').eq('partner_id',pid).order('role');S.members[pid]=error?{error:true}:{rows:data||[]};render()}
+function accessPanel(o){
+  if(Store.mode!=='server')return '';const role=Store.role(o.id);if(!['coach','admin'].includes(role))return '';
+  S.members=S.members||{};const m=S.members[o.id];if(!m){setTimeout(()=>loadMembers(o.id),0);return `<div class="panel"><h2>Who can sign in</h2><p class="sp small muted">Loading the access list.</p></div>`}
+  const edit=role==='coach';
+  const rows=m.rows||[];
+  return `<div class="panel"><h2>Who can sign in</h2><p class="small muted" style="margin-top:4px">Each login sees ${esc(o.name)} only. ${edit?'You see every dealership.':''}</p>
+  <div class="plist2 sp">${m.error?'<p class="small bad">The access list didn’t load.</p>':rows.length?rows.map(r=>`<div class="obsrow"><span><b>${esc(r.email)}</b><span class="tiny muted" style="display:block">${esc(ROLE_LABEL[r.role]||r.role)}</span></span>${edit?`<button class="btn small ghost" data-act="removeMember" data-email="${esc(r.email)}">Remove</button>`:''}</div>`).join(''):'<p class="small muted">Nobody yet.</p>'}</div>
+  ${edit?`<div class="sp" style="display:grid;grid-template-columns:1fr auto;gap:8px"><input type="text" id="mbEmail" placeholder="name@dealership.com" inputmode="email"><select class="in" id="mbRole" style="width:auto"><option value="exec">Executive</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div>
+  <div class="row sp"><button class="btn primary" data-act="addMember">Give access</button></div>
+  <p class="hint sp"><b>Then send the login.</b> In Supabase, open Authentication, then Users, then Invite user, and enter the same email. They get a link, set a password, and land on their dashboard.</p>`:''}</div>`;
+}
+async function memberAction(a,el){
+  const o=org();const sb=Store.sb;
+  if(a==='addMember'){const email=($('#mbEmail').value||'').trim().toLowerCase(),role=$('#mbRole').value;
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return toast('Enter a full email address.');
+    $('#mbEmail').blur();const {error}=await sb.from('members').upsert({partner_id:o.id,email,role});if(error)throw dbErr(error);toast('Access added for '+email+'.');}
+  if(a==='removeMember'){const email=el.dataset.email;if(!confirm('Remove access for '+email+'? They won’t see this dealership anymore.'))return;
+    const {error}=await sb.from('members').delete().eq('partner_id',o.id).eq('email',email);if(error)throw dbErr(error);toast('Access removed.');}
+  await loadMembers(o.id);
+}
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-act],[data-ob],[data-ed],.tab');if(!el)return;
+  if(el.dataset.ed){ED.name=($('#edName')||{}).value||ED.name;if(el.dataset.ed==='role'){if(ED.role==='sales'&&$('#edTeam'))ED.teamId=$('#edTeam').value;ED.role=el.dataset.v}drawEdit();return}
+  if(el.classList.contains('tab')){S.view=el.dataset.view;location.hash=S.view;render();window.scrollTo(0,0);return}
+  if(el.dataset.ob){const k=el.dataset.ob,v=el.dataset.v;OBS[k]=v;if(k==='beh')OBS.ev=[];drawObs();return}
+  const a=el.dataset.act,o=org();
+  if(['signIn','forgot','setPw','signOut','reload','chgPw','cancelPw'].includes(a)){try{await authAction(a)}catch(err){S.authMsg='Something went wrong. Try again.';render()}return}
+  if(a==='addMember'||a==='removeMember'){try{await memberAction(a,el)}catch(err){toast(writeError(err))}return}
+  try{switch(a){
+    case 'go':S.view=el.dataset.view;location.hash=S.view;render();window.scrollTo(0,0);break;
+    case 'weeks':S.weeks=Number(el.dataset.n);render();break;
+    case 'person':S.personId=el.dataset.person;S.beh=el.dataset.beh||null;S.view='people';location.hash='people';render();window.scrollTo(0,0);break;
+    case 'beh':S.beh=el.dataset.beh;render();break;
+    case 'obs':openObs(el.dataset.person,el.dataset.beh);break;
+    case 'delObs':if(confirm('Remove this observation?')){await Store.saveObs(o.id,el.dataset.person,el.dataset.id,null);toast('Observation removed.')}break;
+    case 'sample':await loadSample();break;
+    case 'newPartner':openPartner();break;
+    case 'saveNums':await saveNumbers();break;
+    case 'importCsv':await importCsv();break;
+    case 'csvTemplate':csvTemplate();break;
+    case 'exportCsv':await exportCsv();break;
+    case 'print':window.print();break;
+    case 'brief':await runBrief(el.dataset.key);break;
+    case 'copyBrief':{const t=S.briefs[el.dataset.key]&&S.briefs[el.dataset.key].text;if(t&&navigator.clipboard){await navigator.clipboard.writeText(t);toast('Copied.')}break}
+    case 'addStore':openEdit('store');break;
+    case 'editStore':openEdit('store',el.dataset.id);break;
+    case 'addTeam':if(!(o.stores||[]).length){openEdit('store');toast('Add a store first.');break}openEdit('team',null,{storeId:el.dataset.store});break;
+    case 'editTeam':openEdit('team',el.dataset.id);break;
+    case 'addPerson':openEdit('person',null,{role:el.dataset.role});break;
+    case 'editPerson':openEdit('person',el.dataset.person);break;
+    case 'addSales':await addSales(el.dataset.team);break;
+    case 'focusAdd':{const i=document.querySelector('[data-addsales]');if(i){i.scrollIntoView({block:'center'});i.focus()}break}
+    case 'pasteRoster':openPaste();break;
+    case 'renamePartner':{const n=cleanName($('#pname').value);if(!n)return toast('Name the partner.');await Store.savePartner({...o,name:n});toast('Name saved.');break}
+    case 'saveTargets':{const t={...DEFAULT_TARGETS,...(o.targets||{})};let bad=false;document.querySelectorAll('[data-target]').forEach(i=>{const k=i.dataset.target,m=METRICS[k];let v=Number(i.value);if(!isFinite(v)||v<=0){bad=true;return}if(m.fmt==='pct'){if(v>100){bad=true;return}v=v/100}t[k]=v});if(bad)return toast('Standards must be positive. Percentages run 1 to 100.');await Store.savePartner({...o,targets:t});toast('Standards saved.');break}
+    case 'deletePartner':{if(($('#delConfirm').value||'').trim()!==o.name)return toast('Type the partner name exactly to delete.');await Store.deletePartner(o);S.pid=null;toast('Partner deleted.');render();break}
+  }}catch(err){console.error(err);toast(writeError(err))}
+});
+document.addEventListener('change',e=>{
+  const el=e.target;
+  if(el.id==='partnerSel'){S.pid=el.value;S.team='all';S.store='all';S.personId=null;S.numTeam=null;render();return}
+  if(el.dataset.mgr){const v=el.value;el.blur();assignManager(el.dataset.mgr,v,el);return}
+  if(el.dataset.edlead!=null){const id=el.dataset.edlead;ED.leads=el.checked?[...new Set([...ED.leads,id])]:ED.leads.filter(x=>x!==id);return}
+  if(el.dataset.bind){S[el.dataset.bind]=el.value;el.blur();render();return}
+  if(el.dataset.ev!=null){const i=Number(el.dataset.ev);OBS.ev=el.checked?[...new Set([...OBS.ev,i])]:OBS.ev.filter(x=>x!==i);return}
+  if(el.id==='obsPerson'){OBS.personId=el.value;return}
+  if(el.id==='obsDate'){OBS.d=el.value;return}
+});
+document.addEventListener('keydown',e=>{const el=e.target;if(e.key==='Enter'&&el.dataset&&el.dataset.addsales!=null){e.preventDefault();addSales(el.dataset.addsales)}if(e.key==='Enter'&&el.id==='edName'){e.preventDefault();saveEdit()}if(e.key==='Enter'&&(el.id==='liPw'||el.id==='liEmail')){e.preventDefault();authAction('signIn')}if(e.key==='Enter'&&el.id==='pw2'){e.preventDefault();authAction('setPw')}});
+document.addEventListener('input',e=>{const el=e.target;if(el.id==='pasteIn'){previewPaste();return}if(el.dataset.draft){const k=el.dataset.draft;S.drafts[k]=S.drafts[k]||{};S.drafts[k][el.dataset.k]=el.value;el.classList.remove('err')}});
+
+/* ---------- numbers save / import / export ---------- */
+async function saveNumbers(){
+  const o=org(),wk=S.numWk;
+  const people=activeSales(o).filter(p=>p.teamId===S.numTeam);
+  const jobs=[];const problems=[];
+  for(const p of people){
+    const k=wk+'|'+p.id;const d=S.drafts[k];if(!d)continue;
+    const base=(Store.perf[p.id]&&Store.perf[p.id].weeks&&Store.perf[p.id].weeks[wk])||{};
+    const merged={};FIELDS.forEach(f=>{merged[f.k]=(f.k in d)?d[f.k]:(base[f.k]==null?'':base[f.k])});
+    const {errs,clean}=validateWeek(merged);
+    if(errs.length){problems.push(p.name+': '+errs[0]);document.querySelectorAll(`[data-draft="${CSS.escape(k)}"]`).forEach(i=>i.classList.add('err'));continue}
+    jobs.push([p,clean,k]);
+  }
+  if(problems.length){toast(problems[0]);return}
+  if(!jobs.length){toast('No changes to save.');return}
+  for(const [p,clean,k] of jobs){await Store.saveWeek(o.id,p.id,wk,clean);delete S.drafts[k]}
+  toast(`Saved ${jobs.length} ${jobs.length===1?'person':'people'} for the week of ${fmtWeek(wk)}.`);render();
+}
+function parseCSV(text){
+  const rows=[];let row=[],cell='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){cell+='"';i++}else q=false}else cell+=c}
+    else if(c==='"')q=true;else if(c===','){row.push(cell);cell=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell=''}else cell+=c}
+  if(cell!==''||row.length){row.push(cell);rows.push(row)}
+  return rows.filter(r=>r.some(c=>c.trim()!==''));
+}
+async function importCsv(){
+  const o=org();const rows=parseCSV($('#csvIn').value||'');
+  if(rows.length<2)return toast('Paste a header row and at least one data row.');
+  const head=rows[0].map(h=>h.trim().toLowerCase());
+  const keyFor=h=>{if(h==='name'||h==='person'||h==='salesperson')return 'name';if(h==='week'||h==='week of')return 'week';const f=FIELDS.find(f=>f.k.toLowerCase()===h||f.label.toLowerCase()===h);return f?f.k:null};
+  const cols=head.map(keyFor);if(!cols.includes('name')||!cols.includes('week'))return toast('The header needs name and week columns.');
+  const byName=Object.fromEntries(salesOf(o).map(p=>[p.name.toLowerCase(),p]));
+  const ok=[],bad=[];
+  rows.slice(1).forEach((r,i)=>{const rec={};cols.forEach((k,j)=>{if(k)rec[k]=(r[j]||'').trim()});
+    const p=byName[(rec.name||'').toLowerCase()];if(!p){bad.push(`Row ${i+2}: no one named ${rec.name||'(blank)'}`);return}
+    if(!validDate(rec.week)){bad.push(`Row ${i+2}: week must look like 2026-11-02`);return}
+    const wk=mondayOf(rec.week);const {errs,clean}=validateWeek(rec);if(errs.length){bad.push(`Row ${i+2}: ${errs[0]}`);return}
+    ok.push([p,wk,clean])});
+  if(bad.length&&!confirm(`${bad.length} rows have problems and will be skipped:\n\n${bad.slice(0,6).join('\n')}${bad.length>6?'\n…':''}\n\nImport the other ${ok.length}?`))return;
+  for(const [p,wk,clean] of ok)await Store.saveWeek(o.id,p.id,wk,clean);
+  $('#csvIn').value='';toast(`Imported ${ok.length} rows.`);
+}
+function csvTemplate(){
+  const o=org();const people=activeSales(o).filter(p=>p.teamId===S.numTeam);
+  $('#csvIn').value=['name,week,'+FIELDS.map(f=>f.k).join(','),...people.map(p=>p.name+','+S.numWk+','+FIELDS.map(()=>'').join(','))].join('\n');
+}
+async function exportCsv(){
+  const o=org();const lines=[['type','store','team','person','week_or_date','field_or_behavior','value','evidence_markers','context'].join(',')];
+  const q=v=>{const s=String(v==null?'':v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};
+  salesOf(o).forEach(p=>{const t=(o.teams||[]).find(x=>x.id===p.teamId)||{};const st=storeName(o,t.storeId);
+    const w=(Store.perf[p.id]&&Store.perf[p.id].weeks)||{};Object.entries(w).sort().forEach(([wk,r])=>FIELDS.forEach(f=>{if(r[f.k]!=null)lines.push([ 'week',st,t.name,p.name,wk,f.k,r[f.k],'',''].map(q).join(','))}));
+    obsItems(Store.obs[p.id]).sort((a,b)=>a.d.localeCompare(b.d)).forEach(x=>lines.push(['observation',st,t.name,p.name,x.d,x.b,RATINGS[x.r]||x.r,(x.ev||[]).length,x.ctx||''].map(q).join(',')))});
+  const data=lines.join('\n');const name=(o.name||'partner').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-'+todayISO()+'.csv';
+  let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){}
+  if(dl){try{await dl.save({filename:name,data});toast('Export ready.')}catch(e){if(e&&e.code!=='declined')toast('Export isn’t available here.')}return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+
+/* ---------- coaching briefs (Claude) ---------- */
+function personFacts(o,r){
+  const team=(o.teams||[]).find(t=>t.id===r.teamId)||{};
+  return {person:r.person.name,team:team.name,window_weeks:S.weeks,weeks_reported:r.sum.weeks,first_broken_link:r.focus?BMAP[r.focus].name:'none',
+    links:r.links.map(l=>({behavior:BMAP[l.beh].name,status:STATUS[l.status].label,root_cause:STATUS[l.status].plain,numbers:l.metrics.map(m=>({metric:m.label,actual:fmt(m.val,m.fmt),standard:fmt(m.target,m.fmt),enough_data:m.enough})),observations:{assessed:l.adoption.n,independent:l.adoption.ind,with_prompting:l.adoption.prompt,not_yet:l.adoption.not}}))};
+}
+async function runBrief(key){
+  const o=org();let sample=null;
+  try{sample=window.claude&&window.claude.use?await window.claude.use('sample'):null}catch(e){}
+  if(!sample){S.briefs[key]={err:'Briefs need this page open inside Claude.'};render();return}
+  let facts,ask;
+  if(key.startsWith('p:')){const A=analysisFor(o,(o.teams||[]).map(t=>t.id));const r=A.reads.find(x=>x.person.id===key.slice(2));if(!r)return;facts=personFacts(o,r);
+    ask='Write a coaching brief for this salesperson’s manager. Sections, each with a short plain heading: Root cause (name whether it is a skill gap, a habit gap, an evidence gap because nobody has observed it, or a system gap, and say why in two or three sentences). Three moves for this week: one training method, one motivation tool grounded in behavioral science, one accountability check. Barriers to watch, with how to remove each. One question for the manager to sit with.';}
+  else {const ids=teamsInScope(o,true);const A=analysisFor(o,ids);const ro=rollup(A.reads);
+    facts={partner:o.name,window_weeks:S.weeks,rollup:{units_per_person_weekly:fmt(ro.unitsPerRepWk,'dec'),gross_per_unit:fmt(ro.gpu,'money'),survey:fmt(ro.csi,'score'),ownership:fmt(ro.adoption,'pct'),coaching_obs_per_person_weekly:fmt(cadence(A.reads,S.weeks),'dec')},
+      team_wide_gaps:A.systems.map(s=>({team:s.team,behavior:BMAP[s.beh].name,people_missing:s.count+' of '+s.of})),
+      first_broken_links:BEHAVIORS.map(b=>({behavior:b.name,people:A.reads.filter(r=>r.focus===b.id).length})),
+      teams:A.teams.map(t=>{const u=rollup(t.reads);return {team:t.team.name,manager:t.team.manager,people:u.people,ownership:fmt(u.adoption,'pct'),obs_per_person_weekly:fmt(cadence(t.reads,S.weeks),'dec'),units_per_person_weekly:fmt(u.unitsPerRepWk,'dec'),gross_per_unit:fmt(u.gpu,'money'),survey:fmt(u.csi,'score')}})};
+    ask='Write an executive brief for the dealer principal and general manager. Sections, each with a short plain heading: What the numbers say (three sentences). Root causes (separate leadership and system causes from individual skill and habit causes). The three priorities for the next 30 days, each with an owner role and a measure. Risks and barriers. One question for the leadership team.';}
+  S.briefs[key]={busy:true};render();
+  const prompt=`You are a seasoned automotive retail sales leadership coach. The goal of this program: salespeople build real connection with people in the market or soon to be in the market, which shows up as more units, more gross, and higher customer survey scores. The model is a chain of six behaviors: Reach Out First, Warm Open, Discover the Why, Make It Relevant, Ask With Confidence, Keep the Promise. Fix the first broken link first.\n\n${ask}\n\nVoice: direct, warm, grounded. Short sentences. Active voice. No jargon, no buzzwords. Never use em dashes or en dashes. Plain text only: no markdown symbols, no asterisks, no pound signs. Stay under 260 words. Use only the data below. Do not invent numbers. Where data is thin, say what to observe next.\n\nDATA:\n${JSON.stringify(facts)}`;
+  try{const res=await sample(prompt,{modelTier:'default',onText:({text})=>{S.briefs[key]={busy:true,text:clean(text)};scheduleRender()}});S.briefs[key]={text:clean(res.text)}}
+  catch(e){S.briefs[key]={err:e&&e.code==='not_granted'?'Briefs are turned off for this page.':e&&e.code==='rate_limited'?'Too many requests. Try again in a minute.':'The brief didn’t finish. Try again.'}}
+  render();
+}
+function clean(t){return String(t||'').replace(/\s*[—–]\s*/g,', ').replace(/^#+\s*/gm,'').replace(/\*\*/g,'')}
+
+/* ---------- sample ---------- */
+async function loadSample(){
+  if(Object.values(Store.partners).some(p=>p.sample)){S.pid=Object.values(Store.partners).find(p=>p.sample).id;render();return}
+  toast('Loading the sample dealership…');
+  const {org,perf,obs}=makeSample(mondayOf(todayISO()));
+  await Store.putBulk(org.id,org,perf,obs);S.pid=org.id;S.view='week';location.hash='week';toast('Sample loaded. Start with the three moves.');render();
+}
+
+/* ---------- boot ---------- */
+readHash();
+$('#obsSave').addEventListener('click',saveObs);
+$('#editSave').addEventListener('click',saveEdit);
+$('#editDelete').addEventListener('click',deleteEdit);
+$('#pasteGo').addEventListener('click',importRoster);
+$('#pdSave').addEventListener('click',createPartner);
+$('#pdName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();createPartner()}});
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
+render();
+Store.init();
+</script>
+</body>
+</html>
