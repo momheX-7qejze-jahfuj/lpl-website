@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The TORQUE Meeting — Demo | The Leadership Pressure Lab™</title>
+<meta name="description" content="The TORQUE Meeting. A behavior-based leadership operating cadence for the service drive. Built on the 6 TORQUE principles.">
+<!--
+  ============================================================
+  THE TORQUE MEETING  —  WORKING DEMO  (v1.0)
+  The Leadership Pressure Lab™  ·  Torque Drive OS™
+  ------------------------------------------------------------
+  WHAT THIS IS
+  A self-contained, single-file demo of the TORQUE Meeting: a
+  weekly behavior-based leadership cadence for dealerships,
+  independent repair shops, and small businesses.
+
+  It runs like a tight weekly ops meeting, but every segment is
+  built on the 6 TORQUE principles and drives BEHAVIOR, not just
+  metrics. Pre-seeded with a believable service department so it
+  is alive the moment it opens.
+
+  FOR A DEVELOPER BUILDING ON THIS
+  - No framework, no build step, no dependencies except Google
+    Fonts. Vanilla JS, organized into DATA / LOGIC / RENDER / NAV.
+  - All state lives in the STATE object. Swap it for an API later.
+  - Color + trend logic is pure and reusable (see gaugeStatus()).
+  - Each meeting segment is one render function. Add or reorder
+    freely in the AGENDA array.
+  - To wire to a backend: replace seedDemo() with a fetch, and
+    persist STATE on each mutation. That is the whole integration.
+
+  © 2026 Joseph "Coach Joe" Clementi. All rights reserved.
+  TORQUE, Torque Drive OS, the 7 Pillars, the 5 Rules, OODA Rx,
+  and the 6 TORQUE Principles are marks of The Leadership Pressure Lab.
+  ============================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- ======================================================
+     TORQUE CONFIG  —  your live Supabase project.
+     The anon / publishable key is SAFE in the browser; it only
+     allows what Row Level Security permits. NEVER the secret key.
+     Leave the YOUR_... placeholders to run in Demo Mode (no login).
+     ====================================================== -->
+<script>
+  window.TORQUE_CONFIG = {
+    url: "https://ubuisezzfcacvnvmhopd.supabase.co",
+    anonKey: "YOUR_SUPABASE_ANON_KEY"
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root{
+    --navy:#0A1F3D; --navy-mid:#1B3A6B; --navy-light:#D6E4F5;
+    --gold:#C8992B; --gold-pale:#F5EDD4; --gold-dim:#9A7420;
+    --steel:#4A7FA5; --charcoal:#1E1E2E; --body:#3D3D3D; --mid:#6B6B6B;
+    --border:#E2DFD8; --cream:#F8F6F2; --white:#FFFFFF;
+    --green:#2F7A4F; --amber:#C8992B; --red:#B91C1C;
+    --font-d:'DM Serif Display',Georgia,serif;
+    --font-s:'Manrope',system-ui,sans-serif;
+    --font-m:'JetBrains Mono','Courier New',monospace;
+    --ease:cubic-bezier(.16,1,.3,1);
+    --sbw:272px;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font-s); color:var(--body); background:var(--cream);
+    -webkit-font-smoothing:antialiased; line-height:1.55;
+    padding-top:env(safe-area-inset-top,0); padding-bottom:env(safe-area-inset-bottom,0);
+  }
+  h1,h2,h3,h4{font-family:var(--font-d); font-weight:400; color:var(--navy); line-height:1.12}
+  .mono{font-family:var(--font-m)}
+  .eyebrow{font-family:var(--font-s); font-weight:700; letter-spacing:.2em; text-transform:uppercase; font-size:.64rem; color:var(--gold)}
+  button{font-family:var(--font-s); cursor:pointer; border:none; background:none}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px}
+
+  /* ---------- TOP BAR ---------- */
+  .top{position:sticky; top:0; z-index:40; background:var(--navy); color:var(--cream);
+       box-shadow:0 8px 30px -14px rgba(10,31,61,.6)}
+  .top::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0); background:var(--navy); z-index:41}
+  .top__in{display:flex; align-items:center; gap:14px; padding:12px 20px; max-width:1080px; margin:0 auto}
+  .mark{flex-shrink:0}
+  .brandword{font-weight:800; letter-spacing:.06em; font-size:.92rem; line-height:1}
+  .brandsub{font-size:.56rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-top:3px}
+  .top__meta{margin-left:auto; text-align:right; font-size:.68rem; color:rgba(248,246,242,.6)}
+  .top__meta b{color:var(--cream)}
+  .legendbtn{margin-left:14px; font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+             color:var(--gold); border:1px solid rgba(200,153,43,.4); border-radius:6px; padding:6px 10px; background:transparent}
+  .legendbtn:hover{background:rgba(200,153,43,.12)}
+
+  /* ---------- PRINCIPLE LEGEND (drawer) ---------- */
+  .legend{display:none; background:var(--navy-mid); color:var(--cream); border-top:1px solid rgba(255,255,255,.08)}
+  .legend.open{display:block}
+  .legend__grid{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; padding:16px 20px; max-width:1080px; margin:0 auto}
+  .ptile{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px}
+  .ptile .pl{font-family:var(--font-d); font-size:1.5rem; color:var(--gold); line-height:1}
+  .ptile .pt{font-weight:700; font-size:.74rem; margin:6px 0 3px; color:var(--cream)}
+  .ptile .pd{font-size:.64rem; color:rgba(248,246,242,.6); line-height:1.4}
+  @media(max-width:820px){ .legend__grid{grid-template-columns:repeat(3,1fr)} .top__meta{display:none} }
+  @media(max-width:520px){ .legend__grid{grid-template-columns:repeat(2,1fr)} }
+
+  /* ---------- START SCREEN ---------- */
+  .hero{background:linear-gradient(155deg,var(--navy) 0%,var(--navy-mid) 100%); color:var(--cream); position:relative; overflow:hidden}
+  .hero__in{position:relative; z-index:2; padding:64px 20px 72px; max-width:1080px; margin:0 auto}
+  .hero h1{color:var(--cream); font-size:clamp(2.3rem,5vw,3.5rem); margin:14px 0 10px; max-width:16ch}
+  .hero h1 em{color:var(--gold); font-style:italic}
+  .hero p{font-size:1.05rem; color:rgba(248,246,242,.72); max-width:52ch; margin-bottom:28px}
+  .hero__gauge{position:absolute; right:-80px; bottom:-120px; opacity:.07; z-index:1}
+  .ctx{display:flex; flex-wrap:wrap; gap:22px; margin:26px 0 30px; padding:18px 0; border-top:1px solid rgba(255,255,255,.12); border-bottom:1px solid rgba(255,255,255,.12)}
+  .ctx > div{min-width:120px}
+  .ctx .l{font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(248,246,242,.5)}
+  .ctx .v{font-weight:700; color:var(--cream); margin-top:3px}
+  .btn{display:inline-flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.04em; border-radius:9px;
+       padding:15px 26px; font-size:.92rem; transition:transform .15s var(--ease),filter .15s, background .2s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn--gold{background:var(--gold); color:var(--navy)}
+  .btn--gold:hover{filter:brightness(1.06)}
+  .btn--navy{background:var(--navy); color:var(--cream)}
+  .btn--navy:hover{background:var(--navy-mid)}
+  .btn--ghost{background:transparent; color:var(--cream); border:1px solid rgba(255,255,255,.3)}
+  .btn--ghost:hover{background:rgba(255,255,255,.08)}
+  .btn--sm{padding:10px 16px; font-size:.78rem}
+  .agenda-preview{display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:10px; margin-top:8px}
+  .ap{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:9px; padding:12px 13px}
+  .ap .n{font-family:var(--font-m); font-size:.62rem; color:var(--gold); letter-spacing:.1em}
+  .ap .t{font-weight:700; font-size:.82rem; color:var(--cream); margin:5px 0 3px}
+  .ap .p{font-size:.62rem; color:rgba(248,246,242,.55); letter-spacing:.06em; text-transform:uppercase}
+
+  /* ---------- MEETING SHELL ---------- */
+  /* ---------- APP SHELL: collapsible left workflow drawer ---------- */
+  .meeting{display:none}
+  .meeting.active{display:flex; align-items:flex-start}
+
+  .hamburger{display:none; flex-direction:column; justify-content:center; gap:4px; width:34px; height:34px;
+             border:1px solid rgba(200,153,43,.4); border-radius:7px; background:transparent; flex-shrink:0}
+  .hamburger span{display:block; height:2px; width:16px; margin:0 auto; background:var(--gold); border-radius:2px; transition:.2s var(--ease)}
+  body.in-meeting .hamburger{display:flex}
+  .meeting.nav-open .hamburger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .meeting.nav-open .hamburger span:nth-child(2){opacity:0}
+  .meeting.nav-open .hamburger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+  /* the sidebar */
+  .sidebar{flex-shrink:0; width:var(--sbw); background:var(--white); border-right:1px solid var(--border);
+           position:sticky; top:57px; height:calc(100vh - 57px); overflow-y:auto; overflow-x:hidden;
+           transition:width .26s var(--ease); z-index:28}
+  .meeting:not(.nav-open) .sidebar{width:0; border-right-color:transparent}
+  .sidebar__in{width:var(--sbw); padding:18px 14px 28px}
+  .side__head{padding:0 6px 14px; border-bottom:1px solid var(--border); margin-bottom:12px}
+  .side__head .pl{font-size:.58rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:700}
+  .side__head .pw{font-family:var(--font-d); color:var(--navy); font-size:1.15rem; margin-top:3px}
+  .side__prog{margin-top:10px}
+  .side__prog .pbar{height:6px; border-radius:4px; background:var(--cream); overflow:hidden}
+  .side__prog .pbar i{display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-dim)); border-radius:4px; transition:width .3s var(--ease)}
+  .side__prog .pt{font-family:var(--font-m); font-size:.6rem; color:var(--mid); margin-top:6px; letter-spacing:.06em}
+
+  .snav{display:flex; flex-direction:column; gap:4px}
+  .snav__item{display:flex; align-items:center; gap:11px; width:100%; text-align:left; padding:11px 12px; border-radius:10px;
+              background:transparent; transition:background .15s, transform .1s; position:relative}
+  .snav__item:hover{background:var(--cream)}
+  .snav__num{flex-shrink:0; width:26px; height:26px; border-radius:7px; background:var(--cream); color:var(--mid);
+             font-family:var(--font-m); font-size:.72rem; font-weight:700; display:flex; align-items:center; justify-content:center}
+  .snav__txt{flex:1; min-width:0}
+  .snav__t{font-size:.84rem; font-weight:700; color:var(--navy); line-height:1.15}
+  .snav__p{font-family:var(--font-m); font-size:.58rem; color:var(--steel); letter-spacing:.06em; margin-top:2px}
+  .snav__item.done .snav__num{background:var(--green); color:#fff}
+  .snav__item.current{background:var(--gold-pale)}
+  .snav__item.current::before{content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; background:var(--gold); border-radius:3px}
+  .snav__item.current .snav__num{background:var(--navy); color:var(--gold)}
+  .side__finish{margin-top:16px; padding-top:14px; border-top:1px solid var(--border)}
+
+  /* the live work area */
+  .stage{flex:1; min-width:0; padding-bottom:50px}
+  .meeting:not(.nav-open) .stage{width:100%}
+
+  /* backdrop (mobile overlay only) */
+  .backdrop{display:none; position:fixed; inset:57px 0 0; background:rgba(10,31,61,.4); z-index:27; opacity:0; transition:opacity .2s}
+
+  @media(max-width:860px){
+    .sidebar{position:fixed; top:57px; left:0; bottom:0; height:auto; width:var(--sbw);
+             transform:translateX(-100%); transition:transform .26s var(--ease); box-shadow:10px 0 40px -18px rgba(10,31,61,.5)}
+    .meeting:not(.nav-open) .sidebar{width:var(--sbw); border-right-color:var(--border)}
+    .meeting.nav-open .sidebar{transform:translateX(0)}
+    .stage{width:100%}
+    .meeting.nav-open .backdrop{display:block; opacity:1}
+  }
+
+  .seg{margin:0 auto; padding:30px 24px 10px; animation:fade .35s var(--ease)}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .seg__head{display:flex; align-items:flex-start; gap:16px; margin-bottom:6px}
+  .seg__pill{flex-shrink:0; width:46px; height:46px; border-radius:11px; background:var(--navy); color:var(--gold);
+             font-family:var(--font-d); font-size:1.6rem; display:flex; align-items:center; justify-content:center}
+  .seg__title h2{font-size:1.7rem}
+  .seg__title .meta{font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); margin-top:4px; font-weight:600}
+  .seg__title .meta b{color:var(--steel)}
+  .seg__time{margin-left:auto; text-align:right; flex-shrink:0}
+  .seg__time .clock{font-family:var(--font-m); font-size:1.3rem; font-weight:600; color:var(--navy)}
+  .seg__time .sug{font-size:.6rem; color:var(--mid); letter-spacing:.08em; text-transform:uppercase}
+  .seg__intro{color:var(--body); font-size:.96rem; max-width:62ch; margin:14px 0 22px; padding-left:62px}
+  @media(max-width:620px){ .seg__intro{padding-left:0} .seg__time{display:none} }
+  .gold-rule{height:3px; width:70px; background:linear-gradient(90deg,var(--gold),rgba(200,153,43,.1)); border-radius:3px; margin:0 0 20px 62px}
+  @media(max-width:620px){ .gold-rule{margin-left:0} }
+
+  /* ---------- CARDS / PANELS ---------- */
+  .panel{background:var(--white); border:1px solid var(--border); border-radius:13px; box-shadow:0 4px 18px -10px rgba(10,31,61,.15)}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media(max-width:720px){ .grid2{grid-template-columns:1fr} }
+
+  /* One Outcome card */
+  .outcome{background:linear-gradient(150deg,var(--navy),var(--navy-mid)); color:var(--cream); border-radius:13px; padding:26px 26px 28px}
+  .outcome .l{font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:700}
+  .outcome textarea{width:100%; background:transparent; border:none; color:var(--cream); font-family:var(--font-d);
+                    font-size:1.55rem; line-height:1.25; resize:none; margin-top:8px; outline:none}
+  .outcome textarea::placeholder{color:rgba(248,246,242,.4)}
+  .outcome .hint{font-size:.74rem; color:rgba(248,246,242,.55); margin-top:10px}
+
+  .attend{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .chip{display:inline-flex; align-items:center; gap:7px; background:var(--cream); border:1px solid var(--border);
+        border-radius:30px; padding:7px 13px 7px 9px; font-size:.8rem; font-weight:600; color:var(--navy); transition:.15s}
+  .chip .dot{width:9px; height:9px; border-radius:50%; background:var(--mid)}
+  .chip.in{background:var(--navy); color:var(--cream); border-color:var(--navy)}
+  .chip.in .dot{background:var(--green)}
+
+  /* Gauges */
+  .gauges{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media(max-width:720px){ .gauges{grid-template-columns:1fr} }
+  .gauge{border:1px solid var(--border); border-radius:12px; padding:15px 16px; background:var(--white); position:relative; overflow:hidden}
+  .gauge::before{content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--mid)}
+  .gauge.g-green::before{background:var(--green)} .gauge.g-amber::before{background:var(--amber)} .gauge.g-red::before{background:var(--red)}
+  .gauge__top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
+  .gauge__name{font-weight:700; font-size:.86rem; color:var(--navy)}
+  .gauge__owner{font-size:.64rem; color:var(--mid); margin-top:2px; letter-spacing:.04em; text-transform:uppercase}
+  .status{font-size:.58rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; color:#fff; white-space:nowrap}
+  .status.g-green{background:var(--green)} .status.g-amber{background:var(--amber);color:var(--navy)} .status.g-red{background:var(--red)}
+  .gauge__row{display:flex; align-items:flex-end; gap:14px; margin-top:12px}
+  .gauge__num{font-family:var(--font-m); font-size:1.5rem; font-weight:700; color:var(--navy); line-height:1}
+  .gauge__num input{width:74px; font-family:var(--font-m); font-size:1.5rem; font-weight:700; color:var(--navy);
+                    border:1px solid var(--border); border-radius:7px; padding:3px 7px; text-align:center}
+  .gauge__num input:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .gauge__vs{font-size:.66rem; color:var(--mid); padding-bottom:3px}
+  .gauge__spark{margin-left:auto}
+  .trendarrow{font-weight:700; font-family:var(--font-m)}
+  .t-up{color:var(--green)} .t-down{color:var(--red)} .t-flat{color:var(--mid)}
+
+  /* Commitments / behavior rows */
+  .brow{display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid var(--border)}
+  .brow:last-child{border-bottom:none}
+  .brow__who{flex-shrink:0; width:86px}
+  .brow__who .nm{font-weight:700; color:var(--navy); font-size:.86rem}
+  .brow__who .rl{font-size:.6rem; color:var(--mid); text-transform:uppercase; letter-spacing:.06em}
+  .brow__beh{flex:1; min-width:0}
+  .brow__beh .bt{font-size:.88rem; color:var(--body)}
+  .brow__beh .bm{font-family:var(--font-m); font-size:.66rem; color:var(--mid); margin-top:3px}
+  .brow__pct{flex-shrink:0; text-align:right; min-width:58px}
+  .brow__pct .p{font-family:var(--font-m); font-weight:700; font-size:1.1rem}
+  .did{display:flex; gap:6px; flex-shrink:0}
+  .didbtn{border:1px solid var(--border); background:var(--white); border-radius:7px; padding:7px 11px; font-size:.72rem; font-weight:700; color:var(--mid)}
+  .didbtn.yes.on{background:var(--green); color:#fff; border-color:var(--green)}
+  .didbtn.no.on{background:var(--red); color:#fff; border-color:var(--red)}
+
+  /* OODA Rx */
+  .ooda{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+  @media(max-width:820px){ .ooda{grid-template-columns:1fr 1fr} }
+  @media(max-width:520px){ .ooda{grid-template-columns:1fr} }
+  .ophase{border-radius:12px; padding:15px; color:#fff}
+  .ophase h4{color:#fff; font-size:1rem; display:flex; align-items:center; gap:8px}
+  .ophase .ol{width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,.2); display:inline-flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:.95rem}
+  .ophase p{font-size:.68rem; color:rgba(255,255,255,.8); margin:4px 0 10px}
+  .ophase textarea{width:100%; border:none; border-radius:8px; padding:9px; font-family:var(--font-s); font-size:.82rem; resize:vertical; min-height:72px; color:var(--charcoal)}
+  .o-observe{background:#1B5E6F} .o-orient{background:var(--steel)} .o-decide{background:var(--red)} .o-act{background:var(--green)}
+  .constraint-pick{display:flex; flex-direction:column; gap:8px; margin-bottom:18px}
+  .cpick{display:flex; align-items:center; gap:12px; border:1px solid var(--border); border-radius:10px; padding:13px 15px; background:var(--white); text-align:left; width:100%; transition:.15s}
+  .cpick:hover{border-color:var(--gold)}
+  .cpick.sel{border-color:var(--navy); background:var(--gold-pale)}
+  .cpick .rank{font-family:var(--font-m); font-weight:700; color:var(--red)}
+  .cpick .ct{font-weight:600; color:var(--navy); font-size:.9rem}
+  .cpick .cd{font-size:.72rem; color:var(--mid); margin-top:2px}
+
+  /* Pillars */
+  .pillrow{display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid var(--border)}
+  .pillrow:last-child{border-bottom:none}
+  .pillrow .pid{font-family:var(--font-d); font-size:1.4rem; color:var(--gold); width:28px}
+  .pillrow .pn{flex:1; font-weight:600; color:var(--navy); font-size:.9rem}
+  .pillrow .pbar{flex:0 0 120px; height:8px; border-radius:5px; background:var(--cream); overflow:hidden}
+  .pillrow .pbar i{display:block; height:100%; border-radius:5px}
+  .pillrow .psc{font-family:var(--font-m); font-weight:700; font-size:.82rem; width:42px; text-align:right; color:var(--navy)}
+  .priority-tag{font-size:.56rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--red); border-radius:20px; padding:2px 8px}
+
+  /* inputs */
+  .fld{margin-bottom:14px}
+  .fld label{display:block; font-size:.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:5px}
+  .fld input,.fld textarea,.fld select{width:100%; border:1px solid var(--border); border-radius:9px; padding:10px 12px; font-family:var(--font-s); font-size:.9rem; color:var(--charcoal); background:var(--white)}
+  .fld input:focus,.fld textarea:focus,.fld select:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .ifthen{background:var(--gold-pale); border:1px solid rgba(200,153,43,.4); border-radius:9px; padding:11px 13px; font-size:.78rem; color:var(--gold-dim); font-weight:600; margin-bottom:14px; font-family:var(--font-m)}
+
+  .section-label{display:flex; align-items:center; gap:10px; margin:0 0 14px}
+  .section-label .k{font-family:var(--font-d); color:var(--gold); font-size:1.3rem}
+  .section-label h3{font-size:.95rem; letter-spacing:.04em; text-transform:uppercase; font-weight:700; font-family:var(--font-s); color:var(--navy)}
+
+  /* nav buttons */
+  .segnav{display:flex; justify-content:space-between; align-items:center; gap:12px; max-width:900px; margin:28px 24px 0; padding:20px 0; border-top:1px solid var(--border)}
+  .seg{max-width:900px}
+  .segnav .back{color:var(--mid); font-weight:600; font-size:.84rem}
+  .segnav .back:hover{color:var(--navy)}
+
+  /* rating */
+  .rate{display:flex; gap:10px; margin:10px 0 4px}
+  .rate button{width:52px; height:52px; border-radius:11px; background:var(--cream); border:1px solid var(--border); font-family:var(--font-m); font-weight:700; font-size:1.1rem; color:var(--mid); transition:.15s}
+  .rate button.on{background:var(--navy); color:var(--cream); border-color:var(--navy); transform:scale(1.05)}
+
+  /* ---------- SUMMARY ---------- */
+  .summary{display:none; padding:36px 0 60px; animation:fade .35s var(--ease)}
+  .summary.active{display:block}
+  .sumcard{background:var(--white); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:0 10px 40px -16px rgba(10,31,61,.3)}
+  .sumhead{background:linear-gradient(150deg,var(--navy),var(--navy-mid)); color:var(--cream); padding:26px 28px}
+  .sumhead .eyebrow{color:var(--gold)}
+  .sumhead h2{color:var(--cream); font-size:1.9rem; margin-top:6px}
+  .sumhead .sub{color:rgba(248,246,242,.7); font-size:.82rem; margin-top:6px; font-family:var(--font-m)}
+  .sumbody{padding:8px 28px 24px}
+  .sumsec{padding:18px 0; border-bottom:1px solid var(--border)}
+  .sumsec:last-child{border-bottom:none}
+  .sumsec .sl{font-size:.6rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:8px}
+  .sumsec .big{font-family:var(--font-d); font-size:1.3rem; color:var(--navy); line-height:1.25}
+  .sumlist{list-style:none}
+  .sumlist li{display:flex; gap:12px; padding:7px 0; font-size:.88rem; align-items:baseline}
+  .sumlist li .own{font-weight:700; color:var(--navy); flex-shrink:0; min-width:72px}
+  .sumlist li .bd{color:var(--body)}
+  .sumdot{display:inline-block; width:9px; height:9px; border-radius:50%; flex-shrink:0; position:relative; top:1px}
+  .footnote{text-align:center; color:var(--mid); font-size:.72rem; margin-top:26px}
+  .footnote b{color:var(--navy)}
+
+  /* ---------- LOGIN ---------- */
+  .login{display:none; min-height:calc(100vh - 57px)}
+  .login.active{display:flex}
+  .login__brand{flex:1; background:linear-gradient(155deg,var(--navy),var(--navy-mid)); display:flex; align-items:center; padding:50px}
+  .login__brandin{max-width:460px; margin-left:auto}
+  .login__form{flex:0 0 440px; display:flex; align-items:center; justify-content:center; padding:40px; background:var(--cream)}
+  .login__formin{width:100%; max-width:330px}
+  .login__note{display:none; margin-top:16px; background:var(--gold-pale); border:1px solid rgba(200,153,43,.4); border-radius:9px; padding:11px 13px; font-size:.76rem; color:var(--gold-dim)}
+  body.demo-mode .login__note{display:block}
+  @media(max-width:860px){ .login__brand{display:none} .login__form{flex:1} }
+
+  /* ---------- ORG DASHBOARD ---------- */
+  .orgdash{display:none; padding:34px 0 70px; animation:fade .35s var(--ease)}
+  .orgdash.active{display:block}
+  .groupcard{background:linear-gradient(150deg,var(--navy),var(--navy-mid)); color:var(--cream); border-radius:14px; padding:26px 28px; margin-bottom:22px}
+  .groupcard .l{font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:700}
+  .groupcard h2{color:var(--cream); font-size:1.5rem; margin:4px 0 2px}
+  .groupcard .gh{display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between}
+  .groupcard textarea{width:100%; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:var(--cream);
+                      font-family:var(--font-d); font-size:1.4rem; line-height:1.3; resize:none; margin-top:12px; padding:12px 14px; outline:none}
+  .groupcard textarea::placeholder{color:rgba(248,246,242,.4)}
+  .groupcard textarea:focus{border-color:var(--gold)}
+  .groupcard .ro{font-family:var(--font-d); font-size:1.4rem; margin-top:12px; padding:12px 14px; background:rgba(255,255,255,.05); border-radius:10px; border:1px solid rgba(255,255,255,.1)}
+  .health-badge{display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.08); border-radius:30px; padding:8px 16px}
+  .health-badge .dot{width:12px; height:12px; border-radius:50%}
+  .health-badge .hs{font-family:var(--font-m); font-weight:700; font-size:1.1rem; color:var(--cream)}
+  .health-badge .hl{font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(248,246,242,.6)}
+
+  .deptgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px}
+  .deptcard{background:var(--white); border:1px solid var(--border); border-radius:13px; padding:18px; position:relative; overflow:hidden; transition:transform .12s, box-shadow .2s}
+  .deptcard:hover{transform:translateY(-2px); box-shadow:0 12px 30px -14px rgba(10,31,61,.28)}
+  .deptcard::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px}
+  .deptcard.g-green::before{background:var(--green)} .deptcard.g-amber::before{background:var(--amber)} .deptcard.g-red::before{background:var(--red)}
+  .deptcard__h{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px}
+  .deptcard__name{font-family:var(--font-d); font-size:1.25rem; color:var(--navy)}
+  .deptcard__head{font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--mid); margin-top:2px}
+  .deptcard__oc{background:var(--cream); border:1px solid var(--border); border-radius:9px; padding:11px 12px; margin:10px 0; min-height:62px}
+  .deptcard__oc .ocl{font-size:.56rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:4px}
+  .deptcard__oc .ocv{font-size:.86rem; color:var(--body); line-height:1.4}
+  .deptcard__oc .ocempty{font-size:.82rem; color:var(--red); font-style:italic}
+  .deptcard__oc textarea{width:100%; border:none; background:transparent; resize:none; font-family:var(--font-s); font-size:.86rem; color:var(--charcoal); outline:none; line-height:1.4}
+  .deptcard__foot{display:flex; justify-content:space-between; align-items:center; margin-top:4px}
+  .deptcard__metrics{display:flex; gap:5px}
+  .mdot{width:10px; height:10px; border-radius:50%}
+  .align-tag{font-size:.56rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; border-radius:20px; padding:3px 9px}
+  .align-tag.on{background:#E7F0EA; color:var(--green)} .align-tag.off{background:#FBE9E7; color:var(--red)}
+  .orgbar{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:18px}
+  .rolepill{font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; background:var(--navy); color:var(--gold); border-radius:20px; padding:4px 11px}
+
+  /* ---------- DIAGNOSTIC ON-RAMP ---------- */
+  .diag{display:none; padding:34px 0 70px; animation:fade .35s var(--ease)}
+  .diag.active{display:block}
+  .diag__band{background:linear-gradient(150deg,var(--navy),var(--navy-mid)); color:var(--cream); border-radius:13px; padding:22px 26px; margin-bottom:22px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px}
+  .diag__band .l{font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:700}
+  .diag__score{display:flex; align-items:baseline; gap:10px}
+  .diag__score .big{font-family:var(--font-m); font-size:3rem; font-weight:700; line-height:1}
+  .diag__score .max{color:rgba(248,246,242,.5); font-size:.9rem}
+  .diag__band .count{font-size:.74rem; color:rgba(248,246,242,.6); text-align:right}
+  .dpill{border:1px solid var(--border); border-radius:12px; margin-bottom:12px; overflow:hidden; background:var(--white)}
+  .dpill__h{display:flex; align-items:center; gap:12px; padding:13px 16px; background:var(--cream); border-bottom:1px solid var(--border)}
+  .dpill__h .id{font-family:var(--font-d); font-size:1.3rem; color:var(--gold)}
+  .dpill__h .nm{font-weight:700; color:var(--navy); font-size:.92rem; flex:1}
+  .dpill__h .sc{font-family:var(--font-m); font-weight:700; font-size:.82rem}
+  .dq{padding:13px 16px; border-bottom:1px solid var(--border); display:flex; gap:14px; align-items:center}
+  .dq:last-child{border-bottom:none}
+  .dq .qt{flex:1; font-size:.86rem; color:var(--body)}
+  .dscale{display:flex; gap:6px; flex-shrink:0}
+  .dscale button{width:34px; height:34px; border-radius:8px; background:var(--cream); border:1px solid var(--border); font-family:var(--font-m); font-weight:700; font-size:.82rem; color:var(--mid); transition:.12s}
+  .dscale button:hover{background:var(--gold-pale)}
+  .dscale button.on{background:var(--navy); color:var(--cream); border-color:var(--navy)}
+  @media(max-width:620px){ .dq{flex-direction:column; align-items:stretch; gap:9px} .dscale{justify-content:space-between} .dscale button{flex:1} }
+
+  /* escalation badge on a gauge */
+  .esc{display:inline-flex; align-items:center; gap:4px; font-size:.56rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; background:var(--red); color:#fff; border-radius:20px; padding:3px 8px; margin-right:6px}
+  .gauge.esc-on{box-shadow:0 0 0 2px rgba(185,28,28,.25)}
+
+  /* OODA full prescription + review loop */
+  .rx-block{background:var(--gold-pale); border:1px solid rgba(200,153,43,.4); border-radius:11px; padding:16px; margin-top:16px}
+  .rx-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:10px}
+  @media(max-width:720px){ .rx-grid{grid-template-columns:1fr} }
+  .review-box{background:#F3EEF7; border:1px solid #D9CBE6; border-radius:11px; padding:16px; margin-top:18px}
+  .review-box .rl{font-size:.6rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#4A3267; margin-bottom:4px}
+  .disclose{margin-top:14px; border:1px solid var(--border); border-radius:10px; overflow:hidden}
+  .disclose > summary{list-style:none; cursor:pointer; padding:12px 15px; background:var(--cream); font-weight:700; font-size:.82rem; color:var(--navy); display:flex; align-items:center; gap:8px}
+  .disclose > summary::-webkit-details-marker{display:none}
+  .disclose > summary::before{content:"+"; font-family:var(--font-m); color:var(--gold); font-weight:700}
+  .disclose[open] > summary::before{content:"\2212"}
+  .disclose__body{padding:16px}
+
+  .demo-ribbon{position:fixed; bottom:14px; left:14px; z-index:50; background:var(--navy); color:var(--cream);
+    font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:7px 12px; border-radius:30px;
+    box-shadow:0 8px 24px -8px rgba(10,31,61,.5); border:1px solid rgba(200,153,43,.4)}
+  .demo-ribbon b{color:var(--gold)}
+  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--navy); color:var(--cream);
+    padding:12px 20px; border-radius:10px; font-size:.82rem; font-weight:600; opacity:0; pointer-events:none; transition:.3s var(--ease); z-index:60}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+  @media print{
+    .top,.rail,.segnav,.demo-ribbon,.hero,.legend{display:none!important}
+    body{background:#fff}
+    .summary{display:block!important; padding:0}
+    .sumcard{box-shadow:none; border:1px solid #ccc}
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================= TOP BAR ======================= -->
+<header class="top">
+  <div class="top__in">
+    <button class="hamburger" id="hamburger" aria-label="Toggle workflow menu"><span></span><span></span><span></span></button>
+    <span class="mark" id="markHome" style="cursor:pointer" title="Restart demo">
+      <svg width="38" height="38" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="#0A1F3D" stroke="#C8992B" stroke-width="1.5"/>
+        <g stroke="#C8992B">
+          <line x1="24" y1="6" x2="24" y2="10.5" stroke-width="1.6"/>
+          <line x1="24" y1="37.5" x2="24" y2="42" stroke-width="1.6"/>
+          <line x1="6" y1="24" x2="10.5" y2="24" stroke-width="1.6"/>
+          <line x1="37.5" y1="24" x2="42" y2="24" stroke-width="1.6"/>
+          <line x1="11" y1="11" x2="14" y2="14" stroke-width=".8" opacity=".6"/>
+          <line x1="34" y1="34" x2="37" y2="37" stroke-width=".8" opacity=".6"/>
+          <line x1="37" y1="11" x2="34" y2="14" stroke-width=".8" opacity=".6"/>
+          <line x1="14" y1="34" x2="11" y2="37" stroke-width=".8" opacity=".6"/>
+        </g>
+        <line x1="24" y1="24" x2="33" y2="18" stroke="#B91C1C" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="2.6" fill="#C8992B"/>
+      </svg>
+    </span>
+    <div>
+      <div class="brandword">TORQUE DRIVE OS</div>
+      <div class="brandsub">The Three Points · LPL™</div>
+    </div>
+    <div class="top__meta">
+      <div><b id="metaStore">Demo Motors · Service</b></div>
+      <div id="metaWeek">Week 7 · Facilitated by Marcus</div>
+    </div>
+    <button class="legendbtn" id="legendToggle">The 6 Principles</button>
+  </div>
+  <div class="legend" id="legend">
+    <div class="legend__grid" id="legendGrid"></div>
+  </div>
+</header>
+
+<!-- ======================= LOGIN ======================= -->
+<section class="login" id="loginScreen">
+  <div class="login__brand">
+    <div class="login__brandin">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:40px">
+        <svg width="42" height="42" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="22" fill="#0A1F3D" stroke="#C8992B" stroke-width="1.5"/>
+          <line x1="24" y1="24" x2="33" y2="18" stroke="#B91C1C" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="2.6" fill="#C8992B"/>
+        </svg>
+        <div><div style="font-weight:800; letter-spacing:.06em; color:#F8F6F2">TORQUE DRIVE OS</div>
+        <div style="font-size:.58rem; letter-spacing:.18em; text-transform:uppercase; color:#C8992B; margin-top:3px">The Leadership Pressure Lab™</div></div>
+      </div>
+      <h1 style="color:#F8F6F2; font-size:2.6rem; line-height:1.15; margin-bottom:14px">You cannot manage<br>a <em style="color:#C8992B; font-style:italic">result.</em></h1>
+      <p style="color:rgba(248,246,242,.72); font-size:1.05rem; max-width:40ch">You can only manage the behavior that produces it. Sign in to set your One Outcome, run your meeting, and keep it aligned to the group.</p>
+    </div>
+  </div>
+  <div class="login__form">
+    <div class="login__formin">
+      <div class="eyebrow" style="color:#C8992B">Secure Access</div>
+      <h2 style="font-size:1.7rem; margin:6px 0 2px">Sign in to your engagement</h2>
+      <p style="font-size:.86rem; color:var(--mid); margin-bottom:24px">Access is provisioned by your facilitator.</p>
+      <div class="fld"><label>Email</label><input id="loginEmail" type="email" placeholder="you@dealership.com"></div>
+      <div class="fld"><label>Password</label><input id="loginPass" type="password" placeholder="••••••••"></div>
+      <div id="loginErr" style="color:var(--red); font-size:.8rem; font-weight:600; min-height:18px; margin-bottom:6px"></div>
+      <button class="btn btn--navy" id="loginBtn" style="width:100%; justify-content:center">Enter the System</button>
+      <button class="btn btn--ghost btn--sm" id="demoBtn" style="width:100%; justify-content:center; margin-top:10px; color:var(--navy); border-color:var(--border)">Explore the Demo Instead</button>
+      <div id="demoNote" class="login__note">Running in Demo Mode. Add your Supabase key to enable saved logins.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ORG DASHBOARD ======================= -->
+<section class="orgdash" id="orgScreen"><div class="wrap"><div id="orgHost"></div></div></section>
+
+<!-- ======================= START SCREEN ======================= -->
+<section class="hero" id="hero">
+  <div class="hero__gauge">
+    <svg width="460" height="460" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" fill="none" stroke="#C8992B" stroke-width="1"/>
+      <line x1="24" y1="24" x2="33" y2="18" stroke="#C8992B" stroke-width="1.2"/>
+    </svg>
+  </div>
+  <div class="hero__in">
+    <div class="eyebrow">A Behavior-Based Operating Cadence</div>
+    <h1>Run the meeting that <em>installs the behavior.</em></h1>
+    <p>Most weekly meetings review the number and move on. This one finds the one behavior that moves the number, names who owns it, and checks that they did it. Built on the six TORQUE principles.</p>
+
+    <div class="ctx">
+      <div><div class="l">Business</div><div class="v" id="ctxStore">Demo Motors · Service Dept</div></div>
+      <div><div class="l">Facilitator</div><div class="v">Marcus, Service Director</div></div>
+      <div><div class="l">Cadence</div><div class="v">Weekly · 60 minutes</div></div>
+      <div><div class="l">This session</div><div class="v">Week 7 of the install</div></div>
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px">
+      <button class="btn btn--gold" id="diagBtn">Score Your Team First →</button>
+      <button class="btn btn--ghost" id="startBtn">Skip to the Meeting</button>
+      <button class="btn btn--ghost" id="jumpSummary">See a Finished Summary</button>
+    </div>
+    <p style="font-size:.78rem; color:rgba(248,246,242,.55); max-width:50ch; margin-bottom:30px">
+      Score your team on the 7 pillars in ten minutes, and the meeting builds itself around your two weakest. Or skip in and explore the pre-loaded demo.</p>
+
+    <div class="eyebrow" style="margin-bottom:12px">The 60-Minute Flow</div>
+    <div class="agenda-preview" id="agendaPreview"></div>
+  </div>
+</section>
+
+<!-- ======================= DIAGNOSTIC ON-RAMP ======================= -->
+<section class="diag" id="diagScreen"><div class="wrap"><div id="diagHost"></div></div></section>
+
+<!-- ======================= MEETING ======================= -->
+<main class="meeting" id="meeting">
+  <aside class="sidebar" id="sidebar"><div class="sidebar__in" id="sideNav"></div></aside>
+  <div class="backdrop" id="backdrop"></div>
+  <div class="stage">
+    <div id="segHost"></div>
+    <div class="segnav" id="segNav"></div>
+  </div>
+</main>
+
+<!-- ======================= SUMMARY ======================= -->
+<section class="summary" id="summaryScreen"><div class="wrap"><div id="summaryHost"></div></div></section>
+
+<div class="demo-ribbon"><b>DEMO</b> &nbsp;Pre-loaded sample data · <b>Fully interactive</b></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   SERVICE LAYER  —  Supabase auth + organization data.
+   ------------------------------------------------------------
+   Reuses the live project (profiles + partner_data tables).
+   For the org model we store ONE shared document per account
+   under partner_data, keyed by the facilitator/org id, holding
+   the group outcome, departments, members, and each department's
+   One Outcome. Row Level Security keeps each org isolated.
+
+   If keys are not configured, isConfigured is false and the app
+   runs in Demo Mode exactly as before (no login, resets).
+   ============================================================ */
+const CFG = (window.TORQUE_CONFIG||{});
+const isConfigured = !!(CFG.url && CFG.anonKey
+  && !String(CFG.url).includes("YOUR_") && !String(CFG.anonKey).includes("YOUR_"));
+let sb = null;
+if(isConfigured && window.supabase){
+  sb = window.supabase.createClient(CFG.url, CFG.anonKey, {
+    auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false }
+  });
+}
+
+/* ---- AUTH ---- */
+async function authCurrentUser(){
+  if(!sb) return null;
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) return null;
+  return await authHydrate(session.user.id, session.user.email||"");
+}
+async function authHydrate(id, email){
+  const { data } = await sb.from("profiles").select("role,display_name,store").eq("id",id).maybeSingle();
+  if(!data){
+    await sb.from("profiles").insert({ id, role:"partner", display_name:"", store:"" });
+    return { id, email, role:"partner", displayName:"", store:"" };
+  }
+  return { id, email, role:data.role, displayName:data.display_name||"", store:data.store||"" };
+}
+async function authSignIn(email, password){
+  if(!sb) return { error:"Not configured." };
+  const { data, error } = await sb.auth.signInWithPassword({ email:email.trim(), password });
+  if(error || !data.user) return { error:(error&&error.message)||"Sign in failed." };
+  return { user: await authHydrate(data.user.id, data.user.email||"") };
+}
+async function authSignOut(){ if(sb) await sb.auth.signOut(); }
+
+/* ---- ORG DATA (shared document per org) ----
+   The org doc lives in partner_data under the facilitator's id,
+   or, for a department-head user, under their created_by owner.
+   orgOwnerId() resolves which org a signed-in user belongs to. */
+async function orgOwnerId(user){
+  if(user.role==="facilitator") return user.id;
+  // department heads carry created_by on their profile
+  const { data } = await sb.from("profiles").select("created_by").eq("id",user.id).maybeSingle();
+  return (data && data.created_by) ? data.created_by : user.id;
+}
+async function orgLoad(ownerId){
+  const { data } = await sb.from("partner_data").select("data").eq("user_id",ownerId).maybeSingle();
+  return (data && data.data && data.data.org) ? data.data : null;
+}
+async function orgSave(ownerId, payload){
+  payload = payload || {};
+  payload.updatedAt = new Date().toISOString();
+  await sb.from("partner_data").upsert(
+    { user_id:ownerId, data:payload, updated_at:new Date().toISOString() },
+    { onConflict:"user_id" });
+}
+
+/* ============================================================
+   DATA  —  the demo state (used in Demo Mode and as the shape
+   the org seeds its first department meeting from).
+   ============================================================ */
+const PRINCIPLES = [
+  {k:"T", t:"Target the One Outcome", d:"Name the single result that makes the rest easier or unnecessary."},
+  {k:"O", t:"Own the Behavior", d:"Every behavior has one name attached. No shared ownership."},
+  {k:"R", t:"Reinforce by Repetition", d:"Coach it at the point of performance, again and again, until it holds."},
+  {k:"Q", t:"Quantify the Leading Indicator", d:"Measure the behavior, not just the result it eventually produces."},
+  {k:"U", t:"Unblock the Constraint", d:"Find the one thing in the way. Clear it. Assign who removes it."},
+  {k:"E", t:"Evaluate, Cut, Double Down", d:"Each week, stop one thing and scale one thing. Evolve on purpose."},
+];
+
+/* THE ACTION POINT  —  department leadership, 30 minutes.
+   Translate the executive decision. Assign the behavior. */
+const DEPT_AGENDA = [
+  {id:"drive",     n:"01", t:"Take the Priority",     mandate:"Translate", min:4,  render:renderDrive},
+  {id:"gauges",    n:"02", t:"Read the Proof",         mandate:"Measure",   min:6,  render:renderGauges},
+  {id:"commit",    n:"04", t:"Verify Adoption",        mandate:"Verify",    min:7,  render:renderCommit},
+  {id:"constraint",n:"05", t:"Clear the Constraint",   mandate:"Unblock",   min:8,  render:renderConstraint},
+  {id:"next",      n:"06", t:"Assign the Behavior",    mandate:"Assign",    min:4,  render:renderNext},
+  {id:"rate",      n:"07", t:"Close the Loop",         mandate:"Carry",     min:1,  render:renderRate},
+];
+
+/* THE PERFORMANCE POINT  —  executive leadership, 90 minutes.
+   Identify the gap. Decide the priority. */
+const EXEC_AGENDA = [
+  {id:"standard", n:"01", t:"Set the Standard",     mandate:"Aim",      min:5,  render:renderStandard},
+  {id:"scoreboard",n:"02",t:"Read the Store",       mandate:"Review",   min:20, render:renderScoreboard},
+  {id:"proofup",  n:"03", t:"Review the Proof",     mandate:"Verify",   min:15, render:renderProofUp},
+  {id:"gap",      n:"04", t:"Name the Gap",         mandate:"Identify", min:20, render:renderGap},
+  {id:"priority", n:"05", t:"Decide the Priority",  mandate:"Decide",   min:15, render:renderPriority},
+  {id:"assign",   n:"06", t:"Assign It Down",       mandate:"Cascade",  min:10, render:renderAssign},
+  {id:"execrate", n:"07", t:"Close the Loop",       mandate:"Carry",    min:5,  render:renderExecRate},
+];
+
+/* the nav runs whichever agenda is active */
+let ACTIVE_AGENDA = DEPT_AGENDA;
+let meetingMode = "dept"; // "dept" (Action Point) or "exec" (Performance Point)
+
+/* The 7 Pillars (from Torque Drive OS) and the 21-question diagnostic,
+   3 statements per pillar. Scored 1 (Never) to 5 (Always). */
+const PILLAR_DEFS = [
+  {id:1, name:"Diagnose the Real Constraint"},
+  {id:2, name:"Margins Before Growth"},
+  {id:3, name:"Make Your Offer Undeniable"},
+  {id:4, name:"Build Repeatable Systems"},
+  {id:5, name:"Redefine Hiring Correctly"},
+  {id:6, name:"Install Accountability"},
+  {id:7, name:"Evaluate, Cut, Double Down"},
+];
+const DIAGNOSTIC = [
+  {p:1, q:"My team knows the single biggest bottleneck in our shop right now."},
+  {p:1, q:"I can name the exact step where we lose the most time or money."},
+  {p:1, q:"When we hit a slowdown, we find root cause before we react."},
+  {p:2, q:"I review effective labor rate and parts-to-labor before total count."},
+  {p:2, q:"My team understands which services drive the highest margin."},
+  {p:2, q:"We fix margin leaks before we chase more volume."},
+  {p:3, q:"Every advisor can clearly say why a customer should choose us."},
+  {p:3, q:"Our inspection and menu process is the same across every advisor."},
+  {p:3, q:"I coach the value presentation in the moment, not just in meetings."},
+  {p:4, q:"Our shop runs its core processes the same whether I am here or not."},
+  {p:4, q:"We have a daily alignment that is short and actually changes behavior."},
+  {p:4, q:"Our processes are built around behaviors, not just steps."},
+  {p:5, q:"We build a talent pipeline instead of waiting for applications."},
+  {p:5, q:"We hire for character and train for skill, not the reverse."},
+  {p:5, q:"We have a real development track for techs and advisors."},
+  {p:6, q:"Accountability here is a pre-decision, not a reaction to a bad week."},
+  {p:6, q:"I coach in the moment at the point of performance, not only in reviews."},
+  {p:6, q:"My team owns outcomes without waiting for me to point out the problem."},
+  {p:7, q:"Every week we name one thing to stop and one thing to scale."},
+  {p:7, q:"We hold a protected reflection time every week before the weekend."},
+  {p:7, q:"We decide what to keep from behavior data, not gut alone."},
+];
+const SCORE_WORDS = ["","Never","Rarely","Sometimes","Usually","Always"];
+
+/* ============================================================
+   ORG MODEL  —  one store, many departments, cascading outcomes.
+   GROUP sets the One Outcome. Each DEPARTMENT head sets a
+   department One Outcome aligned to the group's. Everyone sees
+   the group outcome above their own.
+   ============================================================ */
+let ORG = null;        // the live organization (when signed in)
+let SESSION = null;    // the signed-in user
+let activeDeptId = null;
+
+const DEPT_SEED = [
+  {id:"service", name:"Service",  head:"", outcome:"", aligned:true,
+   gauges:[
+     {name:"MPI Presentation Rate", owner:"Advisor Lead", unit:"%", target:90, actual:84, hist:[58,62,65,68,70,72,74,78,80,82,83]},
+     {name:"Menu Acceptance",       owner:"Advisor Lead", unit:"%", target:45, actual:38, hist:[28,30,31,32,33,34,35,36,37,38,38]},
+     {name:"Write-Up Completion",   owner:"Advisor",      unit:"%", target:95, actual:96, hist:[82,84,86,88,89,90,91,92,93,94,95]},
+   ]},
+  {id:"sales", name:"Sales", head:"", outcome:"", aligned:true,
+   gauges:[
+     {name:"Daily Prospecting Calls", owner:"Sales Mgr", unit:"/20", target:20, actual:16, hist:[9,10,11,12,12,13,14,14,15,15,16]},
+     {name:"Follow-Up Within 24h",    owner:"BDC Lead",  unit:"%",   target:85, actual:72, hist:[50,54,58,61,64,66,68,69,70,71,72]},
+     {name:"Closing Ratio",           owner:"Sales Mgr", unit:"%",   target:22, actual:19, hist:[12,13,14,15,16,16,17,17,18,18,19]},
+   ]},
+  {id:"parts", name:"Parts", head:"", outcome:"", aligned:true,
+   gauges:[
+     {name:"Fill Rate",            owner:"Parts Mgr", unit:"%",    target:92, actual:94, hist:[84,86,87,88,89,90,91,92,93,93,94]},
+     {name:"Special Order Aging",  owner:"Parts Mgr", unit:"days", target:3,  actual:4,  hist:[6,6,5,5,5,4,4,4,3,4,4]},
+   ]},
+  {id:"fi", name:"F&I", head:"", outcome:"", aligned:true,
+   gauges:[
+     {name:"Product Penetration",  owner:"F&I Mgr", unit:"%", target:80,  actual:76, hist:[60,63,65,67,69,70,72,73,74,75,76]},
+     {name:"Menu Presented 100%",  owner:"F&I Mgr", unit:"%", target:100, actual:94, hist:[80,82,84,86,88,89,90,91,92,93,94]},
+   ]},
+  {id:"bdc", name:"BDC", head:"", outcome:"", aligned:true,
+   gauges:[
+     {name:"Lead Response Under 10m", owner:"BDC Lead", unit:"%", target:90, actual:82, hist:[60,64,68,70,72,74,76,78,79,80,81]},
+     {name:"Appointment Set Rate",    owner:"BDC Lead", unit:"%", target:35, actual:31, hist:[20,22,23,24,25,26,27,28,29,30,30]},
+     {name:"Show Rate",               owner:"BDC Lead", unit:"%", target:65, actual:58, hist:[44,46,48,50,51,52,53,54,55,56,57]},
+   ]},
+];
+
+function seedOrg(groupName, store){
+  return {
+    group: groupName || "Your Dealer Group",
+    store: store || "Main Store",
+    week: 7,
+    groupOutcome: "",
+    // the executive decision from the Performance Point, cascaded down
+    weekPriority: { gapDept:"", decision:"", assignedDept:"", behavior:"" },
+    departments: JSON.parse(JSON.stringify(DEPT_SEED)),
+  };
+}
+/* department health from its gauges (reuses gaugeStatus) */
+function deptHealth(d){
+  let g=0,a=0,r=0;
+  d.gauges.forEach(x=>{const s=gaugeStatus(x.actual,x.target); if(s==="green")g++; else if(s==="amber")a++; else r++;});
+  const n=d.gauges.length||1;
+  const score=Math.round(((g*100)+(a*55))/n);
+  return { score, status: score>=80?"green":score>=55?"amber":"red", g,a,r,n };
+}
+function storeHealth(){
+  if(!ORG) return {score:0,status:"amber"};
+  const hs=ORG.departments.map(deptHealth);
+  const score=Math.round(hs.reduce((s,h)=>s+h.score,0)/(hs.length||1));
+  const reds=hs.filter(h=>h.status==="red").length;
+  return { score, status: reds>0?"red":score>=80?"green":"amber", reds };
+}
+
+let STATE;
+function seedDemo(){
+  STATE = {
+    store:"Demo Motors · Service",
+    week:7,
+    facilitator:"Marcus",
+    oneOutcome:"Get menu acceptance to 45% by coaching full MPI presentation on every repair order.",
+    team:[
+      {id:"marcus", nm:"Marcus", rl:"Director", in:true},
+      {id:"dana",   nm:"Dana",   rl:"Advisor",  in:true},
+      {id:"luis",   nm:"Luis",   rl:"Advisor",  in:true},
+      {id:"priya",  nm:"Priya",  rl:"Lead Tech",in:true},
+      {id:"sam",    nm:"Sam",    rl:"Parts",    in:false},
+    ],
+    // leading indicators. hist = prior 11 weeks, actual = this week (editable).
+    // 12 weeks total feeds trend + escalation (two weeks red in a row flags).
+    gauges:[
+      {name:"MPI Presentation Rate", owner:"Dana",  unit:"%", target:90,  actual:84, hist:[58,62,65,68,70,72,74,78,80,82,83]},
+      {name:"Write-Up Completion",   owner:"Luis",  unit:"%", target:95,  actual:96, hist:[82,84,86,88,89,90,91,92,93,94,95]},
+      {name:"Menu Acceptance",       owner:"Dana",  unit:"%", target:45,  actual:38, hist:[28,30,31,32,33,34,35,36,37,38,38]},
+      {name:"Daily Alignment Held",  owner:"Marcus",unit:"/5",target:5,   actual:5,  hist:[2,3,3,4,4,4,5,5,4,5,5]},
+      {name:"Parts Flagged Early",   owner:"Priya", unit:"%", target:85,  actual:72, hist:[48,52,55,58,60,63,65,68,69,70,71]},
+    ],
+    pillars:[
+      {id:1, name:"Diagnose the Real Constraint", score:9},
+      {id:2, name:"Margins Before Growth",        score:8},
+      {id:3, name:"Make Your Offer Undeniable",   score:6, priority:true},
+      {id:4, name:"Build Repeatable Systems",     score:10},
+      {id:5, name:"Redefine Hiring Correctly",    score:9},
+      {id:6, name:"Install Accountability",       score:7, priority:true},
+      {id:7, name:"Evaluate, Cut, Double Down",   score:10},
+    ],
+    // last week's behavior commitments, with result
+    commitments:[
+      {owner:"Dana",  rl:"Advisor",  beh:"Present the full MPI menu verbally on every RO", target:5, did:4},
+      {owner:"Luis",  rl:"Advisor",  beh:"Walk the drive and ask one discovery question per customer", target:5, did:2},
+      {owner:"Priya", rl:"Lead Tech",beh:"Flag parts delays at the 7am alignment", target:5, did:5},
+    ],
+    // candidate constraints to solve
+    constraints:[
+      {t:"Menu acceptance stuck at 38% for three weeks", d:"Behavior is happening on some ROs, not all. Inconsistent presentation."},
+      {t:"Luis only walked the drive 2 of 5 days", d:"Discovery questions are not becoming a habit yet."},
+      {t:"Parts delays still surface mid-repair", d:"Early-flag behavior is at 72%, short of the 85% target."},
+    ],
+    chosenConstraint:0,
+    // Full OODA Rx: observe, orient, the if-then prescription with dosage
+    // and frequency, the leading indicator to watch, and the 30-day loop.
+    ooda:{
+      observe:"Menu acceptance has held at 37 to 38% for three weeks. Target is 45%. MPI presentation rate is 84%, so the menu is not reaching every customer.",
+      orient:"When Dana presents the full menu verbally, acceptance is strong. When she hands a printed sheet without walking it, it stalls. The behavior is present but inconsistent at the moment of hand-off.",
+      decide:"",
+      dosage:"",
+      frequency:"",
+      indicator:"",
+      act:"",
+      owner:"Dana",
+      // 30-day review loop (shown as the next cycle)
+      review:{ result:"", consistency:"", obstacle:"", next:"" }
+    },
+    // diagnostic answers: question index -> 1..5. Empty until scored.
+    diagnostic:{},
+    diagnosticDone:false,
+    nextBehaviors:[
+      {owner:"Dana",  beh:"When I hand the MPI, I will walk the top three line items out loud before asking for the decision.", freq:"Every RO, all week"},
+      {owner:"Luis",  beh:"", freq:""},
+      {owner:"Priya", beh:"", freq:""},
+    ],
+    rating:0,
+    carry:"",
+  };
+}
+
+/* ============================================================
+   LOGIC  —  pure functions. Color + trend are reusable.
+   ============================================================ */
+function gaugeStatus(actual, target){
+  if(target===0) return "amber";
+  const ratio = actual/target;
+  if(actual>=target) return "green";
+  if(ratio>=0.90)    return "amber";
+  return "red";
+}
+function statusLabel(s){ return s==="green"?"On Track":s==="amber"?"Watch":"Below"; }
+function trend(hist){
+  if(hist.length<2) return "flat";
+  const a=hist[hist.length-1], b=hist[hist.length-2];
+  if(a>b) return "up"; if(a<b) return "down"; return "flat";
+}
+function execPct(did, target){ return target? Math.round((did/target)*100) : 0; }
+function pillarStatus(score){ if(score>=13)return"green"; if(score>=9)return"amber"; return"red"; }
+
+/* ---- Diagnostic scoring (from Torque Drive OS) ---- */
+function pillarScore(pid){
+  // sum the 3 answered questions for a pillar (max 15)
+  let sum=0;
+  DIAGNOSTIC.forEach((d,i)=>{ if(d.p===pid && STATE.diagnostic[i]) sum+=STATE.diagnostic[i]; });
+  return sum;
+}
+function pillarAnswered(pid){
+  let n=0; DIAGNOSTIC.forEach((d,i)=>{ if(d.p===pid && STATE.diagnostic[i]) n++; }); return n;
+}
+function diagnosticAnswered(){ return Object.values(STATE.diagnostic).filter(Boolean).length; }
+function overallScore(){ return PILLAR_DEFS.reduce((a,p)=>a+pillarScore(p.id),0); }
+function overallBand(t){ if(t>=75)return{l:"Strong Foundation",s:"green"}; if(t>=50)return{l:"Developing",s:"amber"}; return{l:"Priority Reset",s:"red"}; }
+/* the two lowest-scoring pillars become the cycle's priorities */
+function priorityPillars(){
+  return PILLAR_DEFS.map(p=>({id:p.id,score:pillarScore(p.id)}))
+    .sort((a,b)=>a.score-b.score).slice(0,2).map(x=>x.id);
+}
+/* rebuild STATE.pillars from the diagnostic so Pillar Check is honest */
+function syncPillarsFromDiagnostic(){
+  const pri=priorityPillars();
+  STATE.pillars = PILLAR_DEFS.map(p=>({ id:p.id, name:p.name, score:pillarScore(p.id), priority:pri.includes(p.id) }));
+}
+/* escalation: this week red AND last week red = two in a row */
+function gaugeEscalated(g){
+  const full=g.hist.concat([g.actual]);
+  if(full.length<2) return false;
+  const a=full[full.length-1], bk=full[full.length-2];
+  return gaugeStatus(a,g.target)==="red" && gaugeStatus(bk,g.target)==="red";
+}
+
+/* inline SVG sparkline from a number array */
+function sparkline(hist, target, w=96, h=30){
+  const min=Math.min(...hist, target), max=Math.max(...hist, target);
+  const span=(max-min)||1;
+  const stepX=w/(hist.length-1);
+  const pts=hist.map((v,i)=>`${(i*stepX).toFixed(1)},${(h-((v-min)/span)*h).toFixed(1)}`).join(" ");
+  const ty=(h-((target-min)/span)*h).toFixed(1);
+  const last=hist[hist.length-1];
+  const col = gaugeStatus(last,target)==="green"?"#2F7A4F":gaugeStatus(last,target)==="amber"?"#C8992B":"#B91C1C";
+  const lastX=((hist.length-1)*stepX).toFixed(1);
+  const lastY=(h-((last-min)/span)*h).toFixed(1);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+    <line x1="0" y1="${ty}" x2="${w}" y2="${ty}" stroke="#C8992B" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>
+    <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${lastX}" cy="${lastY}" r="2.6" fill="${col}"/>
+  </svg>`;
+}
+
+/* ============================================================
+   RENDER  —  one function per segment. Pure DOM strings.
+   ============================================================ */
+function segShell(item, inner, introHtml){
+  const pointName = meetingMode==="exec" ? "The Performance Point" : "The Action Point";
+  return `
+    <div class="seg">
+      <div class="seg__head">
+        <div class="seg__pill">${item.n}</div>
+        <div class="seg__title">
+          <h2>${item.t}</h2>
+          <div class="meta">${pointName} · <b>${item.mandate}</b></div>
+        </div>
+        <div class="seg__time">
+          <div class="clock" id="clock">00:00</div>
+          <div class="sug">Suggested ${item.min} min</div>
+        </div>
+      </div>
+      <div class="seg__intro">${introHtml}</div>
+      <div class="gold-rule"></div>
+      ${inner}
+    </div>`;
+}
+
+function renderDrive(item){
+  const execBanner = (STATE.execPriority && STATE.execPriority.decision)
+    ? `<div style="background:var(--navy); border-radius:11px; padding:14px 16px; margin-bottom:12px">
+         <div style="font-size:.56rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:5px">↓ Cascaded from the Performance Point · translate this</div>
+         <div style="font-family:var(--font-d); font-size:1.1rem; color:var(--cream); line-height:1.3">${STATE.execPriority.decision}</div>
+         ${STATE.execPriority.behavior? `<div style="font-size:.78rem; color:rgba(248,246,242,.7); margin-top:6px"><b style="color:var(--gold)">Expected behavior:</b> ${STATE.execPriority.behavior}</div>`:""}
+       </div>` : "";
+  const groupBanner = (STATE.groupOutcome)
+    ? `<div style="background:var(--gold-pale); border:1px solid rgba(200,153,43,.4); border-radius:11px; padding:13px 16px; margin-bottom:14px">
+         <div style="font-size:.56rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px">The Store One Outcome · align to this</div>
+         <div style="font-family:var(--font-d); font-size:1.05rem; color:var(--navy); line-height:1.3">${STATE.groupOutcome}</div>
+       </div>` : "";
+  const inner = `
+    ${execBanner}
+    ${groupBanner}
+    <div class="outcome">
+      <div class="l">This Department's One Outcome · Week ${STATE.week}</div>
+      <textarea id="ooInput" rows="2" placeholder="Name the single result that makes everything else easier...">${STATE.oneOutcome}</textarea>
+      <div class="hint">Everyone in the room can repeat this by the end of the meeting. If they cannot, it is not clear enough. It should move the group outcome forward.</div>
+    </div>
+    <div class="section-label" style="margin-top:24px"><span class="k">·</span><h3>Who is on the drive today</h3></div>
+    <div class="attend" id="attend">${STATE.team.map(m=>`
+      <button class="chip ${m.in?'in':''}" data-id="${m.id}"><span class="dot"></span>${m.nm} · ${m.rl}</button>`).join("")}
+    </div>`;
+  const intro = "Open every meeting the same way. Restate the one outcome for the week, out loud, so the room aligns before anything else happens. Clarity is the first behavior.";
+  return segShell(item, inner, intro);
+}
+
+function renderGauges(item){
+  const inner = `<div class="gauges" id="gaugeGrid">${STATE.gauges.map((g,i)=>gaugeCard(g,i)).join("")}</div>`;
+  const intro = "Read the leading indicators, not the lagging results. These are behaviors made visible. Color tells you where to look. The twelve-week trend line tells you if the behavior is taking hold. Two weeks red in a row auto-flags for escalation, so nothing drifts quietly.";
+  return segShell(item, inner, intro);
+}
+function gaugeCard(g,i){
+  const s=gaugeStatus(g.actual,g.target);
+  const tr=trend(g.hist.concat([g.actual]));
+  const arrow = tr==="up"?"▲":tr==="down"?"▼":"—";
+  const esc=gaugeEscalated(g);
+  return `
+    <div class="gauge g-${s} ${esc?'esc-on':''}" id="gauge-${i}">
+      <div class="gauge__top">
+        <div>
+          <div class="gauge__name">${g.name}</div>
+          <div class="gauge__owner">Owner · ${g.owner}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px">
+          ${esc?'<span class="esc" title="Two weeks red in a row">⚠ Escalate</span>':''}
+          <span class="status g-${s}">${statusLabel(s)}</span>
+        </div>
+      </div>
+      <div class="gauge__row">
+        <div class="gauge__num"><input type="number" data-i="${i}" value="${g.actual}" aria-label="${g.name} actual"></div>
+        <div class="gauge__vs">vs ${g.target}${g.unit} target &nbsp;<span class="trendarrow t-${tr}">${arrow}</span></div>
+        <div class="gauge__spark">${sparkline(g.hist.concat([g.actual]), g.target)}</div>
+      </div>
+    </div>`;
+}
+
+function renderPillars(item){
+  const inner = `
+    <div class="panel">${STATE.pillars.map(p=>{
+      const pct = Math.round((p.score/15)*100);
+      const s = pillarStatus(p.score);
+      const col = s==="green"?"#2F7A4F":s==="amber"?"#C8992B":"#B91C1C";
+      return `<div class="pillrow">
+        <div class="pid">${p.id}</div>
+        <div class="pn">${p.name} ${p.priority?'<span class="priority-tag">Priority</span>':''}</div>
+        <div class="pbar"><i style="width:${pct}%;background:${col}"></i></div>
+        <div class="psc">${p.score}/15</div>
+      </div>`;}).join("")}
+    </div>`;
+  const intro = "Two pillars are the focus this cycle, the two scoring lowest. You do not work all seven at once. You install one or two behaviors deeply, then move. Behavior before metric, one pillar at a time.";
+  return segShell(item, inner, intro);
+}
+
+function renderCommit(item){
+  const inner = `
+    <div class="panel" id="commitList">${STATE.commitments.map((c,i)=>commitRow(c,i)).join("")}</div>
+    <p style="font-size:.78rem; color:var(--mid); margin-top:12px; font-family:var(--font-m)">
+      Did they do the behavior? Not did the number move. The behavior is the commitment. The number follows.</p>`;
+  const intro = "Start with last week's commitments. For each one, a simple question: did the owner do the behavior, at the frequency they committed to? Yes or no. This is where accountability becomes real.";
+  return segShell(item, inner, intro);
+}
+function commitRow(c,i){
+  const pct=execPct(c.did,c.target);
+  const col = pct>=90?"#2F7A4F":pct>=60?"#C8992B":"#B91C1C";
+  return `<div class="brow">
+    <div class="brow__who"><div class="nm">${c.owner}</div><div class="rl">${c.rl}</div></div>
+    <div class="brow__beh"><div class="bt">${c.beh}</div><div class="bm">Target ${c.target}x · Done ${c.did}x this week</div></div>
+    <div class="did" data-i="${i}">
+      <button class="didbtn yes ${c.did>=c.target?'on':''}" data-v="yes">Hit</button>
+      <button class="didbtn no ${c.did<c.target?'on':''}" data-v="no">Short</button>
+    </div>
+    <div class="brow__pct"><div class="p" style="color:${col}">${pct}%</div></div>
+  </div>`;
+}
+
+function renderConstraint(item){
+  const c=STATE.ooda;
+  const inner = `
+    <div class="section-label"><span class="k">·</span><h3>Pick the one constraint to clear</h3></div>
+    <div class="constraint-pick" id="cpick">${STATE.constraints.map((k,i)=>`
+      <button class="cpick ${STATE.chosenConstraint===i?'sel':''}" data-i="${i}">
+        <span class="rank">#${i+1}</span>
+        <span><span class="ct">${k.t}</span><span class="cd">${k.d}</span></span>
+      </button>`).join("")}
+    </div>
+    <div class="section-label" style="margin-top:22px"><span class="k">Rx</span><h3>Run the OODA loop to a prescribed behavior</h3></div>
+    <div class="ooda">
+      <div class="ophase o-observe"><h4><span class="ol">O</span>Observe</h4><p>What is actually happening? The facts.</p>
+        <textarea data-k="observe" placeholder="Pull the real numbers...">${c.observe}</textarea></div>
+      <div class="ophase o-orient"><h4><span class="ol">O</span>Orient</h4><p>What does it mean? The absent behavior.</p>
+        <textarea data-k="orient" placeholder="Who is not doing what...">${c.orient}</textarea></div>
+      <div class="ophase o-decide"><h4><span class="ol">D</span>Decide</h4><p>One behavior. If-then. Observable.</p>
+        <textarea data-k="decide" placeholder="When [trigger], [owner] will [behavior]...">${c.decide}</textarea></div>
+      <div class="ophase o-act"><h4><span class="ol">A</span>Act</h4><p>Activate it. Name the first rep and who watches.</p>
+        <textarea data-k="act" placeholder="First rep: day, time, who watches...">${c.act}</textarea></div>
+    </div>
+
+    <div class="rx-block">
+      <div class="ifthen" style="margin:0 0 4px">The Prescription · When [trigger], [owner] will [behavior], at [dosage / frequency]</div>
+      <div class="rx-grid">
+        <div class="fld" style="margin:0">
+          <label>Owner of the Rx</label>
+          <select id="oodaOwner">${STATE.team.map(m=>`<option ${STATE.ooda.owner===m.nm?'selected':''}>${m.nm}</option>`).join("")}</select>
+        </div>
+        <div class="fld" style="margin:0">
+          <label>Dosage</label>
+          <input data-k="dosage" value="${c.dosage||""}" placeholder="How many per RO / shift">
+        </div>
+        <div class="fld" style="margin:0">
+          <label>Frequency</label>
+          <input data-k="frequency" value="${c.frequency||""}" placeholder="Which days, what time">
+        </div>
+      </div>
+      <div class="fld" style="margin:12px 0 0">
+        <label>Leading indicator to watch (appears in 48 to 72 hours)</label>
+        <input data-k="indicator" value="${c.indicator||""}" placeholder="The behavior-adjacent signal you will see first">
+      </div>
+    </div>
+
+    <details class="disclose">
+      <summary>30-Day Review Loop · the next OODA cycle begins here</summary>
+      <div class="disclose__body">
+        <div class="review-box" style="margin-top:0">
+          <div class="rl">A failed loop is not a failure. It is the richest data you have.</div>
+          <div class="rx-grid" style="margin-top:12px">
+            <div class="fld" style="margin:0"><label>Metric result at day 30</label>
+              <input data-rk="result" value="${c.review.result||""}" placeholder="Where did it land vs target"></div>
+            <div class="fld" style="margin:0"><label>Behavior consistency</label>
+              <input data-rk="consistency" value="${c.review.consistency||""}" placeholder="Days per week it ran"></div>
+            <div class="fld" style="margin:0"><label>Biggest obstacle</label>
+              <input data-rk="obstacle" value="${c.review.obstacle||""}" placeholder="What blocked execution"></div>
+          </div>
+          <div class="fld" style="margin:12px 0 0"><label>Next loop decision</label>
+            <select data-rk="next">
+              ${["","Same Rx, it is working","Adjust the Rx, behavior was inconsistent","Return to Orient, behavior did not start"].map(o=>`<option ${c.review.next===o?'selected':''} ${o===''?'disabled':''}>${o||"Choose..."}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+      </div>
+    </details>`;
+  const intro = "One constraint per meeting. Not ten. Find the single thing most in the way of the one outcome, then run Boyd's loop until it becomes a prescribed behavior with an owner, a dosage, and a leading indicator. The 30-day loop is where the next cycle begins. This replaces open issue lists that never close.";
+  return segShell(item, inner, intro);
+}
+
+function renderNext(item){
+  const inner = `
+    <div class="ifthen">Format · When [trigger or context], I will [specific behavior], [dosage / frequency]</div>
+    <div id="nextList">${STATE.nextBehaviors.map((b,i)=>`
+      <div class="panel" style="padding:16px; margin-bottom:12px">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px">
+          <strong style="color:var(--navy)">${b.owner}</strong>
+          <span style="font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mid)">commits one behavior</span>
+        </div>
+        <div class="fld" style="margin-bottom:10px">
+          <textarea data-i="${i}" data-k="beh" rows="2" placeholder="When I... I will...">${b.beh}</textarea>
+        </div>
+        <div class="fld" style="margin:0; max-width:320px">
+          <label>Dosage / frequency</label>
+          <input data-i="${i}" data-k="freq" value="${b.freq}" placeholder="Every RO · 5 days this week">
+        </div>
+      </div>`).join("")}
+    </div>`;
+  const intro = "Every person leaves with one behavior they own for the week. One. Written if-then, because stated intentions with a trigger get followed through far more often than vague goals. This is the commitment you check next week.";
+  return segShell(item, inner, intro);
+}
+
+function renderRate(item){
+  const inner = `
+    <div class="panel" style="padding:22px">
+      <div class="section-label"><span class="k">·</span><h3>Rate this drive · 1 to 5</h3></div>
+      <div class="rate" id="rateRow">${[1,2,3,4,5].map(n=>`<button data-n="${n}" class="${STATE.rating===n?'on':''}">${n}</button>`).join("")}</div>
+      <p style="font-size:.76rem; color:var(--mid); margin-bottom:20px">Was this meeting worth the hour? If it is a 3 or below, name why before you leave.</p>
+      <div class="fld" style="margin:0">
+        <label>One thing we carry into Monday better</label>
+        <textarea id="carryInput" rows="2" placeholder="The one improvement we protect and repeat...">${STATE.carry}</textarea>
+      </div>
+    </div>`;
+  const intro = "Close every meeting by evaluating the meeting. Rate it, and name the one thing you carry forward. This is the Friday Learning Lab in miniature. Stop one thing. Scale one thing. Every week gets sharper than the last.";
+  return segShell(item, inner, intro);
+}
+
+/* ============================================================
+   THE PERFORMANCE POINT  —  executive meeting render functions.
+   Reads ORG (all departments). Writes ORG.weekPriority, which
+   cascades down to each department's Action Point.
+   ============================================================ */
+function renderStandard(item){
+  const canEdit = canEditGroup();
+  const inner = `
+    <div class="outcome">
+      <div class="l">The Store One Outcome · Week ${ORG.week}</div>
+      ${canEdit
+        ? `<textarea id="ooInput" rows="2" placeholder="The single result the whole store aims at this quarter...">${ORG.groupOutcome||""}</textarea>`
+        : `<div style="font-family:var(--font-d); font-size:1.5rem; color:var(--cream); margin-top:8px">${ORG.groupOutcome||"Not set"}</div>`}
+      <div class="hint">Every department head in this room can repeat it. It is the aim all five departments translate into behavior.</div>
+    </div>`;
+  const intro = "Open the Performance Point by naming the standard. One outcome for the whole store. Everything the executive team decides today must move this forward.";
+  return segShell(item, inner, intro);
+}
+
+function renderScoreboard(item){
+  const inner = `
+    <div class="deptgrid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
+      ${ORG.departments.map(d=>{const h=deptHealth(d);
+        return `<div class="deptcard g-${h.status}" style="cursor:default">
+          <div class="deptcard__h">
+            <div><div class="deptcard__name">${d.name}</div><div class="deptcard__head">${d.head||"Head unassigned"}</div></div>
+            <span class="align-tag ${h.status==='green'?'on':'off'}" style="${h.status==='amber'?'background:#F5EDD4;color:#9A7420':''}">${h.score}</span>
+          </div>
+          <div class="deptcard__metrics" style="margin:8px 0">${d.gauges.map(g=>`<span class="mdot" style="background:${statusHexSafe(gaugeStatus(g.actual,g.target))}" title="${g.name}: ${g.actual}${g.unit} vs ${g.target}${g.unit}"></span>`).join("")}</div>
+          <div style="font-size:.7rem; color:var(--mid); line-height:1.4">${d.outcome? "Outcome: "+d.outcome : "<span style='color:var(--red)'>No department outcome set</span>"}</div>
+        </div>`;}).join("")}
+    </div>`;
+  const intro = "Read the whole store across all five departments. Health, color, and the proof that rolled up from last week. This is the view only the executive team has. Look for the one that drags the rest.";
+  return segShell(item, inner, intro);
+}
+
+function renderProofUp(item){
+  const inner = `
+    <div class="panel">
+      ${ORG.departments.map(d=>{const h=deptHealth(d);
+        const reds=d.gauges.filter(g=>gaugeStatus(g.actual,g.target)==="red");
+        return `<div class="brow">
+          <div class="brow__who" style="width:110px"><div class="nm">${d.name}</div><div class="rl">${h.score} health</div></div>
+          <div class="brow__beh"><div class="bt">${d.outcome||"<i style='color:var(--mid)'>no outcome set last week</i>"}</div>
+            <div class="bm">${reds.length? reds.length+" indicator"+(reds.length>1?"s":"")+" below target" : "all indicators on track or watch"}</div></div>
+          <div class="brow__pct"><span class="status g-${h.status}">${h.status==='green'?'Adopted':h.status==='amber'?'Partial':'Not yet'}</span></div>
+        </div>`;}).join("")}
+    </div>
+    <p style="font-size:.76rem; color:var(--mid); margin-top:12px; font-family:var(--font-m)">Proof rolls up. Did last week's behaviors get adopted? Green means the behavior held. Red means it did not start.</p>`;
+  const intro = "Before deciding anything new, review the proof coming up from the floor. Adoption first, the number second. A department that did not adopt last week's behavior is where the next gap usually hides.";
+  return segShell(item, inner, intro);
+}
+
+function renderGap(item){
+  // pick the single department that is the biggest constraint
+  const ranked=ORG.departments.map(d=>({d,h:deptHealth(d)})).sort((a,b)=>a.h.score-b.h.score);
+  const inner = `
+    <div class="section-label"><span class="k">·</span><h3>Name the one gap holding the store back</h3></div>
+    <div class="constraint-pick" id="gapPick">
+      ${ranked.map(({d,h})=>`
+        <button class="cpick ${ORG.weekPriority.gapDept===d.id?'sel':''}" data-dept="${d.id}">
+          <span class="rank" style="color:${statusHexSafe(h.status)}">${h.score}</span>
+          <span><span class="ct">${d.name}</span><span class="cd">${d.gauges.filter(g=>gaugeStatus(g.actual,g.target)==='red').map(g=>g.name).join(", ")||"indicators holding"}</span></span>
+        </button>`).join("")}
+    </div>`;
+  const intro = "One gap. Not five. The discipline of the Performance Point is choosing the single constraint that, if cleared, moves the store most. Pick the department, and the priority will aim there.";
+  return segShell(item, inner, intro);
+}
+
+function renderPriority(item){
+  const gapName = ORG.weekPriority.gapDept ? (ORG.departments.find(d=>d.id===ORG.weekPriority.gapDept)||{}).name : "";
+  const inner = `
+    ${gapName? `<div class="ifthen" style="margin-bottom:14px">The gap you named: <b>${gapName}</b></div>`:""}
+    <div class="outcome">
+      <div class="l">The One Priority · cascades to the departments</div>
+      <textarea id="priorityInput" rows="2" placeholder="The single decision this week. Specific. Observable. One sentence.">${ORG.weekPriority.decision||""}</textarea>
+      <div class="hint">This is the decision every affected department translates into a behavior at their Action Point. If it is not clear here, it cannot cascade clearly.</div>
+    </div>`;
+  const intro = "Decide the one priority. A decision is not a wish or a theme. It is one specific thing the store will do differently this week, clear enough that a department head can turn it into a behavior tomorrow.";
+  return segShell(item, inner, intro);
+}
+
+function renderAssign(item){
+  const inner = `
+    <div class="rx-block">
+      <div class="ifthen" style="margin:0 0 10px">Assign the priority to the department that owns the response</div>
+      <div class="rx-grid">
+        <div class="fld" style="margin:0">
+          <label>Assigned department</label>
+          <select id="assignDept">
+            <option value="">Choose...</option>
+            ${ORG.departments.map(d=>`<option value="${d.id}" ${ORG.weekPriority.assignedDept===d.id?'selected':''}>${d.name}</option>`).join("")}
+          </select>
+        </div>
+        <div class="fld" style="margin:0; grid-column:span 2">
+          <label>Expected behavior (what the manager will assign)</label>
+          <input id="assignBeh" value="${ORG.weekPriority.behavior||""}" placeholder="The behavior the department installs this week">
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.76rem; color:var(--mid); margin-top:14px">When this department runs its Action Point, the priority and behavior appear at the top of their meeting. That is the cascade working.</p>`;
+  const intro = "Assign it down. Name the department that owns the response and the behavior you expect. This is the hand-off from the Performance Point to the Action Point. The decision becomes a behavior with a home.";
+  return segShell(item, inner, intro);
+}
+
+function renderExecRate(item){
+  const inner = `
+    <div class="panel" style="padding:22px">
+      <div class="section-label"><span class="k">·</span><h3>Rate this Performance Point · 1 to 5</h3></div>
+      <div class="rate" id="rateRow">${[1,2,3,4,5].map(n=>`<button data-n="${n}" class="${STATE.rating===n?'on':''}">${n}</button>`).join("")}</div>
+      <p style="font-size:.76rem; color:var(--mid); margin-bottom:20px">Did this meeting produce one clear decision the store can act on? If not, it was a status meeting, not a Performance Point.</p>
+      <div class="fld" style="margin:0">
+        <label>One thing the executive team carries into next week</label>
+        <textarea id="carryInput" rows="2" placeholder="The improvement we protect and repeat...">${STATE.carry}</textarea>
+      </div>
+    </div>`;
+  const intro = "Close the loop. Rate the meeting and name what carries forward. A strong Performance Point ends with one decision assigned and one improvement named. Nothing more, nothing vague.";
+  return segShell(item, inner, intro);
+}
+
+/* ============================================================
+   SUMMARY  —  assembles everything into the artifact to show.
+   ============================================================ */
+function renderExecSummary(){
+  const sh=storeHealth();
+  const wp=ORG.weekPriority||{};
+  const dept=ORG.departments.find(d=>d.id===wp.assignedDept);
+  const gapDept=ORG.departments.find(d=>d.id===wp.gapDept);
+  const dot=s=>`<span class="sumdot" style="background:${statusHexSafe(s)}"></span>`;
+  const html=`
+    <div class="sumcard">
+      <div class="sumhead">
+        <div class="eyebrow">The Performance Point · Summary</div>
+        <h2>${ORG.group} · Executive Team</h2>
+        <div class="sub">Week ${ORG.week} · Store Health ${sh.score} · ${ORG.departments.length} departments</div>
+      </div>
+      <div class="sumbody">
+        <div class="sumsec"><div class="sl">The Store One Outcome</div>
+          <div class="big">${ORG.groupOutcome||"<span style='color:#B91C1C'>Not set</span>"}</div></div>
+        <div class="sumsec"><div class="sl">The Store, by Department</div>
+          <ul class="sumlist">${ORG.departments.map(d=>{const h=deptHealth(d);
+            return `<li>${dot(h.status)}<span class="own">${h.score}</span><span class="bd">${d.name} · <b style="color:${statusHexSafe(h.status)}">${statusWord(h.status)}</b>${d.outcome?` · ${d.outcome}`:""}</span></li>`;}).join("")}</ul></div>
+        <div class="sumsec"><div class="sl">The Gap Named</div>
+          <div class="big">${gapDept? gapDept.name : "<i style='color:#B91C1C'>not named</i>"}</div></div>
+        <div class="sumsec"><div class="sl">The Priority Decided</div>
+          <div class="big">${wp.decision||"<i style='color:#B91C1C'>not decided</i>"}</div></div>
+        <div class="sumsec"><div class="sl">Cascaded To</div>
+          <ul class="sumlist">
+            <li><span class="own">Department</span><span class="bd">${dept? dept.name : "<i style='color:#B91C1C'>not assigned</i>"}</span></li>
+            <li><span class="own">Behavior</span><span class="bd">${wp.behavior||"<i>not specified</i>"}</span></li>
+          </ul></div>
+        <div class="sumsec"><div class="sl">Rating · What We Carry</div>
+          <ul class="sumlist">
+            <li><span class="own">Rating</span><span class="bd mono" style="font-weight:700">${STATE.rating? STATE.rating+" / 5":"not rated"}</span></li>
+            <li><span class="own">Carry</span><span class="bd">${STATE.carry||"<i>not named</i>"}</span></li>
+          </ul></div>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; justify-content:center; margin-top:22px; flex-wrap:wrap">
+      <button class="btn btn--gold btn--sm" id="restartBtn" style="color:var(--navy)">Back to Dashboard</button>
+      <button class="btn btn--navy btn--sm" id="copyBtn">Copy Summary Text</button>
+      <button class="btn btn--ghost btn--sm" id="printBtn" style="color:var(--navy);border-color:var(--border)">Print / Save PDF</button>
+    </div>
+    <div class="footnote">The priority now cascades. When <b>${dept?dept.name:"the assigned department"}</b> runs its Action Point, it appears at the top of their meeting.</div>`;
+  document.getElementById("summaryHost").innerHTML = html;
+  // wire exec summary buttons
+  document.getElementById("restartBtn").addEventListener("click",()=>{ if(!returnToOrg()) restart(); });
+  document.getElementById("copyBtn").addEventListener("click",()=>{
+    const L=[`THE PERFORMANCE POINT — ${ORG.group} — Week ${ORG.week}`,"",
+      `STORE OUTCOME: ${ORG.groupOutcome}`,"",`GAP: ${gapDept?gapDept.name:""}`,
+      `PRIORITY: ${wp.decision}`,`ASSIGNED TO: ${dept?dept.name:""}`,`BEHAVIOR: ${wp.behavior}`,
+      "",`RATING: ${STATE.rating}/5`,`CARRY: ${STATE.carry}`,"","The Leadership Pressure Lab — The Three Points"].join("\n");
+    navigator.clipboard?.writeText(L).then(()=>toast("Summary copied")).catch(()=>fallbackCopy(L));
+  });
+  document.getElementById("printBtn").addEventListener("click",()=>window.print());
+}
+
+function renderSummary(){
+  if(meetingMode==="exec" && ORG){ renderExecSummary(); return; }
+  const gaugesByStatus = STATE.gauges.map(g=>({...g, s:gaugeStatus(g.actual,g.target)}));
+  const dot = s=>`<span class="sumdot" style="background:${s==='green'?'#2F7A4F':s==='amber'?'#C8992B':'#B91C1C'}"></span>`;
+  const c = STATE.constraints[STATE.chosenConstraint];
+  const html = `
+    <div class="sumcard">
+      <div class="sumhead">
+        <div class="eyebrow">TORQUE Meeting Summary</div>
+        <h2>${STATE.store}</h2>
+        <div class="sub">Week ${STATE.week} · Facilitated by ${STATE.facilitator} · ${STATE.team.filter(m=>m.in).length} on the drive</div>
+      </div>
+      <div class="sumbody">
+        ${STATE.diagnosticDone ? `<div class="sumsec">
+          <div class="sl">Diagnostic Baseline</div>
+          <div class="big">${overallScore()} / 105 · ${overallBand(overallScore()).l}</div>
+          <div style="font-size:.8rem; color:var(--mid); margin-top:4px">Priority pillars this cycle: ${priorityPillars().map(id=>PILLAR_DEFS.find(p=>p.id===id).name).join(" and ")}.</div>
+        </div>`:""}
+        <div class="sumsec">
+          <div class="sl">The One Outcome</div>
+          <div class="big">${STATE.oneOutcome||"<span style='color:#B91C1C'>Not set</span>"}</div>
+        </div>
+        <div class="sumsec">
+          <div class="sl">The Gauges</div>
+          <ul class="sumlist">${gaugesByStatus.map(g=>`
+            <li>${dot(g.s)}<span class="own">${g.actual}${g.unit}</span><span class="bd">${g.name} · target ${g.target}${g.unit} · owner ${g.owner} · <b style="color:${g.s==='green'?'#2F7A4F':g.s==='amber'?'#C8992B':'#B91C1C'}">${statusLabel(g.s)}</b></span></li>`).join("")}
+          </ul>
+        </div>
+        <div class="sumsec">
+          <div class="sl">Last Week · Did the Behavior Hold</div>
+          <ul class="sumlist">${STATE.commitments.map(cm=>{const p=execPct(cm.did,cm.target);const col=p>=90?'#2F7A4F':p>=60?'#C8992B':'#B91C1C';
+            return `<li><span class="own">${cm.owner}</span><span class="bd">${cm.beh} · <b style="color:${col};font-family:var(--font-m)">${p}%</b></span></li>`;}).join("")}
+          </ul>
+        </div>
+        <div class="sumsec">
+          <div class="sl">Constraint Cleared · OODA Rx</div>
+          <div style="font-weight:700; color:var(--navy); margin-bottom:6px">${c? c.t : ""}</div>
+          <ul class="sumlist">
+            <li><span class="own">Rx</span><span class="bd">${STATE.ooda.decide||"<i style='color:#B91C1C'>prescription not written</i>"}</span></li>
+            <li><span class="own">Dosage</span><span class="bd">${STATE.ooda.dosage||"<i>not set</i>"}${STATE.ooda.frequency?` · <span style="font-family:var(--font-m);color:var(--mid)">${STATE.ooda.frequency}</span>`:""}</span></li>
+            <li><span class="own">Watch</span><span class="bd">${STATE.ooda.indicator||"<i>leading indicator not named</i>"}</span></li>
+            <li><span class="own">Owner</span><span class="bd">${STATE.ooda.owner}</span></li>
+          </ul>
+        </div>
+        <div class="sumsec">
+          <div class="sl">This Week · Behaviors Owned</div>
+          <ul class="sumlist">${STATE.nextBehaviors.map(b=>`
+            <li><span class="own">${b.owner}</span><span class="bd">${b.beh||"<i style='color:#B91C1C'>not committed</i>"} ${b.freq?`· <span style="font-family:var(--font-m);color:var(--mid)">${b.freq}</span>`:""}</span></li>`).join("")}
+          </ul>
+        </div>
+        <div class="sumsec">
+          <div class="sl">Drive Rating · What We Carry</div>
+          <ul class="sumlist">
+            <li><span class="own">Rating</span><span class="bd mono" style="font-weight:700">${STATE.rating? STATE.rating+" / 5":"not rated"}</span></li>
+            <li><span class="own">Carry</span><span class="bd">${STATE.carry||"<i>not named</i>"}</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; justify-content:center; margin-top:22px; flex-wrap:wrap">
+      <button class="btn btn--navy btn--sm" id="copyBtn">Copy Summary Text</button>
+      <button class="btn btn--gold btn--sm" id="printBtn">Print / Save PDF</button>
+      <button class="btn btn--ghost btn--sm" id="restartBtn" style="color:var(--navy);border-color:var(--border)">${ (typeof SESSION!=='undefined' && SESSION && activeDeptId) ? 'Back to Dashboard' : 'Restart Demo' }</button>
+    </div>
+    <div class="footnote">
+      This is the artifact a leader shows the owner. <b>One page. One outcome. Owned behaviors.</b><br>
+      Every week the gauges climb and the behaviors hold, this page proves the install is working.
+    </div>`;
+  document.getElementById("summaryHost").innerHTML = html;
+  wireSummary();
+}
+function summaryText(){
+  const L=[];
+  L.push(`TORQUE MEETING SUMMARY — ${STATE.store} — Week ${STATE.week}`);
+  L.push(`Facilitated by ${STATE.facilitator}`);
+  L.push("");
+  L.push(`ONE OUTCOME: ${STATE.oneOutcome}`);
+  L.push("");
+  L.push("GAUGES:");
+  STATE.gauges.forEach(g=>{const s=gaugeStatus(g.actual,g.target);L.push(`  [${statusLabel(s).toUpperCase()}] ${g.name}: ${g.actual}${g.unit} vs ${g.target}${g.unit} (owner ${g.owner})`);});
+  L.push("");
+  L.push("LAST WEEK — BEHAVIOR HELD:");
+  STATE.commitments.forEach(c=>L.push(`  ${c.owner}: ${c.beh} — ${execPct(c.did,c.target)}%`));
+  L.push("");
+  const c=STATE.constraints[STATE.chosenConstraint];
+  L.push(`CONSTRAINT CLEARED: ${c?c.t:""}`);
+  L.push(`  Decide: ${STATE.ooda.decide}`);
+  L.push(`  Act: ${STATE.ooda.act}`);
+  L.push(`  Owner: ${STATE.ooda.owner}`);
+  L.push("");
+  L.push("THIS WEEK — BEHAVIORS OWNED:");
+  STATE.nextBehaviors.forEach(b=>L.push(`  ${b.owner}: ${b.beh} ${b.freq?`(${b.freq})`:""}`));
+  L.push("");
+  L.push(`DRIVE RATING: ${STATE.rating}/5`);
+  L.push(`CARRY TO MONDAY: ${STATE.carry}`);
+  L.push("");
+  L.push("The Leadership Pressure Lab — Torque Drive OS");
+  return L.join("\n");
+}
+
+/* ============================================================
+   NAV  —  stepper, timers, wiring.
+   ============================================================ */
+let current = 0;
+let timer = null, elapsed = 0;
+
+function buildLegend(){
+  document.getElementById("legendGrid").innerHTML = PRINCIPLES.map(p=>`
+    <div class="ptile"><div class="pl">${p.k}</div><div class="pt">${p.t}</div><div class="pd">${p.d}</div></div>`).join("");
+}
+function buildAgendaPreview(){
+  document.getElementById("agendaPreview").innerHTML = DEPT_AGENDA.map(a=>`
+    <div class="ap"><div class="n">${a.n} · ${a.min}m</div><div class="t">${a.t}</div><div class="p">${a.mandate}</div></div>`).join("");
+}
+function buildSidebar(){
+  const pct = Math.round(((current+1)/ACTIVE_AGENDA.length)*100);
+  document.getElementById("sideNav").innerHTML = `
+    <div class="side__head">
+      <div class="pl">The TORQUE Meeting</div>
+      <div class="pw">Workflow</div>
+      <div class="side__prog">
+        <div class="pbar"><i style="width:${pct}%"></i></div>
+        <div class="pt">Segment ${current+1} of ${ACTIVE_AGENDA.length} · ${ACTIVE_AGENDA[current].t}</div>
+      </div>
+    </div>
+    <div class="snav">${ACTIVE_AGENDA.map((a,i)=>`
+      <button class="snav__item ${i===current?'current':''} ${i<current?'done':''}" data-i="${i}">
+        <span class="snav__num">${i<current?'✓':a.n}</span>
+        <span class="snav__txt"><span class="snav__t">${a.t}</span><span class="snav__p">Principle ${a.p} · ${a.min} min</span></span>
+      </button>`).join("")}
+    </div>
+    <div class="side__finish">
+      <button class="btn btn--gold btn--sm" id="sideFinish" style="width:100%; justify-content:center">Finish · See Summary →</button>
+    </div>`;
+  document.querySelectorAll(".snav__item").forEach(s=>s.addEventListener("click",()=>{
+    persistCurrent(); goTo(+s.dataset.i); if(isMobile()) closeDrawer();
+  }));
+  document.getElementById("sideFinish").addEventListener("click",()=>{ persistCurrent(); finishMeeting(); });
+}
+function buildSegNav(){
+  const atStart = current===0, atEnd = current===ACTIVE_AGENDA.length-1;
+  document.getElementById("segNav").innerHTML = `
+    <button class="back" id="prevBtn">${atStart?'':'← '+ACTIVE_AGENDA[current-1].t}</button>
+    <button class="btn ${atEnd?'btn--gold':'btn--navy'} btn--sm" id="nextBtn">
+      ${atEnd?'Finish · See Summary →':'Next · '+ACTIVE_AGENDA[current+1].t+' →'}
+    </button>`;
+  if(!atStart) document.getElementById("prevBtn").addEventListener("click",()=>{persistCurrent(); goTo(current-1);});
+  document.getElementById("nextBtn").addEventListener("click",()=>{ persistCurrent(); atEnd? finishMeeting() : goTo(current+1); });
+}
+function startTimer(){
+  elapsed=0; if(timer) clearInterval(timer);
+  const el=document.getElementById("clock");
+  timer=setInterval(()=>{ elapsed++; if(el){const m=String(Math.floor(elapsed/60)).padStart(2,"0"),s=String(elapsed%60).padStart(2,"0"); el.textContent=`${m}:${s}`;} },1000);
+}
+function goTo(i){
+  current=Math.max(0,Math.min(ACTIVE_AGENDA.length-1,i));
+  const item=ACTIVE_AGENDA[current];
+  document.getElementById("segHost").innerHTML = item.render(item);
+  buildSidebar(); buildSegNav(); startTimer();
+  item.wire && item.wire();
+  wireSegment(item);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+/* ---- DRAWER CONTROL ---- */
+function isMobile(){ return window.matchMedia("(max-width:860px)").matches; }
+function openDrawer(){ document.getElementById("meeting").classList.add("nav-open"); }
+function closeDrawer(){ document.getElementById("meeting").classList.remove("nav-open"); }
+function toggleDrawer(){ document.getElementById("meeting").classList.toggle("nav-open"); }
+
+function startMeeting(){
+  meetingMode="dept"; ACTIVE_AGENDA=DEPT_AGENDA;
+  document.getElementById("metaWeek").textContent = "The Action Point · 30 min";
+  launchShell();
+}
+/* The Performance Point: executive meeting over the whole store */
+function openExecMeeting(){
+  if(!ORG) return;
+  meetingMode="exec"; ACTIVE_AGENDA=EXEC_AGENDA; activeDeptId=null;
+  seedDemo(); // STATE carries rating/carry; ORG carries the real data
+  STATE.store = ORG.group+" · Executive";
+  document.getElementById("metaStore").textContent = ORG.group+" · Executive Team";
+  document.getElementById("metaWeek").textContent = "The Performance Point · 90 min";
+  document.getElementById("orgScreen").classList.remove("active");
+  launchShell();
+}
+function launchShell(){
+  document.getElementById("hero").style.display="none";
+  document.getElementById("diagScreen").classList.remove("active");
+  document.getElementById("summaryScreen").classList.remove("active");
+  document.getElementById("meeting").classList.add("active");
+  document.body.classList.add("in-meeting");
+  isMobile() ? closeDrawer() : openDrawer();
+  current=0; goTo(0);
+}
+
+/* ---- DIAGNOSTIC ON-RAMP ---- */
+function renderDiagnostic(){
+  const total=overallScore(), answered=diagnosticAnswered(), band=overallBand(total);
+  const bandCol = band.s==="green"?"#2F7A4F":band.s==="amber"?"#C8992B":"#B91C1C";
+  const host=document.getElementById("diagHost");
+  host.innerHTML = `
+    <div class="eyebrow" style="color:var(--gold)">Step 01 · Baseline</div>
+    <h2 style="font-size:1.9rem; margin:6px 0 4px">Score your team on the 7 pillars</h2>
+    <div class="gold-rule" style="margin-left:0"></div>
+    <p style="color:var(--body); max-width:62ch; margin-bottom:20px">Answer honestly. 1 is Never, 5 is Always. Your two lowest pillars become the focus of the meeting. This is the ten-minute score a prospect runs on their own shop.</p>
+
+    <div class="diag__band">
+      <div>
+        <div class="l">Overall Score</div>
+        <div class="diag__score"><span class="big">${total}</span><span class="max">/ 105 · <b style="color:${bandCol}">${band.l}</b></span></div>
+      </div>
+      <div class="count">${answered} / 21 answered<br>75+ Strong · 50-74 Developing · under 50 Reset</div>
+    </div>
+
+    <div id="diagPillars">${PILLAR_DEFS.map(p=>{
+      const sc=pillarScore(p.id), ans=pillarAnswered(p.id), st=pillarStatus(sc);
+      const col=st==="green"?"#2F7A4F":st==="amber"?"#C8992B":"#B91C1C";
+      return `<div class="dpill">
+        <div class="dpill__h"><span class="id">${p.id}</span><span class="nm">${p.name}</span>
+          <span class="sc" style="color:${ans?col:'var(--mid)'}">${ans?sc+"/15":"—"}</span></div>
+        ${DIAGNOSTIC.map((d,i)=> d.p===p.id ? `
+          <div class="dq"><div class="qt">${d.q}</div>
+            <div class="dscale" data-i="${i}">${[1,2,3,4,5].map(n=>`<button data-n="${n}" class="${STATE.diagnostic[i]===n?'on':''}" title="${SCORE_WORDS[n]}">${n}</button>`).join("")}</div>
+          </div>`:"").join("")}
+      </div>`;}).join("")}
+    </div>
+
+    <div style="display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:22px; flex-wrap:wrap">
+      <button class="btn btn--ghost btn--sm" id="diagBack" style="color:var(--navy); border-color:var(--border)">← Back</button>
+      <button class="btn btn--gold" id="diagToMeeting">Build the Meeting from My Score →</button>
+    </div>`;
+  wireDiagnostic();
+}
+function wireDiagnostic(){
+  document.querySelectorAll('#diagPillars .dscale').forEach(scale=>{
+    scale.querySelectorAll('button').forEach(btn=>btn.addEventListener("click",()=>{
+      STATE.diagnostic[+scale.dataset.i]=+btn.dataset.n;
+      renderDiagnostic(); // re-render to update live scores
+    }));
+  });
+  const back=document.getElementById("diagBack");
+  back && back.addEventListener("click",()=>{
+    document.getElementById("diagScreen").classList.remove("active");
+    document.getElementById("hero").style.display="block";
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+  const go=document.getElementById("diagToMeeting");
+  go && go.addEventListener("click",()=>{
+    if(diagnosticAnswered()>0){ STATE.diagnosticDone=true; syncPillarsFromDiagnostic(); }
+    startMeeting();
+  });
+}
+function startDiagnostic(){
+  document.getElementById("hero").style.display="none";
+  document.getElementById("diagScreen").classList.add("active");
+  renderDiagnostic();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function finishMeeting(){
+  if(timer) clearInterval(timer);
+  document.getElementById("meeting").classList.remove("active");
+  document.body.classList.remove("in-meeting");
+  renderSummary();
+  document.getElementById("summaryScreen").classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function restart(){
+  seedDemo();
+  document.getElementById("summaryScreen").classList.remove("active");
+  document.getElementById("diagScreen").classList.remove("active");
+  document.getElementById("meeting").classList.remove("active");
+  document.body.classList.remove("in-meeting");
+  document.getElementById("hero").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---- read the current segment's DOM back into STATE before leaving ---- */
+function persistCurrent(){
+  const id=ACTIVE_AGENDA[current].id;
+  if(id==="drive"){ const t=document.getElementById("ooInput"); if(t) STATE.oneOutcome=t.value; }
+  if(id==="rate"){ const c=document.getElementById("carryInput"); if(c) STATE.carry=c.value; }
+  if(id==="constraint"){
+    document.querySelectorAll('.ooda textarea').forEach(t=>STATE.ooda[t.dataset.k]=t.value);
+    document.querySelectorAll('.rx-block [data-k]').forEach(el=>STATE.ooda[el.dataset.k]=el.value);
+    document.querySelectorAll('[data-rk]').forEach(el=>STATE.ooda.review[el.dataset.rk]=el.value);
+    const o=document.getElementById("oodaOwner"); if(o) STATE.ooda.owner=o.value;
+  }
+  if(id==="next"){
+    document.querySelectorAll('#nextList [data-k]').forEach(el=>{ STATE.nextBehaviors[+el.dataset.i][el.dataset.k]=el.value; });
+  }
+  // --- exec (Performance Point) segments write to ORG ---
+  if(id==="standard"){ const t=document.getElementById("ooInput"); if(t && ORG){ ORG.groupOutcome=t.value; } }
+  if(id==="priority"){ const t=document.getElementById("priorityInput"); if(t && ORG){ ORG.weekPriority.decision=t.value; } }
+  if(id==="assign"){
+    const d=document.getElementById("assignDept"), be=document.getElementById("assignBeh");
+    if(ORG){ if(d) ORG.weekPriority.assignedDept=d.value; if(be) ORG.weekPriority.behavior=be.value; }
+  }
+  if(id==="execrate"){ const c=document.getElementById("carryInput"); if(c) STATE.carry=c.value; }
+  if(ORG && meetingMode==="exec") queueOrgSave();
+}
+
+/* ---- per-segment interactivity ---- */
+function wireSegment(item){
+  const id=item.id;
+  if(id==="drive"){
+    document.querySelectorAll('#attend .chip').forEach(ch=>ch.addEventListener("click",()=>{
+      const m=STATE.team.find(t=>t.id===ch.dataset.id); m.in=!m.in; ch.classList.toggle("in");
+    }));
+  }
+  if(id==="gauges"){
+    const onGauge = (inp)=>{
+      const i=+inp.dataset.i; STATE.gauges[i].actual=parseFloat(inp.value)||0;
+      const card=document.getElementById("gauge-"+i);
+      const caret=inp.selectionStart;
+      const fresh=document.createElement("div"); fresh.innerHTML=gaugeCard(STATE.gauges[i],i);
+      card.replaceWith(fresh.firstElementChild);
+      const ni=document.querySelector(`#gauge-${i} input`);
+      ni.addEventListener("input",()=>onGauge(ni));
+      ni.focus();
+      try{ ni.setSelectionRange(caret,caret); }catch(e){}
+    };
+    document.querySelectorAll('#gaugeGrid input').forEach(inp=>inp.addEventListener("input",()=>onGauge(inp)));
+  }
+  if(id==="commit"){
+    document.querySelectorAll('#commitList .did').forEach(d=>{
+      d.querySelectorAll('.didbtn').forEach(btn=>btn.addEventListener("click",()=>{
+        const i=+d.dataset.i, c=STATE.commitments[i];
+        c.did = btn.dataset.v==="yes"? c.target : Math.min(c.did, c.target-1<0?0:Math.min(c.did,c.target-1));
+        if(btn.dataset.v==="no" && c.did>=c.target) c.did=Math.max(0,c.target-1);
+        const fresh=document.createElement("div"); fresh.innerHTML=commitRow(c,i);
+        d.closest(".brow").replaceWith(fresh.firstElementChild);
+        wireSegment(item);
+      }));
+    });
+  }
+  if(id==="constraint"){
+    document.querySelectorAll('#cpick .cpick').forEach(b=>b.addEventListener("click",()=>{
+      STATE.chosenConstraint=+b.dataset.i;
+      document.querySelectorAll('#cpick .cpick').forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+    }));
+  }
+  if(id==="next"){
+    document.querySelectorAll('#nextList [data-k]').forEach(el=>el.addEventListener("input",()=>{
+      STATE.nextBehaviors[+el.dataset.i][el.dataset.k]=el.value;
+    }));
+  }
+  if(id==="rate" || id==="execrate"){
+    document.querySelectorAll('#rateRow button').forEach(btn=>btn.addEventListener("click",()=>{
+      STATE.rating=+btn.dataset.n;
+      document.querySelectorAll('#rateRow button').forEach(x=>x.classList.remove("on")); btn.classList.add("on");
+    }));
+  }
+  // --- exec segments ---
+  if(id==="standard"){ const t=document.getElementById("ooInput"); if(t) t.addEventListener("input",()=>{ if(ORG) ORG.groupOutcome=t.value; }); }
+  if(id==="gap"){
+    document.querySelectorAll('#gapPick .cpick').forEach(btn=>btn.addEventListener("click",()=>{
+      ORG.weekPriority.gapDept=btn.dataset.dept;
+      document.querySelectorAll('#gapPick .cpick').forEach(x=>x.classList.remove("sel")); btn.classList.add("sel");
+    }));
+  }
+  if(id==="priority"){ const t=document.getElementById("priorityInput"); if(t) t.addEventListener("input",()=>{ if(ORG) ORG.weekPriority.decision=t.value; }); }
+  if(id==="assign"){
+    const d=document.getElementById("assignDept"), be=document.getElementById("assignBeh");
+    if(d) d.addEventListener("change",()=>{ if(ORG) ORG.weekPriority.assignedDept=d.value; });
+    if(be) be.addEventListener("input",()=>{ if(ORG) ORG.weekPriority.behavior=be.value; });
+  }
+}
+function wireSummary(){
+  document.getElementById("copyBtn").addEventListener("click",()=>{
+    const txt=summaryText();
+    navigator.clipboard?.writeText(txt).then(()=>toast("Summary copied")).catch(()=>fallbackCopy(txt));
+  });
+  document.getElementById("printBtn").addEventListener("click",()=>window.print());
+  document.getElementById("restartBtn").addEventListener("click",()=>{ if(!returnToOrg()) restart(); });
+}
+function fallbackCopy(txt){
+  const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
+  try{document.execCommand("copy"); toast("Summary copied");}catch(e){toast("Copy not supported");} ta.remove();
+}
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+/* ============================================================
+   ORG DASHBOARD  —  the cascade lives here.
+   A facilitator (group leader) sets the group One Outcome and
+   can edit every department's. A department head sees the group
+   outcome (read-only) and sets only their own department's.
+   ============================================================ */
+let orgOwner = null;  // partner_data owner id for saving
+
+function canEditGroup(){ return SESSION && SESSION.role==="facilitator"; }
+function myDeptId(){
+  // a department head's store field names their department id
+  if(SESSION && SESSION.role!=="facilitator" && SESSION.store) return SESSION.store;
+  return null;
+}
+function canEditDept(deptId){
+  if(canEditGroup()) return true;
+  return myDeptId()===deptId;
+}
+
+function renderOrg(){
+  const sh=storeHealth();
+  const host=document.getElementById("orgHost");
+  const roleWord = canEditGroup() ? "Group Leader" : "Department Head";
+  host.innerHTML = `
+    <div class="orgbar">
+      <div>
+        <div class="eyebrow" style="color:var(--gold)">${ORG.group} · ${ORG.store} · Week ${ORG.week}</div>
+        <h2 style="font-size:1.8rem; margin-top:4px">Operating Dashboard</h2>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px">
+        <span class="rolepill">${roleWord}</span>
+        <button class="btn btn--ghost btn--sm" id="orgSignout" style="color:var(--navy); border-color:var(--border)">Sign out</button>
+      </div>
+    </div>
+
+    <div class="groupcard">
+      <div class="gh">
+        <div class="l">The Group One Outcome · set by the leader</div>
+        <div class="health-badge">
+          <span class="dot" style="background:${statusHexSafe(sh.status)}"></span>
+          <span class="hs">${sh.score}</span>
+          <span class="hl">Store Health</span>
+        </div>
+      </div>
+      ${canEditGroup()
+        ? `<textarea id="groupOcInput" rows="2" placeholder="Name the single result the whole store aims at this quarter...">${ORG.groupOutcome||""}</textarea>`
+        : `<div class="ro">${ORG.groupOutcome || "<span style='color:rgba(248,246,242,.4); font-style:italic'>The group leader has not set the One Outcome yet.</span>"}</div>`}
+      ${canEditGroup() ? `<button class="btn btn--gold btn--sm" id="runExec" style="margin-top:16px">Run the Performance Point · 90 min →</button>`:""}
+    </div>
+
+    ${priorityBanner()}
+
+    <div class="eyebrow" style="color:var(--mid); margin:4px 0 12px">Departments · The Action Point · each manager runs 30 minutes</div>
+    <div class="deptgrid">${ORG.departments.map(d=>deptCard(d)).join("")}</div>
+
+    <p style="font-size:.74rem; color:var(--mid); margin-top:22px; max-width:70ch">
+      ${canEditGroup()
+        ? "The Performance Point sets the one priority. It cascades to the department you assign it to. Each manager runs their Action Point to translate it into a behavior."
+        : "Run your department's Action Point. If the executive team assigned you this week's priority, it appears at the top of your meeting."}
+    </p>`;
+  wireOrg();
+}
+function priorityBanner(){
+  const wp=ORG.weekPriority||{};
+  if(!wp.decision) return "";
+  const dept=ORG.departments.find(d=>d.id===wp.assignedDept);
+  return `<div style="background:var(--white); border:1px solid var(--border); border-left:4px solid var(--gold); border-radius:11px; padding:16px 18px; margin-bottom:20px">
+    <div style="font-size:.56rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:5px">This Week's Priority · decided at the Performance Point</div>
+    <div style="font-family:var(--font-d); font-size:1.2rem; color:var(--navy); line-height:1.3">${wp.decision}</div>
+    ${dept?`<div style="font-size:.78rem; color:var(--mid); margin-top:6px">Assigned to <b style="color:var(--navy)">${dept.name}</b>${wp.behavior?` · Behavior: ${wp.behavior}`:""}</div>`:""}
+  </div>`;
+}
+function deptCard(d){
+  const h=deptHealth(d);
+  const editable=canEditDept(d.id);
+  const ocBody = editable
+    ? `<textarea data-dept="${d.id}" rows="2" placeholder="Your department's one outcome, aligned to the group...">${d.outcome||""}</textarea>`
+    : (d.outcome ? `<div class="ocv">${d.outcome}</div>` : `<div class="ocempty">Not set yet</div>`);
+  return `
+    <div class="deptcard g-${h.status}">
+      <div class="deptcard__h">
+        <div>
+          <div class="deptcard__name">${d.name}</div>
+          <div class="deptcard__head">${d.head||"Head unassigned"}</div>
+        </div>
+        <span class="align-tag ${d.outcome?'on':'off'}">${d.outcome?'Outcome set':'No outcome'}</span>
+      </div>
+      <div class="deptcard__oc"><div class="ocl">${d.name} One Outcome</div>${ocBody}</div>
+      <div class="deptcard__foot">
+        <div class="deptcard__metrics">${d.gauges.map(g=>`<span class="mdot" style="background:${statusHexSafe(gaugeStatus(g.actual,g.target))}" title="${g.name}"></span>`).join("")}</div>
+        <button class="btn btn--navy btn--sm" data-run="${d.id}">Run the Action Point →</button>
+      </div>
+    </div>`;
+}
+function statusHexSafe(s){ return s==="green"?"#2F7A4F":s==="amber"?"#C8992B":"#B91C1C"; }
+function statusWord(s){ return s==="green"?"Healthy":s==="amber"?"Watch":"At Risk"; }
+
+function wireOrg(){
+  const g=document.getElementById("groupOcInput");
+  if(g) g.addEventListener("input",()=>{ ORG.groupOutcome=g.value; queueOrgSave(); });
+  document.querySelectorAll('.deptcard__oc textarea').forEach(t=>t.addEventListener("input",()=>{
+    const d=ORG.departments.find(x=>x.id===t.dataset.dept); if(d){ d.outcome=t.value; queueOrgSave(); }
+  }));
+  document.querySelectorAll('[data-run]').forEach(btn=>btn.addEventListener("click",()=>{
+    openDeptMeeting(btn.dataset.run);
+  }));
+  const ex=document.getElementById("runExec");
+  if(ex) ex.addEventListener("click",openExecMeeting);
+  const so=document.getElementById("orgSignout");
+  if(so) so.addEventListener("click",doSignOut);
+}
+
+/* debounced save of the whole org doc */
+let orgSaveTimer=null;
+function queueOrgSave(){
+  if(!sb || !orgOwner) return;
+  if(orgSaveTimer) clearTimeout(orgSaveTimer);
+  orgSaveTimer=setTimeout(()=>{ orgSave(orgOwner, { org:true, ...ORG }); toast("Saved"); }, 700);
+}
+
+/* open a department's meeting: load its One Outcome + gauges into STATE */
+function openDeptMeeting(deptId){
+  const d=ORG.departments.find(x=>x.id===deptId); if(!d) return;
+  activeDeptId=deptId;
+  seedDemo(); // base shape
+  STATE.store = ORG.group+" · "+d.name;
+  STATE.facilitator = d.head || (SESSION?SESSION.displayName:"") || "Lead";
+  STATE.week = ORG.week;
+  STATE.oneOutcome = d.outcome || "";
+  STATE.gauges = JSON.parse(JSON.stringify(d.gauges));
+  STATE.groupOutcome = ORG.groupOutcome || "";
+  // cascade: if the executive assigned this department a priority, carry it in
+  const wp = ORG.weekPriority || {};
+  STATE.execPriority = (wp.assignedDept===deptId) ? { decision:wp.decision, behavior:wp.behavior } : null;
+  document.getElementById("metaStore").textContent = STATE.store;
+  document.getElementById("orgScreen").classList.remove("active");
+  startMeeting();
+}
+
+/* ============================================================
+   AUTH FLOW
+   ============================================================ */
+function showScreen(which){
+  ["loginScreen","orgScreen","hero","diagScreen","summaryScreen"].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    if(id==="hero") el.style.display = (which==="hero")?"block":"none";
+    else el.classList.toggle("active", which===id);
+  });
+  document.getElementById("meeting").classList.remove("active");
+  document.body.classList.remove("in-meeting");
+}
+
+async function boot(){
+  if(!isConfigured){
+    // Demo Mode: no login, straight to the hero as before
+    document.body.classList.add("demo-mode");
+    showScreen("hero");
+    return;
+  }
+  SESSION = await authCurrentUser();
+  if(!SESSION){ showScreen("loginScreen"); return; }
+  await enterOrg();
+}
+
+async function enterOrg(){
+  orgOwner = await orgOwnerId(SESSION);
+  let doc = await orgLoad(orgOwner);
+  if(!doc){
+    // first time for this org: seed it (facilitator only), else wait
+    const fresh = seedOrg(SESSION.store || "Your Dealer Group", "Main Store");
+    doc = { org:true, ...fresh };
+    if(canEditGroup()){ await orgSave(orgOwner, doc); }
+  }
+  ORG = { group:doc.group, store:doc.store, week:doc.week||7,
+          groupOutcome:doc.groupOutcome||"",
+          weekPriority:doc.weekPriority||{gapDept:"",decision:"",assignedDept:"",behavior:""},
+          departments:doc.departments||seedOrg().departments };
+  showScreen("orgScreen");
+  renderOrg();
+}
+
+async function doSignIn(){
+  const email=document.getElementById("loginEmail").value;
+  const pass=document.getElementById("loginPass").value;
+  const err=document.getElementById("loginErr"); err.textContent="";
+  const btn=document.getElementById("loginBtn"); btn.textContent="Signing in...";
+  const res=await authSignIn(email,pass);
+  btn.textContent="Enter the System";
+  if(res.error){ err.textContent=res.error; return; }
+  SESSION=res.user; await enterOrg();
+}
+async function doSignOut(){
+  await authSignOut(); SESSION=null; ORG=null; orgOwner=null;
+  showScreen("loginScreen");
+}
+
+/* when a meeting finishes, a signed-in user returns to the org dashboard
+   and the department's outcome is written back */
+function returnToOrg(){
+  if(!ORG) return false;
+  if(meetingMode==="exec"){
+    // exec writes ORG directly (priority, outcome) during the meeting
+    queueOrgSave();
+    meetingMode="dept"; ACTIVE_AGENDA=DEPT_AGENDA;
+    showScreen("orgScreen"); renderOrg();
+    return true;
+  }
+  if(activeDeptId){
+    const d=ORG.departments.find(x=>x.id===activeDeptId);
+    if(d){ d.outcome = STATE.oneOutcome || d.outcome; d.gauges = JSON.parse(JSON.stringify(STATE.gauges)); }
+    queueOrgSave();
+    activeDeptId=null;
+    showScreen("orgScreen"); renderOrg();
+    return true;
+  }
+  return false;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+seedDemo();
+buildLegend(); buildAgendaPreview();
+document.getElementById("metaStore").textContent=STATE.store;
+document.getElementById("ctxStore").textContent=STATE.store+" Dept";
+document.getElementById("legendToggle").addEventListener("click",()=>document.getElementById("legend").classList.toggle("open"));
+document.getElementById("startBtn").addEventListener("click",startMeeting);
+document.getElementById("diagBtn").addEventListener("click",startDiagnostic);
+document.getElementById("markHome").addEventListener("click",()=>{ if(!returnToOrg()) restart(); });
+document.getElementById("hamburger").addEventListener("click",toggleDrawer);
+document.getElementById("backdrop").addEventListener("click",closeDrawer);
+document.getElementById("jumpSummary").addEventListener("click",()=>{
+  document.getElementById("hero").style.display="none"; finishMeeting();
+});
+// auth screen buttons
+document.getElementById("loginBtn").addEventListener("click",doSignIn);
+document.getElementById("loginPass").addEventListener("keydown",e=>{ if(e.key==="Enter") doSignIn(); });
+document.getElementById("demoBtn").addEventListener("click",()=>{ document.body.classList.add("demo-mode"); showScreen("hero"); });
+boot();
+</script>
+</body>
+</html>
