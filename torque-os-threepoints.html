@@ -46,8 +46,8 @@
      ====================================================== -->
 <script>
   window.TORQUE_CONFIG = {
-      url: "https://ubuisezzfcacvnvmhopd.supabase.co",
-    anonKey: "sb_publishable_mykFVnm2QgIHrYjEn4FUsw__-GHkFMo"
+    url: "https://ubuisezzfcacvnvmhopd.supabase.co",
+    anonKey: "YOUR_SUPABASE_ANON_KEY"
   };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -409,7 +409,27 @@
   .gauge.esc-on{box-shadow:0 0 0 2px rgba(185,28,28,.25)}
 
   /* OODA full prescription + review loop */
+  .align-trace{font-size:.62rem; color:var(--steel); letter-spacing:.02em; margin:-4px 0 10px; font-style:italic}
   .rx-block{background:var(--gold-pale); border:1px solid rgba(200,153,43,.4); border-radius:11px; padding:16px; margin-top:16px}
+
+  /* THE THREE LAYERS */
+  .layers{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  @media(max-width:820px){ .layers{grid-template-columns:1fr} }
+  .layer{border:1px solid var(--border); border-radius:12px; padding:15px; background:var(--white); position:relative; overflow:hidden}
+  .layer::before{content:""; position:absolute; left:0; top:0; bottom:0; width:4px}
+  .l-behavior::before{background:#1B5E6F} .l-ops::before{background:var(--steel)} .l-fin::before{background:var(--green)}
+  .layer__tag{font-size:.56rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--mid)}
+  .layer__q{font-family:var(--font-d); font-size:1.05rem; color:var(--navy); margin:4px 0 12px; line-height:1.2}
+  .layer__beh{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .layer__beh input{width:62px; font-family:var(--font-m); font-weight:700; font-size:1.2rem; text-align:center; border:1px solid var(--border); border-radius:8px; padding:5px; color:var(--navy)}
+  .layer__beh input:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .layer__beh .slash{font-family:var(--font-m); color:var(--mid); font-size:1.2rem}
+  .layer__pct{font-family:var(--font-m); font-weight:700; font-size:1.5rem; margin-left:auto}
+  .layer textarea{width:100%; border:1px solid var(--border); border-radius:8px; padding:9px; font-family:var(--font-s); font-size:.84rem; resize:vertical; min-height:70px; color:var(--charcoal); margin-bottom:8px}
+  .layer textarea:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .layer__hint{font-size:.66rem; color:var(--mid); line-height:1.4; font-style:italic}
+  .layer__verdict{display:flex; align-items:flex-start; gap:9px; border:1px solid; border-radius:11px; padding:13px 15px; margin-top:12px; font-size:.84rem; line-height:1.4}
+  .layer__vdot{flex-shrink:0; width:11px; height:11px; border-radius:50%; margin-top:4px}
   .rx-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:10px}
   @media(max-width:720px){ .rx-grid{grid-template-columns:1fr} }
   .review-box{background:#F3EEF7; border:1px solid #D9CBE6; border-radius:11px; padding:16px; margin-top:18px}
@@ -717,34 +737,109 @@ let ORG = null;        // the live organization (when signed in)
 let SESSION = null;    // the signed-in user
 let activeDeptId = null;
 
+/* TORQUE Department Intelligence v1.1
+   Each department is the SINGLE AUTHORITATIVE CONTEXT for its own
+   meeting: its manager (head), its team, its gauges, its constraints,
+   and its prior-week commitments. openDeptMeeting() loads ALL of this,
+   nothing generic. Switching departments swaps every field together. */
 const DEPT_SEED = [
-  {id:"service", name:"Service",  head:"", outcome:"", aligned:true,
+  {id:"service", name:"Service", head:"Marcus Vogal", outcome:"", aligned:true,
+   team:[
+     {id:"marcus", nm:"Marcus", rl:"Director",  in:true},
+     {id:"dana",   nm:"Dana",   rl:"Advisor",   in:true},
+     {id:"luis",   nm:"Luis",   rl:"Advisor",   in:true},
+     {id:"priya",  nm:"Priya",  rl:"Lead Tech", in:true},
+   ],
    gauges:[
-     {name:"MPI Presentation Rate", owner:"Advisor Lead", unit:"%", target:90, actual:84, hist:[58,62,65,68,70,72,74,78,80,82,83]},
-     {name:"Menu Acceptance",       owner:"Advisor Lead", unit:"%", target:45, actual:38, hist:[28,30,31,32,33,34,35,36,37,38,38]},
-     {name:"Write-Up Completion",   owner:"Advisor",      unit:"%", target:95, actual:96, hist:[82,84,86,88,89,90,91,92,93,94,95]},
+     {name:"MPI Presentation Rate", owner:"Dana", unit:"%", target:90, actual:84, hist:[58,62,65,68,70,72,74,78,80,82,83]},
+     {name:"Menu Acceptance",       owner:"Dana", unit:"%", target:45, actual:38, hist:[28,30,31,32,33,34,35,36,37,38,38]},
+     {name:"Write-Up Completion",   owner:"Luis", unit:"%", target:95, actual:96, hist:[82,84,86,88,89,90,91,92,93,94,95]},
+   ],
+   constraints:[
+     {t:"Menu acceptance stuck at 38% for three weeks", d:"Presentation inconsistent at hand-off."},
+     {t:"MPI not presented on every RO", d:"Rate sits at 84%, short of 90%."},
+     {t:"Write-up quality varies by advisor", d:"Concerns captured unevenly."},
+   ],
+   commitments:[
+     {owner:"Dana", rl:"Advisor",  beh:"Present the full MPI menu verbally on every RO", target:5, did:4},
+     {owner:"Luis", rl:"Advisor",  beh:"Walk the drive and ask one discovery question per customer", target:5, did:2},
+     {owner:"Priya",rl:"Lead Tech",beh:"Flag parts delays at the 7am alignment", target:5, did:5},
    ]},
-  {id:"sales", name:"Sales", head:"", outcome:"", aligned:true,
+  {id:"sales", name:"Sales", head:"Rhonda Pierce", outcome:"", aligned:true,
+   team:[
+     {id:"rhonda", nm:"Rhonda", rl:"Sales Mgr", in:true},
+     {id:"tariq",  nm:"Tariq",  rl:"Salesperson", in:true},
+     {id:"beth",   nm:"Beth",   rl:"Salesperson", in:true},
+     {id:"nav",    nm:"Nav",    rl:"BDC Lead",  in:true},
+   ],
    gauges:[
-     {name:"Daily Prospecting Calls", owner:"Sales Mgr", unit:"/20", target:20, actual:16, hist:[9,10,11,12,12,13,14,14,15,15,16]},
-     {name:"Follow-Up Within 24h",    owner:"BDC Lead",  unit:"%",   target:85, actual:72, hist:[50,54,58,61,64,66,68,69,70,71,72]},
-     {name:"Closing Ratio",           owner:"Sales Mgr", unit:"%",   target:22, actual:19, hist:[12,13,14,15,16,16,17,17,18,18,19]},
+     {name:"Daily Prospecting Calls", owner:"Tariq", unit:"/20", target:20, actual:16, hist:[9,10,11,12,12,13,14,14,15,15,16]},
+     {name:"Follow-Up Within 24h",    owner:"Nav",   unit:"%",   target:85, actual:72, hist:[50,54,58,61,64,66,68,69,70,71,72]},
+     {name:"Closing Ratio",           owner:"Beth",  unit:"%",   target:22, actual:19, hist:[12,13,14,15,16,16,17,17,18,18,19]},
+   ],
+   constraints:[
+     {t:"Follow-up within 24 hours is slipping", d:"Leads going cold overnight at 72%, target 85%."},
+     {t:"Prospecting calls below 20 per day", d:"Pipeline thinning at 16 calls."},
+     {t:"Closing ratio stalled at 19%", d:"Demos strong, close rate short of 22%."},
+   ],
+   commitments:[
+     {owner:"Tariq", rl:"Salesperson",beh:"Make 20 prospecting touches before 11am", target:5, did:3},
+     {owner:"Nav",   rl:"BDC Lead",   beh:"Log a 24-hour follow-up on every fresh lead", target:5, did:3},
+     {owner:"Beth",  rl:"Salesperson",beh:"Ask for the appointment on every inbound call", target:5, did:4},
    ]},
-  {id:"parts", name:"Parts", head:"", outcome:"", aligned:true,
+  {id:"parts", name:"Parts", head:"Sam Okoye", outcome:"", aligned:true,
+   team:[
+     {id:"sam",   nm:"Sam",   rl:"Parts Mgr", in:true},
+     {id:"dee",   nm:"Dee",   rl:"Counter",   in:true},
+     {id:"hank",  nm:"Hank",  rl:"Warehouse", in:true},
+   ],
    gauges:[
-     {name:"Fill Rate",            owner:"Parts Mgr", unit:"%",    target:92, actual:94, hist:[84,86,87,88,89,90,91,92,93,93,94]},
-     {name:"Special Order Aging",  owner:"Parts Mgr", unit:"days", target:3,  actual:4,  hist:[6,6,5,5,5,4,4,4,3,4,4]},
+     {name:"Fill Rate",           owner:"Dee",  unit:"%",    target:92, actual:94, hist:[84,86,87,88,89,90,91,92,93,93,94]},
+     {name:"Special Order Aging", owner:"Hank", unit:"days", target:3,  actual:4,  hist:[6,6,5,5,5,4,4,4,3,4,4]},
+   ],
+   constraints:[
+     {t:"Special order aging creeping up", d:"Customers waiting on back-ordered parts at 4 days."},
+     {t:"Fill rate dipping on fast movers", d:"Occasional stockouts on common SKUs."},
+   ],
+   commitments:[
+     {owner:"Dee",  rl:"Counter",  beh:"Check stock against the day's RO schedule each morning", target:5, did:5},
+     {owner:"Hank", rl:"Warehouse",beh:"Call every special order the day it lands", target:5, did:3},
    ]},
-  {id:"fi", name:"F&I", head:"", outcome:"", aligned:true,
+  {id:"fi", name:"F&I", head:"Dev Rao", outcome:"", aligned:true,
+   team:[
+     {id:"dev",   nm:"Dev",   rl:"F&I Mgr", in:true},
+     {id:"lena",  nm:"Lena",  rl:"F&I Mgr", in:true},
+   ],
    gauges:[
-     {name:"Product Penetration",  owner:"F&I Mgr", unit:"%", target:80,  actual:76, hist:[60,63,65,67,69,70,72,73,74,75,76]},
-     {name:"Menu Presented 100%",  owner:"F&I Mgr", unit:"%", target:100, actual:94, hist:[80,82,84,86,88,89,90,91,92,93,94]},
+     {name:"Product Penetration", owner:"Dev",  unit:"%", target:80,  actual:76, hist:[60,63,65,67,69,70,72,73,74,75,76]},
+     {name:"Menu Presented 100%", owner:"Lena", unit:"%", target:100, actual:94, hist:[80,82,84,86,88,89,90,91,92,93,94]},
+   ],
+   constraints:[
+     {t:"Menu not presented on every deal", d:"100% menu at 94%, penetration uneven across the desk."},
+     {t:"Product penetration below target", d:"Sits at 76%, target 80%."},
+   ],
+   commitments:[
+     {owner:"Dev",  rl:"F&I Mgr",beh:"Present the full menu on every deal, no skips", target:5, did:4},
+     {owner:"Lena", rl:"F&I Mgr",beh:"Open with the needs assessment before numbers", target:5, did:3},
    ]},
-  {id:"bdc", name:"BDC", head:"", outcome:"", aligned:true,
+  {id:"bdc", name:"BDC", head:"Tia Nguyen", outcome:"", aligned:true,
+   team:[
+     {id:"tia",   nm:"Tia",   rl:"BDC Lead", in:true},
+     {id:"omar",  nm:"Omar",  rl:"BDC Rep",  in:true},
+     {id:"kara",  nm:"Kara",  rl:"BDC Rep",  in:true},
+   ],
    gauges:[
-     {name:"Lead Response Under 10m", owner:"BDC Lead", unit:"%", target:90, actual:82, hist:[60,64,68,70,72,74,76,78,79,80,81]},
-     {name:"Appointment Set Rate",    owner:"BDC Lead", unit:"%", target:35, actual:31, hist:[20,22,23,24,25,26,27,28,29,30,30]},
-     {name:"Show Rate",               owner:"BDC Lead", unit:"%", target:65, actual:58, hist:[44,46,48,50,51,52,53,54,55,56,57]},
+     {name:"Lead Response Under 10m", owner:"Omar", unit:"%", target:90, actual:82, hist:[60,64,68,70,72,74,76,78,79,80,81]},
+     {name:"Appointment Set Rate",    owner:"Kara", unit:"%", target:35, actual:31, hist:[20,22,23,24,25,26,27,28,29,30,30]},
+     {name:"Show Rate",               owner:"Tia",  unit:"%", target:65, actual:58, hist:[44,46,48,50,51,52,53,54,55,56,57]},
+   ],
+   constraints:[
+     {t:"Show rate soft at 58%", d:"Appointments set but not confirmed the day before."},
+     {t:"Lead response over 10 minutes", d:"Response at 82%, target 90%."},
+   ],
+   commitments:[
+     {owner:"Omar", rl:"BDC Rep",beh:"Answer or return every lead within 10 minutes", target:5, did:4},
+     {owner:"Kara", rl:"BDC Rep",beh:"Confirm every appointment the day before", target:5, did:2},
    ]},
 ];
 
@@ -832,7 +927,14 @@ function seedDemo(){
       act:"",
       owner:"Dana",
       // 30-day review loop (shown as the next cycle)
-      review:{ result:"", consistency:"", obstacle:"", next:"" }
+      review:{ result:"", consistency:"", obstacle:"", next:"" },
+      // THE THREE LAYERS — the core thesis made auditable.
+      // Behavior is not Operations. Operations is not Financial.
+      layers:{
+        behDid:38, behTotal:50,          // compliance fraction (followed the process?)
+        opsResult:"",                     // what happened as a result
+        finValue:"",                      // what value actually remained after avoidable cost
+      }
     },
     // diagnostic answers: question index -> 1..5. Empty until scored.
     diagnostic:{},
@@ -864,6 +966,20 @@ function trend(hist){
   if(a>b) return "up"; if(a<b) return "down"; return "flat";
 }
 function execPct(did, target){ return target? Math.round((did/target)*100) : 0; }
+
+/* ---- THE THREE LAYERS ----
+   Behavior compliance is auditable WITHOUT looking at the register.
+   The verdict names whether a real behavior measure exists yet. */
+function compliancePct(did, total){ return total? Math.round((did/total)*100) : 0; }
+function complianceTone(pct){ return pct>=90?"green" : pct>=70?"amber" : "red"; }
+function layerVerdict(L){
+  const hasBehavior = L.behTotal>0;             // an auditable fraction exists
+  const hasOps = (L.opsResult||"").trim().length>0;
+  const hasFin = (L.finValue||"").trim().length>0;
+  if(!hasBehavior) return { ok:false, msg:"No behavior measure yet. You are describing a number, not an action. The number tells you where to look. It cannot tell you what to change." };
+  if(!hasOps || !hasFin) return { ok:"partial", msg:"Behavior is isolated. Now separate what happened (operations) from what value remained (financial). Do not let one stand in for another." };
+  return { ok:true, msg:"Three layers separated. You can audit this behavior without glancing at the register. That is a real behavior measure." };
+}
 function pillarStatus(score){ if(score>=13)return"green"; if(score>=9)return"amber"; return"red"; }
 
 /* ---- Diagnostic scoring (from Torque Drive OS) ---- */
@@ -1036,6 +1152,60 @@ function commitRow(c,i){
   </div>`;
 }
 
+/* THE THREE LAYERS — behavior / operations / financial, never blurred.
+   This is the thesis made auditable, inside the meeting. */
+function threeLayerPanel(L){
+  const pct=compliancePct(L.behDid,L.behTotal);
+  const tone=complianceTone(pct);
+  const col=statusHexSafe(tone);
+  const v=layerVerdict(L);
+  const vcol = v.ok===true? "#2F7A4F" : v.ok==="partial" ? "#C8992B" : "#B91C1C";
+  const vbg  = v.ok===true? "#E7F0EA" : v.ok==="partial" ? "#F5EDD4" : "#FBE9E7";
+  return `
+    <div class="section-label" style="margin-top:24px"><span class="k">3</span><h3>Separate the three layers</h3></div>
+    <p style="font-size:.82rem; color:var(--mid); margin:-6px 0 14px; max-width:64ch">The number tells you where to look. The behavior tells you what must change. Keep them apart. Behavior is not operations. Operations is not financial.</p>
+    <div class="layers">
+      <div class="layer l-behavior">
+        <div class="layer__tag">Layer 1 · Behavior</div>
+        <div class="layer__q">Did they follow the process?</div>
+        <div class="layer__beh">
+          <input type="number" data-L="behDid" value="${L.behDid}" aria-label="followed">
+          <span class="slash">/</span>
+          <input type="number" data-L="behTotal" value="${L.behTotal}" aria-label="opportunities">
+          <span class="layer__pct" style="color:${col}">${pct}%</span>
+        </div>
+        <div class="layer__hint">Auditable without the register. Successful actions over total opportunities.</div>
+      </div>
+      <div class="layer l-ops">
+        <div class="layer__tag">Layer 2 · Operations</div>
+        <div class="layer__q">What happened as a result?</div>
+        <textarea data-L="opsResult" placeholder="Authorized items, released hours, jobs written... what the operation did.">${L.opsResult||""}</textarea>
+        <div class="layer__hint">Operations never substitutes for compliance. Conversion is not compliance.</div>
+      </div>
+      <div class="layer l-fin">
+        <div class="layer__tag">Layer 3 · Financial</div>
+        <div class="layer__q">What value actually remained?</div>
+        <textarea data-L="finValue" placeholder="Value kept after avoidable cost. Validated, non-displaced, collected.">${L.finValue||""}</textarea>
+        <div class="layer__hint">Released capacity is not revenue. Revenue is not profit.</div>
+      </div>
+    </div>
+    <div class="layer__verdict" id="layerVerdict" style="background:${vbg}; border-color:${vcol}">
+      <span class="layer__vdot" style="background:${vcol}"></span>
+      <span style="color:${vcol}; font-weight:700">${v.ok===true?"Real behavior measure":v.ok==="partial"?"Half there":"Not a behavior measure yet"}</span>
+      <span style="color:var(--body)"> &nbsp;${v.msg}</span>
+    </div>`;
+}
+function refreshVerdict(){
+  const el=document.getElementById("layerVerdict"); if(!el) return;
+  const v=layerVerdict(STATE.ooda.layers);
+  const vcol = v.ok===true? "#2F7A4F" : v.ok==="partial" ? "#C8992B" : "#B91C1C";
+  const vbg  = v.ok===true? "#E7F0EA" : v.ok==="partial" ? "#F5EDD4" : "#FBE9E7";
+  el.style.background=vbg; el.style.borderColor=vcol;
+  el.innerHTML=`<span class="layer__vdot" style="background:${vcol}"></span>`+
+    `<span style="color:${vcol}; font-weight:700">${v.ok===true?"Real behavior measure":v.ok==="partial"?"Half there":"Not a behavior measure yet"}</span>`+
+    `<span style="color:var(--body)"> &nbsp;${v.msg}</span>`;
+}
+
 function renderConstraint(item){
   const c=STATE.ooda;
   const inner = `
@@ -1079,6 +1249,8 @@ function renderConstraint(item){
         <input data-k="indicator" value="${c.indicator||""}" placeholder="The behavior-adjacent signal you will see first">
       </div>
     </div>
+
+    <div id="layerHost">${threeLayerPanel(STATE.ooda.layers)}</div>
 
     <details class="disclose">
       <summary>30-Day Review Loop · the next OODA cycle begins here</summary>
@@ -1363,6 +1535,17 @@ function renderSummary(){
             <li><span class="own">Owner</span><span class="bd">${STATE.ooda.owner}</span></li>
           </ul>
         </div>
+        ${(()=>{const L=STATE.ooda.layers; const p=compliancePct(L.behDid,L.behTotal); const v=layerVerdict(L);
+          const vcol=v.ok===true?"#2F7A4F":v.ok==="partial"?"#C8992B":"#B91C1C";
+          return `<div class="sumsec">
+          <div class="sl">The Three Layers · Behavior / Operations / Financial</div>
+          <ul class="sumlist">
+            <li><span class="own">Behavior</span><span class="bd"><b style="font-family:var(--font-m); color:${statusHexSafe(complianceTone(p))}">${L.behDid}/${L.behTotal} · ${p}%</b> followed the process</span></li>
+            <li><span class="own">Operations</span><span class="bd">${L.opsResult||"<i>not separated</i>"}</span></li>
+            <li><span class="own">Financial</span><span class="bd">${L.finValue||"<i>not separated</i>"}</span></li>
+            <li><span class="own">Verdict</span><span class="bd" style="color:${vcol}; font-weight:700">${v.ok===true?"Real behavior measure":v.ok==="partial"?"Half there":"Not a behavior measure yet"}</span></li>
+          </ul>
+        </div>`;})()}
         <div class="sumsec">
           <div class="sl">This Week · Behaviors Owned</div>
           <ul class="sumlist">${STATE.nextBehaviors.map(b=>`
@@ -1604,6 +1787,10 @@ function persistCurrent(){
     document.querySelectorAll('.ooda textarea').forEach(t=>STATE.ooda[t.dataset.k]=t.value);
     document.querySelectorAll('.rx-block [data-k]').forEach(el=>STATE.ooda[el.dataset.k]=el.value);
     document.querySelectorAll('[data-rk]').forEach(el=>STATE.ooda.review[el.dataset.rk]=el.value);
+    document.querySelectorAll('[data-L]').forEach(el=>{
+      const k=el.dataset.L, val = (k==="behDid"||k==="behTotal") ? (parseInt(el.value)||0) : el.value;
+      STATE.ooda.layers[k]=val;
+    });
     const o=document.getElementById("oodaOwner"); if(o) STATE.ooda.owner=o.value;
   }
   if(id==="next"){
@@ -1660,6 +1847,23 @@ function wireSegment(item){
       document.querySelectorAll('#cpick .cpick').forEach(x=>x.classList.remove("sel"));
       b.classList.add("sel");
     }));
+    // THREE LAYERS: update state + re-render the panel so % and verdict move live
+    const rewireLayers=()=>{
+      const panel=document.querySelector('.layers')?.parentElement; if(!panel) return;
+      document.querySelectorAll('[data-L]').forEach(el=>el.addEventListener("input",()=>{
+        const k=el.dataset.L, val=(k==="behDid"||k==="behTotal")?(parseInt(el.value)||0):el.value;
+        STATE.ooda.layers[k]=val;
+        if(k==="behDid"||k==="behTotal"){
+          // re-render only the layer block to refresh pct + verdict, keep focus
+          const host=document.getElementById("layerHost");
+          if(host){ host.innerHTML=threeLayerPanel(STATE.ooda.layers); rewireLayers(); }
+        } else {
+          // text layers only affect the verdict; refresh it without stealing focus
+          refreshVerdict();
+        }
+      }));
+    };
+    rewireLayers();
   }
   if(id==="next"){
     document.querySelectorAll('#nextList [data-k]').forEach(el=>el.addEventListener("input",()=>{
@@ -1792,6 +1996,7 @@ function deptCard(d){
         <span class="align-tag ${d.outcome?'on':'off'}">${d.outcome?'Outcome set':'No outcome'}</span>
       </div>
       <div class="deptcard__oc"><div class="ocl">${d.name} One Outcome</div>${ocBody}</div>
+      ${(d.outcome && ORG.groupOutcome) ? `<div class="align-trace">↑ Stated alignment to the store outcome. Relationship, not verified dollars.</div>` : ""}
       <div class="deptcard__foot">
         <div class="deptcard__metrics">${d.gauges.map(g=>`<span class="mdot" style="background:${statusHexSafe(gaugeStatus(g.actual,g.target))}" title="${g.name}"></span>`).join("")}</div>
         <button class="btn btn--navy btn--sm" data-run="${d.id}">Run the Action Point →</button>
@@ -1825,20 +2030,49 @@ function queueOrgSave(){
 }
 
 /* open a department's meeting: load its One Outcome + gauges into STATE */
+/* Monotonic token: every meeting launch increments it. Any async save or
+   render that finishes after a newer launch is ignored, so a stale response
+   can never write into the wrong department. */
+let deptLoadToken = 0;
+
 function openDeptMeeting(deptId){
-  const d=ORG.departments.find(x=>x.id===deptId); if(!d) return;
+  const d=ORG.departments.find(x=>x.id===deptId);
+  if(!d){ console.warn("Department not found:", deptId); return; }
+  const myToken = ++deptLoadToken;
   activeDeptId=deptId;
-  seedDemo(); // base shape
-  STATE.store = ORG.group+" · "+d.name;
+  seedDemo(); // reset to a clean base, then overwrite with THIS department
+
+  // ---- SINGLE AUTHORITATIVE DEPARTMENT CONTEXT ----
+  // every meeting field is sourced from d. Nothing generic survives.
+  STATE.deptId      = d.id;
+  STATE.deptName    = d.name;
+  STATE.store       = ORG.group+" · "+d.name;
   STATE.facilitator = d.head || (SESSION?SESSION.displayName:"") || "Lead";
-  STATE.week = ORG.week;
-  STATE.oneOutcome = d.outcome || "";
-  STATE.gauges = JSON.parse(JSON.stringify(d.gauges));
-  STATE.groupOutcome = ORG.groupOutcome || "";
-  // cascade: if the executive assigned this department a priority, carry it in
+  STATE.week        = ORG.week;
+  STATE.oneOutcome  = d.outcome || "";
+  STATE.groupOutcome= ORG.groupOutcome || "";
+  // deep-copy so edits in the meeting do not mutate the dashboard until saved
+  STATE.team        = d.team        ? JSON.parse(JSON.stringify(d.team))        : [];
+  STATE.gauges      = d.gauges      ? JSON.parse(JSON.stringify(d.gauges))      : [];
+  STATE.constraints = d.constraints ? JSON.parse(JSON.stringify(d.constraints)): [];
+  STATE.commitments = d.commitments ? JSON.parse(JSON.stringify(d.commitments)): [];
+  STATE.chosenConstraint = 0;
+  // reset the OODA prescription and three layers for the new department
+  STATE.ooda.owner = (STATE.team[0]&&STATE.team[0].nm) || "Lead";
+  STATE.ooda.decide=""; STATE.ooda.dosage=""; STATE.ooda.frequency=""; STATE.ooda.indicator=""; STATE.ooda.act="";
+  STATE.ooda.observe=""; STATE.ooda.orient="";
+  STATE.ooda.review={ result:"", consistency:"", obstacle:"", next:"" };
+  STATE.ooda.layers={ behDid:0, behTotal:0, opsResult:"", finValue:"" };
+
+  // cascade: carry the executive priority ONLY if it was assigned to THIS department
   const wp = ORG.weekPriority || {};
-  STATE.execPriority = (wp.assignedDept===deptId) ? { decision:wp.decision, behavior:wp.behavior } : null;
+  STATE.execPriority = (wp.assignedDept===deptId && wp.decision)
+    ? { decision:wp.decision, behavior:wp.behavior } : null;
+
+  // guard against a stale launch overwriting a newer one
+  if(myToken!==deptLoadToken) return;
   document.getElementById("metaStore").textContent = STATE.store;
+  document.getElementById("metaWeek").textContent = "The Action Point · "+(d.head||"")+" · 30 min";
   document.getElementById("orgScreen").classList.remove("active");
   startMeeting();
 }
@@ -1880,9 +2114,34 @@ async function enterOrg(){
   ORG = { group:doc.group, store:doc.store, week:doc.week||7,
           groupOutcome:doc.groupOutcome||"",
           weekPriority:doc.weekPriority||{gapDept:"",decision:"",assignedDept:"",behavior:""},
-          departments:doc.departments||seedOrg().departments };
+          departments:reconcileDepartments(doc.departments) };
   showScreen("orgScreen");
   renderOrg();
+}
+
+/* Reconcile saved departments against the authoritative DEPT_SEED by id.
+   Saved values (outcome, gauge actuals, commitments) win; any missing
+   context (team, constraints, commitments, head) is backfilled from seed.
+   This keeps old saves working and guarantees every department is complete. */
+function reconcileDepartments(saved){
+  const seed = JSON.parse(JSON.stringify(DEPT_SEED));
+  if(!Array.isArray(saved) || !saved.length) return seed;
+  return seed.map(base=>{
+    const s = saved.find(x=>x.id===base.id);
+    if(!s) return base;
+    return {
+      ...base,
+      head:        s.head && s.head.length ? s.head : base.head,
+      outcome:     s.outcome || "",
+      aligned:     s.aligned!==undefined ? s.aligned : base.aligned,
+      gauges:      (s.gauges && s.gauges.length)      ? s.gauges      : base.gauges,
+      team:        (s.team && s.team.length)          ? s.team        : base.team,
+      constraints: (s.constraints && s.constraints.length) ? s.constraints : base.constraints,
+      commitments: (s.commitments && s.commitments.length) ? s.commitments : base.commitments,
+      lastConstraint: s.lastConstraint || null,
+      lastLayers:     s.lastLayers || null,
+    };
+  });
 }
 
 async function doSignIn(){
@@ -1913,7 +2172,16 @@ function returnToOrg(){
   }
   if(activeDeptId){
     const d=ORG.departments.find(x=>x.id===activeDeptId);
-    if(d){ d.outcome = STATE.oneOutcome || d.outcome; d.gauges = JSON.parse(JSON.stringify(STATE.gauges)); }
+    // write back ONLY if the meeting state still belongs to this department
+    if(d && STATE.deptId===d.id){
+      d.outcome      = STATE.oneOutcome || d.outcome;
+      d.gauges       = JSON.parse(JSON.stringify(STATE.gauges));
+      d.commitments  = JSON.parse(JSON.stringify(STATE.commitments));
+      d.team         = JSON.parse(JSON.stringify(STATE.team));
+      // keep the last constraint worked and its three-layer proof on the department
+      d.lastConstraint = (STATE.constraints[STATE.chosenConstraint]||null);
+      d.lastLayers     = JSON.parse(JSON.stringify(STATE.ooda.layers));
+    }
     queueOrgSave();
     activeDeptId=null;
     showScreen("orgScreen"); renderOrg();
