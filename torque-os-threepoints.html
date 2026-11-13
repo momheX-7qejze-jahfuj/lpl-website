@@ -232,6 +232,32 @@
   .gauge.g-green::before{background:var(--green)} .gauge.g-amber::before{background:var(--amber)} .gauge.g-red::before{background:var(--red)}
   .gauge__top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
   .gauge__name{font-weight:700; font-size:.86rem; color:var(--navy)}
+  /* outcome prompt above the proof */
+  .oc-prompt{background:var(--navy); border-radius:12px; padding:14px 16px; margin-bottom:16px}
+  .oc-prompt--warn{background:#FBE9E7; border:1px solid var(--red)}
+  .oc-prompt__l{font-size:.56rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:5px}
+  .oc-prompt--warn .oc-prompt__l{color:var(--red)}
+  .oc-prompt__o{font-family:var(--font-d); font-size:1.15rem; color:var(--cream); line-height:1.3; margin-bottom:7px}
+  .oc-prompt__q{font-size:.78rem; color:rgba(248,246,242,.72); line-height:1.4}
+  .oc-prompt--warn .oc-prompt__q{color:var(--body)}
+  /* editable gauge fields */
+  .gauge__name-edit{font-weight:700; font-size:.9rem; color:var(--navy); border:1px solid transparent; background:transparent; border-radius:6px; padding:2px 5px; width:100%; font-family:var(--font-s)}
+  .gauge__name-edit:hover{border-color:var(--border)} .gauge__name-edit:focus{outline:none; border-color:var(--gold); background:var(--white)}
+  .gauge__owner-edit{border:1px solid transparent; background:transparent; border-radius:5px; padding:1px 4px; font-size:.64rem; color:var(--mid); font-family:var(--font-s); width:110px; text-transform:uppercase; letter-spacing:.04em}
+  .gauge__owner-edit:hover{border-color:var(--border)} .gauge__owner-edit:focus{outline:none; border-color:var(--gold); background:var(--white)}
+  .gauge__target-edit{width:46px; border:1px solid var(--border); border-radius:5px; padding:1px 4px; font-family:var(--font-m); font-size:.8rem; text-align:center; color:var(--navy)}
+  .gauge__unit-edit{width:38px; border:1px solid var(--border); border-radius:5px; padding:1px 4px; font-family:var(--font-m); font-size:.78rem; text-align:center; color:var(--navy); margin-left:3px}
+  .gauge__target-edit:focus,.gauge__unit-edit:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .gauge__del{width:22px; height:22px; border-radius:6px; background:transparent; color:var(--mid); font-size:1.1rem; line-height:1; border:1px solid var(--border)}
+  .gauge__del:hover{background:#FBE9E7; color:var(--red); border-color:var(--red)}
+  /* suggestions */
+  .suggest-box{background:var(--gold-pale); border:1px solid rgba(200,153,43,.4); border-radius:11px; padding:14px 16px; margin-top:14px}
+  .suggest-box .sl{font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px}
+  .suggest-box .sq{font-size:.74rem; color:var(--body); margin-bottom:10px; font-style:italic}
+  .suggest-chips{display:flex; flex-wrap:wrap; gap:8px}
+  .suggest-chip{display:inline-flex; align-items:center; gap:7px; background:var(--white); border:1px solid var(--border); border-radius:30px; padding:7px 12px; font-size:.78rem; color:var(--navy); font-weight:600; transition:.15s}
+  .suggest-chip:hover{border-color:var(--gold); background:#fff}
+  .suggest-chip .plus{color:var(--gold); font-weight:700}
   .gauge__owner{font-size:.64rem; color:var(--mid); margin-top:2px; letter-spacing:.04em; text-transform:uppercase}
   .status{font-size:.58rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; color:#fff; white-space:nowrap}
   .status.g-green{background:var(--green)} .status.g-amber{background:var(--amber);color:var(--navy)} .status.g-red{background:var(--red)}
@@ -1013,6 +1039,72 @@ function gaugeEscalated(g){
   return gaugeStatus(a,g.target)==="red" && gaugeStatus(bk,g.target)==="red";
 }
 
+/* ---- OUTCOME-DRIVEN GAUGE SUGGESTIONS ----
+   Transparent and keyword-based, never a black box. Reads the department's
+   One Outcome text and offers leading indicators a coach would suggest.
+   The manager accepts, edits, or ignores. Nothing is auto-committed, and
+   no number is invented. Each suggestion is a behavior you can audit
+   without the register. */
+const SUGGESTION_RULES = [
+  { keys:["internet","online lead","web lead","e-lead","elead"], picks:[
+    {name:"Lead response under 2 minutes", unit:"%", target:90, owner:"BDC Lead"},
+    {name:"Personal video reply sent", unit:"%", target:80, owner:"Salesperson"},
+    {name:"Touches before day 3", unit:"/5", target:5, owner:"Salesperson"},
+  ]},
+  { keys:["lead","response","follow","follow-up","follow up"], picks:[
+    {name:"Lead response under 10 minutes", unit:"%", target:90, owner:"BDC Lead"},
+    {name:"Follow-up within 24 hours", unit:"%", target:85, owner:"BDC Lead"},
+  ]},
+  { keys:["conversion","convert","close","closing"], picks:[
+    {name:"Appointment set rate", unit:"%", target:35, owner:"BDC Lead"},
+    {name:"Appointment show rate", unit:"%", target:65, owner:"Sales Mgr"},
+    {name:"Closing ratio on shown appts", unit:"%", target:30, owner:"Sales Mgr"},
+  ]},
+  { keys:["appointment","appt","show","show rate"], picks:[
+    {name:"Appointment confirmed day before", unit:"%", target:90, owner:"BDC Lead"},
+    {name:"Appointment show rate", unit:"%", target:65, owner:"Sales Mgr"},
+  ]},
+  { keys:["menu","mpi","inspection","multi-point","multipoint"], picks:[
+    {name:"MPI presented verbally on every RO", unit:"%", target:95, owner:"Advisor"},
+    {name:"Menu walked line by line", unit:"%", target:90, owner:"Advisor"},
+  ]},
+  { keys:["penetration","product","f&i","finance","warranty"], picks:[
+    {name:"Needs assessment before numbers", unit:"%", target:95, owner:"F&I Mgr"},
+    {name:"Full menu presented every deal", unit:"%", target:100, owner:"F&I Mgr"},
+  ]},
+  { keys:["part","fill","special order","stock","inventory"], picks:[
+    {name:"Stock checked against RO schedule", unit:"%", target:95, owner:"Counter"},
+    {name:"Special orders called day of arrival", unit:"%", target:95, owner:"Parts"},
+  ]},
+  { keys:["retention","csi","satisfaction","repeat"], picks:[
+    {name:"Follow-up call after delivery", unit:"%", target:90, owner:"Advisor"},
+    {name:"Next appointment booked at checkout", unit:"%", target:60, owner:"Advisor"},
+  ]},
+];
+function suggestGauges(outcomeText){
+  const t=(outcomeText||"").toLowerCase();
+  if(!t.trim()) return [];
+  const seen=new Set(), out=[];
+  SUGGESTION_RULES.forEach(rule=>{
+    if(rule.keys.some(k=>t.includes(k))){
+      rule.picks.forEach(p=>{ if(!seen.has(p.name)){ seen.add(p.name); out.push(p); } });
+    }
+  });
+  return out.slice(0,5);
+}
+/* a fresh editable gauge shell with a flat starter history at the actual */
+function newGauge(seed){
+  const a = seed&&seed.target ? Math.round(seed.target*0.7) : 0;
+  return {
+    name: (seed&&seed.name)||"New indicator",
+    owner:(seed&&seed.owner)||"Owner",
+    unit: (seed&&seed.unit)||"%",
+    target:(seed&&seed.target)||100,
+    actual:a,
+    hist:[a,a,a,a,a,a,a,a,a,a,a],
+  };
+}
+
 /* inline SVG sparkline from a number array */
 function sparkline(hist, target, w=96, h=30){
   const min=Math.min(...hist, target), max=Math.max(...hist, target);
@@ -1084,8 +1176,23 @@ function renderDrive(item){
 }
 
 function renderGauges(item){
-  const inner = `<div class="gauges" id="gaugeGrid">${STATE.gauges.map((g,i)=>gaugeCard(g,i)).join("")}</div>`;
-  const intro = "Read the leading indicators, not the lagging results. These are behaviors made visible. Color tells you where to look. The twelve-week trend line tells you if the behavior is taking hold. Two weeks red in a row auto-flags for escalation, so nothing drifts quietly.";
+  const oc = STATE.oneOutcome || "";
+  const outcomePrompt = oc.trim()
+    ? `<div class="oc-prompt">
+         <div class="oc-prompt__l">These indicators must prove your One Outcome</div>
+         <div class="oc-prompt__o">${oc}</div>
+         <div class="oc-prompt__q">Does each indicator below measure a behavior you can audit without the register? If not, edit it until it does.</div>
+       </div>`
+    : `<div class="oc-prompt oc-prompt--warn">
+         <div class="oc-prompt__l">No One Outcome set yet</div>
+         <div class="oc-prompt__q">Set this department's outcome in "Take the Priority" first, so the proof can be tied to it.</div>
+       </div>`;
+  const inner = `
+    ${outcomePrompt}
+    <div class="gauges" id="gaugeGrid">${STATE.gauges.map((g,i)=>gaugeCard(g,i)).join("")}</div>
+    <div id="gaugeSuggest"></div>
+    <button class="btn btn--ghost btn--sm" id="addGauge" style="color:var(--navy); border-color:var(--border); margin-top:14px">+ Add an indicator</button>`;
+  const intro = "Read the leading indicators, not the lagging results. These are behaviors made visible, tied to this department's outcome. Edit any of them so the proof fits what you are actually trying to move. Color shows where to look. Two weeks red in a row auto-flags for escalation.";
   return segShell(item, inner, intro);
 }
 function gaugeCard(g,i){
@@ -1096,18 +1203,19 @@ function gaugeCard(g,i){
   return `
     <div class="gauge g-${s} ${esc?'esc-on':''}" id="gauge-${i}">
       <div class="gauge__top">
-        <div>
-          <div class="gauge__name">${g.name}</div>
-          <div class="gauge__owner">Owner · ${g.owner}</div>
+        <div style="flex:1; min-width:0">
+          <input class="gauge__name-edit" data-g="${i}" data-f="name" value="${(g.name||"").replace(/"/g,'&quot;')}" placeholder="Indicator name" aria-label="indicator name">
+          <div class="gauge__owner">Owner · <input class="gauge__owner-edit" data-g="${i}" data-f="owner" value="${(g.owner||"").replace(/"/g,'&quot;')}" placeholder="owner" aria-label="owner"></div>
         </div>
-        <div style="display:flex; align-items:center; gap:6px">
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0">
           ${esc?'<span class="esc" title="Two weeks red in a row">⚠ Escalate</span>':''}
           <span class="status g-${s}">${statusLabel(s)}</span>
+          <button class="gauge__del" data-del="${i}" title="Remove this indicator" aria-label="remove">×</button>
         </div>
       </div>
       <div class="gauge__row">
         <div class="gauge__num"><input type="number" data-i="${i}" value="${g.actual}" aria-label="${g.name} actual"></div>
-        <div class="gauge__vs">vs ${g.target}${g.unit} target &nbsp;<span class="trendarrow t-${tr}">${arrow}</span></div>
+        <div class="gauge__vs">vs <input class="gauge__target-edit" type="number" data-g="${i}" data-f="target" value="${g.target}" aria-label="target"><input class="gauge__unit-edit" data-g="${i}" data-f="unit" value="${(g.unit||"").replace(/"/g,'&quot;')}" aria-label="unit" placeholder="%"> target &nbsp;<span class="trendarrow t-${tr}">${arrow}</span></div>
         <div class="gauge__spark">${sparkline(g.hist.concat([g.actual]), g.target)}</div>
       </div>
     </div>`;
@@ -1816,18 +1924,55 @@ function wireSegment(item){
     }));
   }
   if(id==="gauges"){
-    const onGauge = (inp)=>{
-      const i=+inp.dataset.i; STATE.gauges[i].actual=parseFloat(inp.value)||0;
-      const card=document.getElementById("gauge-"+i);
-      const caret=inp.selectionStart;
+    // redraw one card in place (status/sparkline) without losing the caret
+    const redrawCard = (i, focusSel)=>{
+      const card=document.getElementById("gauge-"+i); if(!card) return;
+      const active=document.activeElement, caret=active&&active.selectionStart;
       const fresh=document.createElement("div"); fresh.innerHTML=gaugeCard(STATE.gauges[i],i);
       card.replaceWith(fresh.firstElementChild);
-      const ni=document.querySelector(`#gauge-${i} input`);
-      ni.addEventListener("input",()=>onGauge(ni));
-      ni.focus();
-      try{ ni.setSelectionRange(caret,caret); }catch(e){}
+      wireGaugeCard(i);
+      if(focusSel){ const el=document.querySelector(`#gauge-${i} ${focusSel}`); if(el){ el.focus(); try{el.setSelectionRange(caret,caret);}catch(e){} } }
     };
-    document.querySelectorAll('#gaugeGrid input').forEach(inp=>inp.addEventListener("input",()=>onGauge(inp)));
+    const wireGaugeCard = (i)=>{
+      const card=document.getElementById("gauge-"+i); if(!card) return;
+      // actual value
+      const num=card.querySelector('input[data-i]');
+      if(num) num.addEventListener("input",()=>{ STATE.gauges[i].actual=parseFloat(num.value)||0; redrawCard(i,'input[data-i]'); });
+      // editable text/number fields: name, owner, target, unit
+      card.querySelectorAll('[data-f]').forEach(f=>f.addEventListener("input",()=>{
+        const k=f.dataset.f;
+        STATE.gauges[i][k] = (k==="target") ? (parseFloat(f.value)||0) : f.value;
+        if(k==="target") redrawCard(i, '.gauge__target-edit');
+      }));
+      // delete
+      const del=card.querySelector('[data-del]');
+      if(del) del.addEventListener("click",()=>{ STATE.gauges.splice(i,1); redrawGrid(); });
+    };
+    const redrawGrid = ()=>{
+      const grid=document.getElementById("gaugeGrid");
+      grid.innerHTML = STATE.gauges.map((g,i)=>gaugeCard(g,i)).join("");
+      STATE.gauges.forEach((g,i)=>wireGaugeCard(i));
+      renderSuggestions();
+    };
+    const renderSuggestions = ()=>{
+      const host=document.getElementById("gaugeSuggest"); if(!host) return;
+      const existing=new Set(STATE.gauges.map(g=>(g.name||"").toLowerCase()));
+      const sugg=suggestGauges(STATE.oneOutcome).filter(s=>!existing.has(s.name.toLowerCase()));
+      if(!sugg.length){ host.innerHTML=""; return; }
+      host.innerHTML = `<div class="suggest-box">
+        <div class="sl">Suggested indicators for this outcome</div>
+        <div class="sq">A starting point, drawn from your outcome text. Add any, then edit it to fit. You own the final list.</div>
+        <div class="suggest-chips">${sugg.map((s,k)=>`<button class="suggest-chip" data-sg="${k}"><span class="plus">+</span> ${s.name} <span style="color:var(--mid);font-family:var(--font-m);font-size:.68rem">${s.target}${s.unit}</span></button>`).join("")}</div>
+      </div>`;
+      host.querySelectorAll('[data-sg]').forEach((chip,k)=>chip.addEventListener("click",()=>{
+        STATE.gauges.push(newGauge(sugg[k])); redrawGrid();
+      }));
+    };
+    STATE.gauges.forEach((g,i)=>wireGaugeCard(i));
+    renderSuggestions();
+    const add=document.getElementById("addGauge");
+    if(add) add.addEventListener("click",()=>{ STATE.gauges.push(newGauge()); redrawGrid();
+      const grid=document.getElementById("gaugeGrid"); const last=grid.lastElementChild; const nm=last&&last.querySelector('.gauge__name-edit'); if(nm){ nm.focus(); nm.select(); } });
   }
   if(id==="commit"){
     document.querySelectorAll('#commitList .did').forEach(d=>{
