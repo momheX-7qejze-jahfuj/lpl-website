@@ -283,6 +283,22 @@
   .brow__pct{flex-shrink:0; text-align:right; min-width:58px}
   .brow__pct .p{font-family:var(--font-m); font-weight:700; font-size:1.1rem}
   .did{display:flex; gap:6px; flex-shrink:0}
+  /* editable Verify Adoption fields */
+  .commit-owner{font-weight:700; color:var(--navy); font-size:.84rem; border:1px solid transparent; background:transparent; border-radius:5px; padding:1px 4px; width:100%; font-family:var(--font-s)}
+  .commit-owner:hover{border-color:var(--border)} .commit-owner:focus{outline:none; border-color:var(--gold); background:var(--white)}
+  .commit-role{font-size:.6rem; color:var(--mid); text-transform:uppercase; letter-spacing:.06em; border:1px solid transparent; background:transparent; border-radius:5px; padding:1px 4px; width:100%; font-family:var(--font-s); margin-top:2px}
+  .commit-role:hover{border-color:var(--border)} .commit-role:focus{outline:none; border-color:var(--gold); background:var(--white)}
+  .commit-beh{width:100%; border:1px solid var(--border); border-radius:8px; padding:7px 9px; font-family:var(--font-s); font-size:.84rem; resize:vertical; color:var(--charcoal); line-height:1.4}
+  .commit-beh:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .commit-frac{flex-shrink:0; text-align:center}
+  .commit-frac__l{font-size:.56rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); margin-bottom:4px}
+  .commit-frac__row{display:flex; align-items:center; gap:4px}
+  .commit-frac__row input{width:40px; font-family:var(--font-m); font-weight:700; font-size:1rem; text-align:center; border:1px solid var(--border); border-radius:7px; padding:4px; color:var(--navy)}
+  .commit-frac__row input:focus{outline:2px solid var(--gold); border-color:var(--gold)}
+  .commit-frac__row .slash{font-family:var(--font-m); color:var(--mid)}
+  .commit-del{width:22px; height:22px; border-radius:6px; background:transparent; color:var(--mid); font-size:1.1rem; line-height:1; border:1px solid var(--border); flex-shrink:0; align-self:center}
+  .commit-del:hover{background:#FBE9E7; color:var(--red); border-color:var(--red)}
+  .brow{align-items:flex-start}
   .didbtn{border:1px solid var(--border); background:var(--white); border-radius:7px; padding:7px 11px; font-size:.72rem; font-weight:700; color:var(--mid)}
   .didbtn.yes.on{background:var(--green); color:#fff; border-color:var(--green)}
   .didbtn.no.on{background:var(--red); color:#fff; border-color:var(--red)}
@@ -298,6 +314,19 @@
   .ophase textarea{width:100%; border:none; border-radius:8px; padding:9px; font-family:var(--font-s); font-size:.82rem; resize:vertical; min-height:72px; color:var(--charcoal)}
   .o-observe{background:#1B5E6F} .o-orient{background:var(--steel)} .o-decide{background:var(--red)} .o-act{background:var(--green)}
   .constraint-pick{display:flex; flex-direction:column; gap:8px; margin-bottom:18px}
+  /* editable constraint rows */
+  .cpick-wrap{display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:var(--white); margin-bottom:8px; transition:.15s}
+  .cpick-wrap.sel{border-color:var(--navy); background:var(--gold-pale)}
+  .cpick-sel{flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:4px; background:transparent; border:1px solid var(--border); border-radius:8px; padding:6px 8px; min-width:52px}
+  .cpick-wrap.sel .cpick-sel{border-color:var(--navy); background:var(--white)}
+  .cp-tag{font-size:.5rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--steel)}
+  .cpick-fields{flex:1; min-width:0; display:flex; flex-direction:column; gap:5px}
+  .cp-title{font-weight:600; color:var(--navy); font-size:.9rem; border:1px solid transparent; background:transparent; border-radius:6px; padding:3px 6px; width:100%; font-family:var(--font-s)}
+  .cp-title:hover{border-color:var(--border)} .cp-title:focus{outline:none; border-color:var(--gold); background:var(--white)}
+  .cp-desc{color:var(--mid); font-size:.74rem; border:1px solid transparent; background:transparent; border-radius:6px; padding:2px 6px; width:100%; font-family:var(--font-s)}
+  .cp-desc:hover{border-color:var(--border)} .cp-desc:focus{outline:none; border-color:var(--gold); background:var(--white)}
+  .cp-del{flex-shrink:0; width:22px; height:22px; border-radius:6px; background:transparent; color:var(--mid); font-size:1.1rem; line-height:1; border:1px solid var(--border); align-self:center}
+  .cp-del:hover{background:#FBE9E7; color:var(--red); border-color:var(--red)}
   .cpick{display:flex; align-items:center; gap:12px; border:1px solid var(--border); border-radius:10px; padding:13px 15px; background:var(--white); text-align:left; width:100%; transition:.15s}
   .cpick:hover{border-color:var(--gold)}
   .cpick.sel{border-color:var(--navy); background:var(--gold-pale)}
@@ -1239,24 +1268,44 @@ function renderPillars(item){
 }
 
 function renderCommit(item){
+  const carried = STATE.commitments.some(c=>c._carried);
+  const banner = carried
+    ? `<div class="oc-prompt" style="margin-bottom:14px"><div class="oc-prompt__l">Pulled forward from last week</div><div class="oc-prompt__q" style="color:rgba(248,246,242,.8)">These are the behaviors you assigned last meeting. Mark what actually got adopted. Edit or add as needed.</div></div>`
+    : `<div class="oc-prompt oc-prompt--warn" style="margin-bottom:14px"><div class="oc-prompt__l">No assigned behaviors carried yet</div><div class="oc-prompt__q">Nothing was assigned last week, or this is the first cycle. Add the behaviors you are verifying, or they will appear here automatically next week once you assign them.</div></div>`;
   const inner = `
-    <div class="panel" id="commitList">${STATE.commitments.map((c,i)=>commitRow(c,i)).join("")}</div>
+    ${banner}
+    <div class="panel" id="commitList">${STATE.commitments.length? STATE.commitments.map((c,i)=>commitRow(c,i)).join("") : `<div style="padding:18px; text-align:center; color:var(--mid); font-size:.86rem">No behaviors to verify yet. Add one below.</div>`}</div>
+    <button class="btn btn--ghost btn--sm" id="addCommit" style="color:var(--navy); border-color:var(--border); margin-top:12px">+ Add a behavior to verify</button>
     <p style="font-size:.78rem; color:var(--mid); margin-top:12px; font-family:var(--font-m)">
-      Did they do the behavior? Not did the number move. The behavior is the commitment. The number follows.</p>`;
-  const intro = "Start with last week's commitments. For each one, a simple question: did the owner do the behavior, at the frequency they committed to? Yes or no. This is where accountability becomes real.";
+      Did they do the behavior? Not did the number move. Compliance is successful actions over total opportunities. Auditable without the register.</p>`;
+  const intro = "Verify adoption of the behavior you assigned last week, not the number it produced. For each one, enter how many times it happened out of how many it should have. The tool computes the compliance fraction. This is where accountability becomes real.";
   return segShell(item, inner, intro);
 }
 function commitRow(c,i){
   const pct=execPct(c.did,c.target);
   const col = pct>=90?"#2F7A4F":pct>=60?"#C8992B":"#B91C1C";
-  return `<div class="brow">
-    <div class="brow__who"><div class="nm">${c.owner}</div><div class="rl">${c.rl}</div></div>
-    <div class="brow__beh"><div class="bt">${c.beh}</div><div class="bm">Target ${c.target}x · Done ${c.did}x this week</div></div>
-    <div class="did" data-i="${i}">
-      <button class="didbtn yes ${c.did>=c.target?'on':''}" data-v="yes">Hit</button>
-      <button class="didbtn no ${c.did<c.target?'on':''}" data-v="no">Short</button>
+  const esc = (c.target>0 && pct<60);
+  return `<div class="brow" id="commit-${i}">
+    <div class="brow__who" style="width:118px">
+      <input class="commit-owner" data-c="${i}" data-f="owner" value="${(c.owner||"").replace(/"/g,'&quot;')}" placeholder="Owner" aria-label="owner">
+      <input class="commit-role" data-c="${i}" data-f="rl" value="${(c.rl||"").replace(/"/g,'&quot;')}" placeholder="role" aria-label="role">
     </div>
-    <div class="brow__pct"><div class="p" style="color:${col}">${pct}%</div></div>
+    <div class="brow__beh" style="flex:1">
+      <textarea class="commit-beh" data-c="${i}" data-f="beh" rows="2" placeholder="The specific, observable behavior to verify...">${c.beh||""}</textarea>
+    </div>
+    <div class="commit-frac">
+      <div class="commit-frac__l">Adopted</div>
+      <div class="commit-frac__row">
+        <input type="number" class="commit-did" data-c="${i}" data-f="did" value="${c.did}" aria-label="done">
+        <span class="slash">/</span>
+        <input type="number" class="commit-target" data-c="${i}" data-f="target" value="${c.target}" aria-label="target">
+      </div>
+    </div>
+    <div class="brow__pct" style="min-width:74px; text-align:right">
+      <div class="p" style="color:${col}; font-family:var(--font-m)">${pct}%</div>
+      ${esc?'<span class="esc" style="margin-top:4px; display:inline-block">⚠ Below</span>':''}
+    </div>
+    <button class="commit-del" data-cdel="${i}" title="Remove" aria-label="remove">×</button>
   </div>`;
 }
 
@@ -1314,16 +1363,43 @@ function refreshVerdict(){
     `<span style="color:var(--body)"> &nbsp;${v.msg}</span>`;
 }
 
+/* Constraints drawn from the proof: any indicator below target is a
+   candidate constraint, named in the manager's own words. Merged with
+   whatever the manager has already written, de-duplicated by title. */
+function constraintsFromProof(){
+  const reds=(STATE.gauges||[]).filter(g=>gaugeStatus(g.actual,g.target)==="red" || gaugeStatus(g.actual,g.target)==="amber");
+  return reds.map(g=>({ t:g.name+" is below target", d:g.actual+(g.unit||"")+" vs "+g.target+(g.unit||"")+" target. Owner "+g.owner+".", _fromProof:true }));
+}
+function syncConstraintsWithProof(){
+  const existing = STATE.constraints||[];
+  const have = new Set(existing.map(c=>(c.t||"").toLowerCase()));
+  constraintsFromProof().forEach(c=>{ if(!have.has(c.t.toLowerCase())){ existing.push(c); have.add(c.t.toLowerCase()); } });
+  STATE.constraints = existing;
+  if(STATE.chosenConstraint>=STATE.constraints.length) STATE.chosenConstraint=0;
+}
+function constraintPicker(){
+  return `<div class="constraint-pick" id="cpick">${STATE.constraints.map((k,i)=>`
+      <div class="cpick-wrap ${STATE.chosenConstraint===i?'sel':''}" id="cp-${i}">
+        <button class="cpick-sel" data-i="${i}" title="Select this constraint">
+          <span class="rank">#${i+1}</span>${k._fromProof?'<span class="cp-tag">from proof</span>':''}
+        </button>
+        <div class="cpick-fields">
+          <input class="cp-title" data-c="${i}" data-f="t" value="${(k.t||"").replace(/"/g,'&quot;')}" placeholder="Name the constraint...">
+          <input class="cp-desc"  data-c="${i}" data-f="d" value="${(k.d||"").replace(/"/g,'&quot;')}" placeholder="What is actually happening">
+        </div>
+        <button class="cp-del" data-cpdel="${i}" title="Remove" aria-label="remove">×</button>
+      </div>`).join("")}
+    </div>
+    <button class="btn btn--ghost btn--sm" id="addConstraint" style="color:var(--navy); border-color:var(--border); margin-top:10px">+ Add a constraint</button>`;
+}
+
 function renderConstraint(item){
   const c=STATE.ooda;
+  syncConstraintsWithProof();
   const inner = `
     <div class="section-label"><span class="k">·</span><h3>Pick the one constraint to clear</h3></div>
-    <div class="constraint-pick" id="cpick">${STATE.constraints.map((k,i)=>`
-      <button class="cpick ${STATE.chosenConstraint===i?'sel':''}" data-i="${i}">
-        <span class="rank">#${i+1}</span>
-        <span><span class="ct">${k.t}</span><span class="cd">${k.d}</span></span>
-      </button>`).join("")}
-    </div>
+    <p style="font-size:.8rem; color:var(--mid); margin:-6px 0 12px; max-width:64ch">Pulled from the indicators you are falling short on. Edit any of them, or add your own. One constraint per meeting. Not ten.</p>
+    <div id="constraintHost">${constraintPicker()}</div>
     <div class="section-label" style="margin-top:22px"><span class="k">Rx</span><h3>Run the OODA loop to a prescribed behavior</h3></div>
     <div class="ooda">
       <div class="ophase o-observe"><h4><span class="ol">O</span>Observe</h4><p>What is actually happening? The facts.</p>
@@ -1975,23 +2051,70 @@ function wireSegment(item){
       const grid=document.getElementById("gaugeGrid"); const last=grid.lastElementChild; const nm=last&&last.querySelector('.gauge__name-edit'); if(nm){ nm.focus(); nm.select(); } });
   }
   if(id==="commit"){
-    document.querySelectorAll('#commitList .did').forEach(d=>{
-      d.querySelectorAll('.didbtn').forEach(btn=>btn.addEventListener("click",()=>{
-        const i=+d.dataset.i, c=STATE.commitments[i];
-        c.did = btn.dataset.v==="yes"? c.target : Math.min(c.did, c.target-1<0?0:Math.min(c.did,c.target-1));
-        if(btn.dataset.v==="no" && c.did>=c.target) c.did=Math.max(0,c.target-1);
-        const fresh=document.createElement("div"); fresh.innerHTML=commitRow(c,i);
-        d.closest(".brow").replaceWith(fresh.firstElementChild);
-        wireSegment(item);
+    const redrawCommit = (i)=>{
+      const row=document.getElementById("commit-"+i); if(!row) return;
+      const active=document.activeElement, caret=active&&active.selectionStart, fcls=active&&active.className;
+      const fresh=document.createElement("div"); fresh.innerHTML=commitRow(STATE.commitments[i],i);
+      row.replaceWith(fresh.firstElementChild);
+      wireCommitRow(i);
+      if(fcls){ const el=document.querySelector(`#commit-${i} .${fcls.split(" ")[0]}`); if(el){ el.focus(); try{el.setSelectionRange(caret,caret);}catch(e){} } }
+    };
+    const wireCommitRow = (i)=>{
+      const row=document.getElementById("commit-"+i); if(!row) return;
+      row.querySelectorAll('[data-f]').forEach(f=>f.addEventListener("input",()=>{
+        const k=f.dataset.f;
+        STATE.commitments[i][k] = (k==="did"||k==="target") ? (parseInt(f.value)||0) : f.value;
+        if(k==="did"||k==="target") redrawCommit(i); // refresh the % + flag
       }));
+      const del=row.querySelector('[data-cdel]');
+      if(del) del.addEventListener("click",()=>{ STATE.commitments.splice(i,1); redrawCommitList(); });
+    };
+    const redrawCommitList = ()=>{
+      const list=document.getElementById("commitList");
+      list.innerHTML = STATE.commitments.length
+        ? STATE.commitments.map((c,i)=>commitRow(c,i)).join("")
+        : `<div style="padding:18px; text-align:center; color:var(--mid); font-size:.86rem">No behaviors to verify yet. Add one below.</div>`;
+      STATE.commitments.forEach((c,i)=>wireCommitRow(i));
+    };
+    STATE.commitments.forEach((c,i)=>wireCommitRow(i));
+    const add=document.getElementById("addCommit");
+    if(add) add.addEventListener("click",()=>{
+      STATE.commitments.push({owner:"", rl:"", beh:"", target:5, did:0});
+      redrawCommitList();
+      const list=document.getElementById("commitList"); const last=list.lastElementChild; const nm=last&&last.querySelector('.commit-owner'); if(nm) nm.focus();
     });
   }
   if(id==="constraint"){
-    document.querySelectorAll('#cpick .cpick').forEach(b=>b.addEventListener("click",()=>{
-      STATE.chosenConstraint=+b.dataset.i;
-      document.querySelectorAll('#cpick .cpick').forEach(x=>x.classList.remove("sel"));
-      b.classList.add("sel");
-    }));
+    const wireConstraintRows = ()=>{
+      document.querySelectorAll('#cpick .cpick-sel').forEach(b=>b.addEventListener("click",()=>{
+        STATE.chosenConstraint=+b.dataset.i;
+        document.querySelectorAll('#cpick .cpick-wrap').forEach(x=>x.classList.remove("sel"));
+        const w=document.getElementById("cp-"+b.dataset.i); if(w) w.classList.add("sel");
+      }));
+      document.querySelectorAll('#cpick [data-f]').forEach(f=>f.addEventListener("input",()=>{
+        STATE.constraints[+f.dataset.c][f.dataset.f]=f.value;
+      }));
+      document.querySelectorAll('#cpick [data-cpdel]').forEach(btn=>btn.addEventListener("click",()=>{
+        STATE.constraints.splice(+btn.dataset.cpdel,1);
+        if(STATE.chosenConstraint>=STATE.constraints.length) STATE.chosenConstraint=Math.max(0,STATE.constraints.length-1);
+        redrawConstraints();
+      }));
+    };
+    const redrawConstraints = ()=>{
+      const host=document.getElementById("constraintHost");
+      host.innerHTML = constraintPicker();
+      wireConstraintRows();
+      document.getElementById("addConstraint").addEventListener("click",onAddConstraint);
+    };
+    const onAddConstraint = ()=>{
+      STATE.constraints.push({t:"", d:""});
+      redrawConstraints();
+      const host=document.getElementById("constraintHost");
+      const inputs=host.querySelectorAll('.cp-title'); const last=inputs[inputs.length-1]; if(last) last.focus();
+    };
+    wireConstraintRows();
+    const addC=document.getElementById("addConstraint");
+    if(addC) addC.addEventListener("click",onAddConstraint);
     // THREE LAYERS: update state + re-render the panel so % and verdict move live
     const rewireLayers=()=>{
       const panel=document.querySelector('.layers')?.parentElement; if(!panel) return;
@@ -2200,7 +2323,11 @@ function openDeptMeeting(deptId){
   STATE.team        = d.team        ? JSON.parse(JSON.stringify(d.team))        : [];
   STATE.gauges      = d.gauges      ? JSON.parse(JSON.stringify(d.gauges))      : [];
   STATE.constraints = d.constraints ? JSON.parse(JSON.stringify(d.constraints)): [];
-  STATE.commitments = d.commitments ? JSON.parse(JSON.stringify(d.commitments)): [];
+  // Verify Adoption: prefer behaviors carried forward from last week's
+  // assignment. Fall back to the department's stored commitments.
+  STATE.commitments = (d.carryForward && d.carryForward.length)
+    ? JSON.parse(JSON.stringify(d.carryForward))
+    : (d.commitments ? JSON.parse(JSON.stringify(d.commitments)) : []);
   STATE.chosenConstraint = 0;
   // reset the OODA prescription and three layers for the new department
   STATE.ooda.owner = (STATE.team[0]&&STATE.team[0].nm) || "Lead";
@@ -2326,6 +2453,10 @@ function returnToOrg(){
       // keep the last constraint worked and its three-layer proof on the department
       d.lastConstraint = (STATE.constraints[STATE.chosenConstraint]||null);
       d.lastLayers     = JSON.parse(JSON.stringify(STATE.ooda.layers));
+      // CARRY FORWARD: this week's assigned behaviors become next week's
+      // behaviors to verify. Only the ones with a behavior actually written.
+      const assigned = (STATE.nextBehaviors||[]).filter(b=>b.beh && b.beh.trim());
+      d.carryForward = assigned.map(b=>({ owner:b.owner||"", rl:"", beh:b.beh, target:5, did:0, _carried:true }));
     }
     queueOrgSave();
     activeDeptId=null;
